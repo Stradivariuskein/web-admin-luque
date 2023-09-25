@@ -16,8 +16,9 @@ Including another URLconf
 """
 
 from django.urls import path
-from .views import ListXlsx
+from .views import ListXlsx, CreateXlsx
 
 urlpatterns = [
     path('', ListXlsx.as_view(), name='listas-xlsx'),
+    path('create/', CreateXlsx.as_view(), name='create-list-xlsx'),
 ]

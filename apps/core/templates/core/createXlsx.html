@@ -43,55 +43,12 @@ https://templatemo.com/tm-554-ocean-vibes
     </nav>
 
     <div class="container">
-        <h1>Tabla Responsiva con Bootstrap</h1>
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Actualizar</th>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Ultima actualizacion</th>
-                        <th>Precio manual</th>
-                        <th>Aumentar por %</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for xlsx in listXlsx %}
-                    <tr>
-                            
-                        <th>
-                            <form>
-                            <label>
-                                <input type="checkbox" name="opcion1" value="Opción 1">
-                            </label><br>
-                            </form>
-                        </th>
-                        <td>{{xlsx.id}}</td>
-                        <td>{{xlsx.name}}</td>
-                        <td>{{xlsx.modDate}}</td>
-                        <td>
-                            <form>
-                            <label>
-                                <input type="checkbox" name="opcion1" value="Opción 1">
-                            </label><br>
-                            </form>
-                        </td>
-                        <td>
-                            <form action="#">
-                                <input type="number" id="numero" name="numero" min="0" max="100">
-                            </form>
-                        </td>
-                        
-                    </tr>
-
-                    {% endfor %}
-
-                   
-                    <!-- Puedes agregar más filas aquí -->
-                </tbody>
-            </table>
-        </div>
+        <h1>Create XLSX</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Guardar</button>
+        </form>
     </div>
 
     <footer class="tm-footer">
