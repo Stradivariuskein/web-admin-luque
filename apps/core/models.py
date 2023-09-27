@@ -7,14 +7,18 @@ from openpyxl import load_workbook
 # Create your models here.
 
 
+class Modelo_test(modesl):
+    pass
 
 class ListXlsx(models.Model):
-    name = models.CharField(max_length=100)
-    driveId = models.CharField(max_length=150)
+    name_file = models.CharField(max_length=100)
+    driveId = models.CharField(max_length=150, null=True, blank=True)
     modDate = models.DateField()
     img = models.ImageField(upload_to='media/img/artics/', null=True, blank=True)
-    pathlocal = models.CharField(max_length=500, default="")
+    pathLocal = models.CharField(max_length=500, default="")
 
+    def __str__(self) -> str:
+        return f"{self.name}, {self.modDate}, {self.pathLocal}"
 
 class Artic(models.Model):
     code = models.CharField(max_length=10)
