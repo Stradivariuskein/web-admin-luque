@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.views.generic import ListView, CreateView
 from django.urls import reverse_lazy
 from django.http import HttpResponse
+from django.views import View
 
 import os
 from re import findall
+import datetime
 
-from .models import ListXlsx
+from .models import ModelListXlsx
 # Create your views here.
 
 def update_xlsx(request):
@@ -19,14 +21,14 @@ def update_xlsx(request):
 
 
 class CreateXlsx(CreateView):
-    model = ListXlsx
+    model = ModelListXlsx
     template_name = 'core/createXlsx.html'
     success_url = reverse_lazy('create-list-xlsx')
     fields = ['name', 'driveId', 'modDate', 'img', 'pathlocal']
 
 
 class ListXlsx(ListView):
-    model = ListXlsx
+    model = ModelListXlsx
     template_name = 'core/index.html'
     context_object_name = 'listXlsx'
 
@@ -45,7 +47,12 @@ def temp_create_listXlsx(request):
         if is_xlsx and not is_tmp_file:
             local_rute_file = carpeta + archivo
             mod_date_file = os.path.getmtime(local_rute_file)
-            xlsx_file = ListXlsx(name_file=archivo, modDate=mod_date_file, pathLocal=local_rute_file)
+            # Convertir el timestamp a un objeto datetime
+            mod_date_datetime = datetime.datetime.fromtimestamp(mod_date_file)
+            # Extraer la fecha del objeto datetime
+            mod_date_file = mod_date_datetime.date()
+            print(f"{mod_date_file}\n\n\n\n")
+            xlsx_file = ModelListXlsx(name=archivo, modDate=mod_date_file, pathLocal=local_rute_file)
             if xlsx_file:
                 print(xlsx_file)
                 xlsx_file.save()
@@ -53,3 +60,16 @@ def temp_create_listXlsx(request):
             filtered_archs.append(archivo)
     print(len(filtered_archs))
     return HttpResponse(archivos)
+
+
+class ViewUpdateXlsx(View):
+
+    def post(self, request, *args, **kwargs):
+        IDs_xlsx = request.POST.getlist("IDs_xlsx")
+        print(IDs_xlsx)
+        if IDs_xlsx:
+            for ID in IDs_xlsx:
+                
+            return HttpResponse(IDs_xlsx)
+        else:
+            return HttpResponse("Error no se selecciono nunguna lista")

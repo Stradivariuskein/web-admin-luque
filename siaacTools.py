@@ -1,6 +1,16 @@
 from shutil import copy
 from re import findall
 
+# quita los caracteres q no son legible y los reeemplaza
+def normalizar(linea):
+    linea = linea.replace('¤', 'ñ')
+    linea = linea.replace('§', '°')
+    linea = linea.replace('ø', '°')
+    linea = linea.replace('£', 'Ú')
+    linea = linea.replace('¥', 'ñ')
+    return linea
+
+
 def leerArtic():
     #PASA EL ARCHIVO DE LOS ARTICULOS DE SISTEMA A UN ARCHIVO DE TEXTO FACIL DE LEER
     copy("Y:/SIAAC3/ARTIC.DBF","siaac/ARTIC.DBF")
@@ -13,6 +23,8 @@ def leerArtic():
 
     linea = file.readline(2)
     linea = file.readline(200)
+
+    dic_artics = {}
 
     index_fin_desc = -131
     index_ini_price = 86
@@ -37,7 +49,12 @@ def leerArtic():
             price1 = 0
 
         if price1 != 0:
+            articLine = normalizar(articLine)
+            artic_cod = articLine[:11]
+            artic_dec = articLine[11:67]
+            #usar el diccionara dic_artic para retornar
             articdb.write(articLine)
+
 
     file.close()
     articdb.close()

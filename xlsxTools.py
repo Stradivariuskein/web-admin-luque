@@ -46,6 +46,15 @@ def buscarPrecio(cod, lista_num):
     return -1
 
 
+def actualizarPrecio (wb,row,cod,lista_num):
+    #ACTUALIZA EL PRECIO EN EL EXCEL
+    
+    sheet = wb['Hoja1']
+    cell = 'D' + str(row)
+    precio = buscarPrecio(cod, lista_num)
+    if precio != -1:
+        sheet[cell] = float(precio)
+
 
 def actualizarLista(bExcel, lista_num):
     #recorre una lista de precios, obtiene los codigo, los busca en articDB.txt y actualiza el precio
@@ -87,14 +96,10 @@ def actualizarLista(bExcel, lista_num):
                     result = 0
 
 
+def update_file_xlsx(wb):
+    pass
 
-def actualizarPrecio (wb,row,cod,lista_num):
-    #ACTUALIZA EL PRECIO EN EL EXCEL
+if __name__ == '__main__':
     
-    sheet = wb['Hoja1']
-    cell = 'D' + str(row)
-    precio = buscarPrecio(cod, lista_num)
-    if precio != -1:
-        sheet[cell] = float(precio)
-
-
+    wb = load_workbook()
+    
