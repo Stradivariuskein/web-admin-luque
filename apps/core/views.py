@@ -8,7 +8,10 @@ import os
 from re import findall
 import datetime
 
-from .models import ModelListXlsx
+# mis bibliotecas
+from siaacTools import reed_artics
+
+from .models import ModelListXlsx, ModelArtic
 # Create your views here.
 
 def update_xlsx(request):
@@ -68,8 +71,20 @@ class ViewUpdateXlsx(View):
         IDs_xlsx = request.POST.getlist("IDs_xlsx")
         print(IDs_xlsx)
         if IDs_xlsx:
-            for ID in IDs_xlsx:
-                
+            #for ID in IDs_xlsx:
+            #buscar en la db los articulos y los precios, actualiza la lista y la sube al drive
             return HttpResponse(IDs_xlsx)
         else:
             return HttpResponse("Error no se selecciono nunguna lista")
+
+
+# funcion temporal par ingresar todos los articulos
+def tmp_create_artics(request):
+    dic_artics = reed_artics()
+
+    for cod, artic in dic_artics.items():
+
+        artic = ModelArtic(code=cod, description=artic['description'], priceMa=artic['price_ma'], priceMi=artic['price_mi'])
+        artic.save()
+    
+    return HttpResponse("Echo")

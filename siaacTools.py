@@ -11,7 +11,7 @@ def normalizar(linea):
     return linea
 
 
-def leerArtic():
+def reed_artics():
     #PASA EL ARCHIVO DE LOS ARTICULOS DE SISTEMA A UN ARCHIVO DE TEXTO FACIL DE LEER
     copy("Y:/SIAAC3/ARTIC.DBF","siaac/ARTIC.DBF")
     file = open("siaac/ARTIC.DBF", errors="ignore")
@@ -25,7 +25,7 @@ def leerArtic():
     linea = file.readline(200)
 
     dic_artics = {}
-
+    whith_max_line = 184
     index_fin_desc = -131
     index_ini_price = 86
     index_price_1 = 84
@@ -43,6 +43,12 @@ def leerArtic():
             #articdb.write(linea[:index_fin_desc].lstrip('\x00').lstrip() + linea[index_ini_price:] + '\n')
             linea = file.readline(200)
         
+        len_artic = len(articLine)
+        #print(f"{articLine} {len(articLine)}")
+        if len_artic > whith_max_line:
+            articLine = articLine[:64] + articLine[65:]
+            
+
         try:
             price1 = float(articLine[79:91])
         except ValueError:
@@ -50,14 +56,23 @@ def leerArtic():
 
         if price1 != 0:
             articLine = normalizar(articLine)
-            artic_cod = articLine[:11]
-            artic_dec = articLine[11:67]
+            artic_cod = articLine[:11].strip()
+            artic_desc = articLine[11:67].strip()
+            artic_price_mi = float(articLine[79:90].strip())
+            artic_price_ma = float(articLine[127:138].strip())
             #usar el diccionara dic_artic para retornar
             articdb.write(articLine)
+            dic_artics[artic_cod] = {
+                'description': artic_desc,
+                'price_ma': artic_price_ma,
+                'price_mi': artic_price_mi
+                }
 
 
     file.close()
     articdb.close()
+    return dic_artics
+
 
 if __name__ == '__main__':
-    leerArtic()
+    print(reed_artics())
