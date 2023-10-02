@@ -60,9 +60,9 @@ def temp_create_listXlsx(request):
 #posterior a la seleccion de las lista te pedira si quieres actualizarlas automaticamente usando los precios de la db,
 # actualizarlo manualmente o poniendo un porsentaje
 class ViewUpdateXlsx(View):
-
-    def post(self, request, *args, **kwargs):
-        IDs_xlsx = request.POST.getlist("IDs_xlsx")
+        
+    def get(self, request, *args, **kwargs):
+        IDs_xlsx = request.GET.getlist("IDs_xlsx")
         #print(IDs_xlsx)
         if IDs_xlsx:
             #buscar en la db los articulos y los precios, actualiza la lista y la sube al drive
@@ -70,14 +70,11 @@ class ViewUpdateXlsx(View):
                 current_xlsx = ModelListXlsx.objects.get(id=Id)
                 
             
-            return HttpResponse(IDs_xlsx)
+            return render(request, 'core/update_xlsx_step.html', {'listXlsx':IDs_xlsx})
         else:
             return HttpResponse("Error no se selecciono nunguna lista")
 
-    # no admite peticion get    
-    def get(self, request, *args, **kwargs):
-
-        return reverse_lazy('listas-xlsx')
+        
 
 
 # funcion temporal par ingresar todos los articulos
