@@ -96,10 +96,50 @@ def actualizarLista(bExcel, lista_num):
                     result = 0
 
 
-def update_file_xlsx(wb):
-    pass
+# dado un archivo xlsx devuelve todos los codgos de los articulos
+def get_artcis_from_xlsx(rute_xlsx):
+    try:
+        wb = load_workbook(rute_xlsx)
+    except FileNotFoundError:
+        return None
+    sheet = wb['Hoja1']
+
+    maxRow = sheet.max_row
+    
+    list_codes = []
+    col = 1
+    for row in range(1,maxRow):
+        cell=str(sheet.cell(row=row,column=col).value).upper()
+        cell_title = cell
+        if cell_title == "COD" or cell_title == "COD.":
+            row += 1
+            cell=str(sheet.cell(row=row,column=col).value).upper()
+            
+            # valido q sea un codigo. el codigo se compone de letras mayusculas seguidas por un guion (ej: TIR-250)
+            result = re.findall(f"[A-Z]-", cell)
+            
+            while result:
+                list_codes.append(cell)
+
+                row += 1
+                cell=sheet.cell(row=row,column=col).value
+                if cell:                    
+                    result = re.findall(f"[A-Z]-", cell.upper())
+                else:
+                    result = 0
+
+    return list_codes
+
+
+
+
+
 
 if __name__ == '__main__':
+    rute_xlsx = './LISTAS/TIRAFONDOS.xlsx'
+
+    resutl = get_artcis_from_xlsx(rute_xlsx)
+
+    print(resutl)
     
-    wb = load_workbook()
     

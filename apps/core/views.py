@@ -10,17 +10,10 @@ import datetime
 
 # mis bibliotecas
 from siaacTools import reed_artics
+from xlsxTools import get_artcis_from_xlsx
 
 from .models import ModelListXlsx, ModelArtic
 # Create your views here.
-
-def update_xlsx(request):
-
-    context = {
-        'listXlsx': [],
-    }
-
-    return render(request, "core/index.html", context)
 
 
 class CreateXlsx(CreateView):
@@ -64,18 +57,27 @@ def temp_create_listXlsx(request):
     print(len(filtered_archs))
     return HttpResponse(archivos)
 
-
+#posterior a la seleccion de las lista te pedira si quieres actualizarlas automaticamente usando los precios de la db,
+# actualizarlo manualmente o poniendo un porsentaje
 class ViewUpdateXlsx(View):
 
     def post(self, request, *args, **kwargs):
         IDs_xlsx = request.POST.getlist("IDs_xlsx")
-        print(IDs_xlsx)
+        #print(IDs_xlsx)
         if IDs_xlsx:
-            #for ID in IDs_xlsx:
             #buscar en la db los articulos y los precios, actualiza la lista y la sube al drive
+            for Id in IDs_xlsx:
+                current_xlsx = ModelListXlsx.objects.get(id=Id)
+                
+            
             return HttpResponse(IDs_xlsx)
         else:
             return HttpResponse("Error no se selecciono nunguna lista")
+
+    # no admite peticion get    
+    def get(self, request, *args, **kwargs):
+
+        return reverse_lazy('listas-xlsx')
 
 
 # funcion temporal par ingresar todos los articulos
@@ -88,3 +90,28 @@ def tmp_create_artics(request):
         artic.save()
     
     return HttpResponse("Echo")
+
+
+# funcion temporal para vincular los articulos con las listas
+def view_vincular_xlsx_artic(request):
+    list_xlsx = ModelListXlsx.objects.all()
+    lists_rute = '/home/mrkein/Documentos/python/web-admin-luque/web-admin-luque/LISTAS/'
+    
+    for xlsx in list_xlsx:
+        current_xlsx = f"{lists_rute}{xlsx.name}"
+        
+        list_codes = get_artcis_from_xlsx(current_xlsx)
+        if list_codes:
+            print(f"{xlsx.name}: {list_codes}")
+            for code in list_codes:
+                code = code.strip().upper()
+                current_artic = ModelArtic.objects.get(code=code)
+                current_artic.listXlsxID = xlsx
+                current_artic.save()
+        else:
+            print("el archivo no exites")
+
+    return HttpResponse("echo")
+
+
+

@@ -23,6 +23,9 @@ class ModelArtic(models.Model):
     priceMi = models.FloatField()
     listXlsxID = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)
 
+    def __str__(self) -> str:
+        return f"{self.code}: {self.description}"
+
 
 class ModelListDrive(models.Model):
     filrId = models.CharField(max_length=50)
