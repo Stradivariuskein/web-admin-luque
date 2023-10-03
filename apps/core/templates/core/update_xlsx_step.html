@@ -49,22 +49,20 @@ https://templatemo.com/tm-554-ocean-vibes
         <h1>Tabla Responsiva con Bootstrap</h1>
         <form method="post" action="{% url 'udate-xlsx' %}">
             {% csrf_token %}
-            <div class="container hight-80 my-2">
-
-
-                        {% for xlsx in listXlsx %}
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Botón 2
-                            </button>
-                            <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton2">
-                              <li><a class="dropdown-item" href="#">Opción 2.1</a></li>
-                              <li><a class="dropdown-item" href="#">Opción 2.2</a></li>
-                              <li><a class="dropdown-item" href="#">Opción 2.3</a></li>
-                            </ul>
-                          </div>
+            
+            <div class="container height-80 my-2">
+                {% for xlsx in listXlsx %}
+                <div class="dropdown">
+                    <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">
+                        {{ xlsx.list_name }}
+                    </button>
+                    <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
+                        {% for artic in xlsx.artics %}
+                            <li><a class="dropdown-item" href="#">{{ artic }}</a></li>
                         {% endfor %}
-
+                    </ul>
+                </div>
+                {% endfor %}
             </div>
             <a href="{% url 'udate-xlsx' %}">Actualizar Archivos</a>
         </form>
@@ -81,6 +79,6 @@ https://templatemo.com/tm-554-ocean-vibes
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script src="{static 'js/script.js'}"></script>
+    <script src="{%static 'js/script.js'%}"></script>
 </body>
 </html>

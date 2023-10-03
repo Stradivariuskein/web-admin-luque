@@ -11,27 +11,6 @@
   width: 90%;
 }
 
-
-/* Estilos para el menú desplegable */
-.menu {
-  display: inline-block;
-  margin: 10px;
-}
-
-button {
-  padding: 10px 20px;
-}
-
-.desplegable {
+.ofusqued-item {
   display: none;
-  list-style: none;
-  padding: 0;
-}
-
-.desplegable li {
-  padding: 5px;
-}
-
-.desplegable li:hover {
-  background-color: #f0f0f0;
 }

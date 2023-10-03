@@ -14,7 +14,7 @@ class ModelListXlsx(models.Model):
     pathLocal = models.CharField(max_length=500, default="")
 
     def __str__(self) -> str:
-        return f"{self.name}, {self.modDate}, {self.pathLocal}"
+        return f"{self.id}, {self.name}, {self.modDate}, {self.pathLocal}"
 
 class ModelArtic(models.Model):
     code = models.CharField(max_length=10)
@@ -26,6 +26,11 @@ class ModelArtic(models.Model):
     def __str__(self) -> str:
         return f"{self.code}: {self.description}"
 
+    # indexo el campo code
+    class Meta:
+        indexes = [
+            models.Index(fields=['code', 'listXlsxID'])
+        ]
 
 class ModelListDrive(models.Model):
     filrId = models.CharField(max_length=50)

@@ -62,15 +62,23 @@ def temp_create_listXlsx(request):
 class ViewUpdateXlsx(View):
         
     def get(self, request, *args, **kwargs):
-        IDs_xlsx = request.GET.getlist("IDs_xlsx")
+        lists_xlsx = request.GET.getlist("lists_xlsx")
         #print(IDs_xlsx)
-        if IDs_xlsx:
+        if lists_xlsx:
+            xlsx_and_artics = []
             #buscar en la db los articulos y los precios, actualiza la lista y la sube al drive
-            for Id in IDs_xlsx:
-                current_xlsx = ModelListXlsx.objects.get(id=Id)
+            for xlsx in lists_xlsx:
+                xlsx = xlsx.split(", ")
+                list_artics = ModelArtic.objects.filter(listXlsxID=xlsx[0])
+                current_xlsx = {
+                    'list_ID': xlsx[0],
+                    'list_name': xlsx[1],
+                    'artics': list_artics
+                    }
+                xlsx_and_artics.append(current_xlsx)
                 
             
-            return render(request, 'core/update_xlsx_step.html', {'listXlsx':IDs_xlsx})
+            return render(request, 'core/update_xlsx_step.html', {'listXlsx': xlsx_and_artics})
         else:
             return HttpResponse("Error no se selecciono nunguna lista")
 
