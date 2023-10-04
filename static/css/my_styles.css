@@ -18,3 +18,14 @@
 .ofusqued-item {
   display: none;
 }
+
+.scrollable-table {
+
+  height: 20em;
+  line-height: 1em;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  width: 100%;
+  border: 1px solid;
+
+}

@@ -50,15 +50,15 @@ https://templatemo.com/tm-554-ocean-vibes
         <form method="post" action="{% url 'udate-xlsx' %}">
             {% csrf_token %}
             
-            <div class="container height-80 my-5">
+            <div class="my-5">
                 {% for xlsx in listXlsx %}
                 <div class="dropdown">
                     <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">
                         {{ xlsx.list_name }}
                     </button>
-                    <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100 h-75">
-                        <div class="table-responsive"></div>
-                        <table class="table table-bordered">
+                    <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
+                        <div class="container  table-responsive scrollable-table">
+                        <table class="table table-bordered scrollable-table">
                             <thead>
                               <tr>
                                 <th>Código</th>
@@ -71,6 +71,7 @@ https://templatemo.com/tm-554-ocean-vibes
                             
                         {% for artic in xlsx.artics %}
                         <!--<a class="dropdown-item" href="#">{{ artic }}</a>-->
+                        <div class="container w-25">
                             <tbody>
                                 <tr>
                                 <td>{{ artic.code }}</td>
@@ -91,6 +92,7 @@ https://templatemo.com/tm-554-ocean-vibes
                                 </td>
                                 </tr>
                             </tbody>
+                        </div>
                         
                         {% endfor %}
                         </table>
