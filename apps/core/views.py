@@ -59,7 +59,7 @@ def temp_create_listXlsx(request):
 
 #posterior a la seleccion de las lista te pedira si quieres actualizarlas automaticamente usando los precios de la db,
 # actualizarlo manualmente o poniendo un porsentaje
-class ViewUpdateXlsx(View):
+class ViewUpdateXlsxStep1(View):
         
     def get(self, request, *args, **kwargs):
         lists_xlsx = request.GET.getlist("lists_xlsx")
@@ -69,7 +69,7 @@ class ViewUpdateXlsx(View):
             #buscar en la db los articulos y los precios, actualiza la lista y la sube al drive
             for xlsx in lists_xlsx:
                 xlsx = xlsx.split(", ")
-                list_artics = ModelArtic.objects.filter(listXlsxID=xlsx[0])
+                list_artics = ModelArtic.objects.filter(listXlsxID=xlsx[0]).order_by('code')
                 current_xlsx = {
                     'list_ID': xlsx[0],
                     'list_name': xlsx[1],
@@ -118,5 +118,9 @@ def view_vincular_xlsx_artic(request):
 
     return HttpResponse("echo")
 
+class ViewUpdateXlsxStep2(View):
 
+    def post(self, request, *args, **kwargs):
+        data = request.POST
 
+        return HttpResponse("metodo post")

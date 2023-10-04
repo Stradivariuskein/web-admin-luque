@@ -32,7 +32,7 @@
 
   height: 20em;
   line-height: 1em;
-  overflow-x: hidden;
+  overflow-x: scroll;
   overflow-y: scroll;
   width: 100%;
   border: 1px solid;

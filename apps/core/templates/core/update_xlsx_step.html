@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     {% load static %}
     <meta charset="UTF-8">
@@ -11,13 +11,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/my_styles.css' %}">
 
-<!--
-    
-TemplateMo 554 Ocean Vibes
 
-https://templatemo.com/tm-554-ocean-vibes
-
--->
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -47,7 +41,7 @@ https://templatemo.com/tm-554-ocean-vibes
 
     <div class="w-90 margin-auto">
         <h1>Tabla Responsiva con Bootstrap</h1>
-        <form method="post" action="{% url 'udate-xlsx' %}">
+        <form method="post" action="{% url 'udate-xlsx-step1' %}">
             {% csrf_token %}
             
             <div class="scrollable-body my-5">
@@ -79,15 +73,20 @@ https://templatemo.com/tm-554-ocean-vibes
                                 <td class="justify-content-center">
                                     <input type="checkbox" name="price_auto_{{artic.code}}" value="true">
                                 </td>
-                                <td><input type="number" step="0.01" id="percent_{{artic.code}}" /></td>
+                                <td><div class="col"><div class="row justify-content-center"><h3>%</h3></div><div class="row"><input class="w-1" type="number" step="1" id="percent_{{artic.code}}" /></div></div></td>
                                 <td>
-                                    <div class="d-flex flex-column align-items-start">
-                                        <p>Mayorista</p>
-                                        <input class="width-2 form-control" type="number" step="0.01" id="price_manual_{{artic.code}}_may" />
-                                    </div>
-                                    <div class="d-flex flex-column align-items-start"></div>
-                                        <p>Minorista</p>
-                                        <input class="width-2 form-control" type="number" step="0.01" id="price_manual_{{artic.code}}_min" />
+                                    <div class="row">
+                                        <!-- Columna 1: Mayorista -->
+                                        <div class="col">
+                                            <h3>Mayorista</h3>
+                                            <input class="form-control" type="number" step="0.01" id="price_manual_{{artic.code}}_may" value="{{artic.priceMa}}" />
+                                        </div>
+                                
+                                        <!-- Columna 2: Minorista -->
+                                        <div class="col">
+                                            <h3>Minorista</h3>
+                                            <input class="width-2 form-control" type="number" step="0.01" id="price_manual_{{artic.code}}_min" value="{{artic.priceMi}}" />
+                                        </div>
                                     </div>
                                 </td>
                                 </tr>
