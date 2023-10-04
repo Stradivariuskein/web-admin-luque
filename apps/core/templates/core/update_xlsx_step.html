@@ -45,38 +45,38 @@ https://templatemo.com/tm-554-ocean-vibes
         </div>
     </nav>
 
-    <div class="container">
+    <div class="w-90 margin-auto">
         <h1>Tabla Responsiva con Bootstrap</h1>
         <form method="post" action="{% url 'udate-xlsx' %}">
             {% csrf_token %}
             
-            <div class="my-5">
+            <div class="scrollable-body my-5">
                 {% for xlsx in listXlsx %}
                 <div class="dropdown">
                     <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">
                         {{ xlsx.list_name }}
                     </button>
                     <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
-                        <div class="container  table-responsive scrollable-table">
+                        <div class="scrollable-table">
                         <table class="table table-bordered scrollable-table">
                             <thead>
                               <tr>
-                                <th>Código</th>
-                                <th>Descripción</th>
-                                <th>Precio automático</th>
-                                <th>Aumento por porcentaje</th>
-                                <th>Precio manual</th>
+                                <th class="text-center">Código</th>
+                                <th class="text-center">Descripción</th>
+                                <th class="text-center">Precio automático</th>
+                                <th class="text-center">Aumento por porcentaje</th>
+                                <th class="text-center">Precio manual</th>
                               </tr>
                             </thead>
                             
                         {% for artic in xlsx.artics %}
                         <!--<a class="dropdown-item" href="#">{{ artic }}</a>-->
-                        <div class="container w-25">
+                        
                             <tbody>
                                 <tr>
-                                <td>{{ artic.code }}</td>
-                                <td>{{ artic.description }}</td>
-                                <td>
+                                <td class="text-center">{{ artic.code }}</td>
+                                <td class="text-center">{{ artic.description }}</td>
+                                <td class="justify-content-center">
                                     <input type="checkbox" name="price_auto_{{artic.code}}" value="true">
                                 </td>
                                 <td><input type="number" step="0.01" id="percent_{{artic.code}}" /></td>
@@ -92,7 +92,7 @@ https://templatemo.com/tm-554-ocean-vibes
                                 </td>
                                 </tr>
                             </tbody>
-                        </div>
+                        
                         
                         {% endfor %}
                         </table>
@@ -106,7 +106,7 @@ https://templatemo.com/tm-554-ocean-vibes
         </form>
     </div>
 
-    <div class="text-center navbar-expand-lg navbar-light bg-light fixed-bottom justify-content-center align-items-center d-flex hight-15">
+    <div class="text-center navbar-expand-lg navbar-light bg-light fixed-bottom justify-content-center align-items-center d-flex hight-10">
         <button class="btn btn-primary">Siguiente</button>
       </div>
 
