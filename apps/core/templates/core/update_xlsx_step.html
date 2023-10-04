@@ -41,7 +41,7 @@
 
     <div class="w-90 margin-auto">
         <h1>Tabla Responsiva con Bootstrap</h1>
-        <form method="post" action="{% url 'udate-xlsx-step1' %}">
+        <form method="post" action="{% url 'udate-xlsx-step2' %}">
             {% csrf_token %}
             
             <div class="scrollable-body my-5">
@@ -68,7 +68,7 @@
                         
                             <tbody>
                                 <tr>
-                                <td class="text-center">{{ artic.code }}</td>
+                                <td class="font-size-1 text-center">{{ artic.code }}</td>
                                 <td class="text-center">{{ artic.description }}</td>
                                 <td class="justify-content-center">
                                     <input type="checkbox" name="price_auto_{{artic.code}}" value="true">
@@ -105,9 +105,7 @@
         </form>
     </div>
 
-    <div class="text-center navbar-expand-lg navbar-light bg-light fixed-bottom justify-content-center align-items-center d-flex hight-10">
-        <button class="btn btn-primary">Siguiente</button>
-      </div>
+
 
     <footer class="tm-footer">
         <p>Echo por Alan Luque</p>

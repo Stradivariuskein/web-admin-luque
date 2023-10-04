@@ -122,5 +122,8 @@ class ViewUpdateXlsxStep2(View):
 
     def post(self, request, *args, **kwargs):
         data = request.POST
+        print(data)
+        for key, value in data.items():
+            print(f'Campo: {key}, Valor: {value}')
 
         return HttpResponse("metodo post")
