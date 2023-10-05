@@ -51,6 +51,8 @@
                         {{ xlsx.list_name }}
                     </button>
                     <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
+                        
+                        
                         <div class="scrollable-table">
                         <table class="table table-bordered scrollable-table">
                             <thead>
@@ -63,38 +65,44 @@
                               </tr>
                             </thead>
                             
-                        {% for artic in xlsx.artics %}
-                        <!--<a class="dropdown-item" href="#">{{ artic }}</a>-->
+                            {% for artic, form in xlsx.artics %}
+                            
+                            
                         
                             <tbody>
                                 <tr>
-                                <td class="font-size-1 text-center">{{ artic.code }}</td>
+                                    
+                                <td class="font-size-1 text-center"><input type="text" name="code" value="{{ form.initial.code }}" readonly></td>
                                 <td class="text-center">{{ artic.description }}</td>
                                 <td class="justify-content-center">
-                                    <input type="checkbox" name="price_auto_{{artic.code}}" value="true">
+                                    {{ form.price_auto }}<!--<input type="checkbox" name="price_auto_{{artic.code}}" value="true">-->
                                 </td>
-                                <td><div class="col"><div class="row justify-content-center"><h3>%</h3></div><div class="row"><input class="w-1" type="number" step="1" id="percent_{{artic.code}}" /></div></div></td>
+                                
+                                <td><div class="col"><div class="row justify-content-center"><h3>%</h3></div><div class="row">{{form.price_percent}}</div></div></td>
                                 <td>
                                     <div class="row">
-                                        <!-- Columna 1: Mayorista -->
+                                        
                                         <div class="col">
                                             <h3>Mayorista</h3>
-                                            <input class="form-control" type="number" step="0.01" id="price_manual_{{artic.code}}_may" value="{{artic.priceMa}}" />
+                                            {{form.price_manual_may}}  
                                         </div>
                                 
-                                        <!-- Columna 2: Minorista -->
+                                        
                                         <div class="col">
                                             <h3>Minorista</h3>
-                                            <input class="width-2 form-control" type="number" step="0.01" id="price_manual_{{artic.code}}_min" value="{{artic.priceMi}}" />
+                                            {{form.price_manual_min}}   
                                         </div>
                                     </div>
                                 </td>
+                                
+                                
                                 </tr>
                             </tbody>
                         
                         
                         {% endfor %}
                         </table>
+                        
                     </ul>
                 </div>
                 {% endfor %}

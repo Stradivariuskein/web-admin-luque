@@ -13,6 +13,7 @@ from siaacTools import reed_artics
 from xlsxTools import get_artcis_from_xlsx
 
 from .models import ModelListXlsx, ModelArtic
+from .forms import UpdateXlsxForm
 # Create your views here.
 
 
@@ -28,6 +29,78 @@ class ListXlsx(ListView):
     template_name = 'core/index.html'
     context_object_name = 'listXlsx'
 
+
+#posterior a la seleccion de las lista te pedira si quieres actualizarlas automaticamente usando los precios de la db,
+# actualizarlo manualmente o poniendo un porsentaje
+class ViewUpdateXlsxStep1(View):
+        
+    def get(self, request, *args, **kwargs):
+        lists_xlsx = request.GET.getlist("lists_xlsx")
+        #print(IDs_xlsx)
+        if lists_xlsx:
+            xlsx_and_artics = []
+            
+            #buscar en la db los articulos y los precios, actualiza la lista y la sube al drive
+            for xlsx in lists_xlsx:
+                xlsx = xlsx.split(", ")
+                xlsx_forms = []
+                list_artics = ModelArtic.objects.filter(listXlsxID=xlsx[0]).order_by('code')
+                for artic in list_artics:
+                    artic_dic = {
+                        'code': artic.code,
+                        'price_auto': True,
+                        'price_percent': 0,
+                        'price_manual_may': artic.priceMa,
+                        'price_manual_min': artic.priceMi,
+                        'xlsx_id': artic.listXlsxID
+                    }
+                    form = UpdateXlsxForm(initial=artic_dic)
+                    xlsx_forms.append((artic,form))
+
+
+
+                current_xlsx = {
+                    'list_ID': xlsx[0],
+                    'list_name': xlsx[1],
+                    'artics': xlsx_forms
+                    }
+                xlsx_and_artics.append(current_xlsx)
+                
+            
+            return render(request, 'core/update_xlsx_step.html', {'listXlsx': xlsx_and_artics})
+        else:
+            return HttpResponse("Error no se selecciono nunguna lista")
+
+class ViewUpdateXlsxStep2(View):
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        codes = data['code']
+        prices_auto = request.POST['price_auto']
+        price_percent = request.POST['price_percent']
+        price_manual = {'ma': request.POST['price_manual_may'], 'mi': request.POST['price_manual_min']}
+        xlsx_ids = request.POST['xlsx_id']
+        len_artics = len(codes)
+
+        
+        print(f"\n\n{len_artics} == {len(prices_auto)} == {len(price_percent)} ==  {len(price_manual['ma'])} == {len(price_manual['mi'])} == {len(xlsx_ids)}\n\n")
+
+        print(f'{data["code"]}')
+        print(prices_auto)
+        print(price_percent)
+        for i in range(len_artics):
+            #print(f"codigo: {codes[i]}\tAutomatico: {prices_auto[i]}\tPorcentaje: {price_percent[i]}\tMayorista:{price_manual['ma'][i]}\tMinorista: {price_manual['mi'][i]}")
+            if not prices_auto:
+                if price_percent[i] > 0:
+                    # updateXlsx(percent)
+                    pass
+
+                
+        
+
+        return HttpResponse("metodo post")
+
+        
 #funcion temporal para registrar listas xlsx en la db
 def temp_create_listXlsx(request):
     carpeta = 'Y:\\Lista de Precio\\LISTA MAYORISTA\\'
@@ -56,33 +129,6 @@ def temp_create_listXlsx(request):
             filtered_archs.append(archivo)
     print(len(filtered_archs))
     return HttpResponse(archivos)
-
-#posterior a la seleccion de las lista te pedira si quieres actualizarlas automaticamente usando los precios de la db,
-# actualizarlo manualmente o poniendo un porsentaje
-class ViewUpdateXlsxStep1(View):
-        
-    def get(self, request, *args, **kwargs):
-        lists_xlsx = request.GET.getlist("lists_xlsx")
-        #print(IDs_xlsx)
-        if lists_xlsx:
-            xlsx_and_artics = []
-            #buscar en la db los articulos y los precios, actualiza la lista y la sube al drive
-            for xlsx in lists_xlsx:
-                xlsx = xlsx.split(", ")
-                list_artics = ModelArtic.objects.filter(listXlsxID=xlsx[0]).order_by('code')
-                current_xlsx = {
-                    'list_ID': xlsx[0],
-                    'list_name': xlsx[1],
-                    'artics': list_artics
-                    }
-                xlsx_and_artics.append(current_xlsx)
-                
-            
-            return render(request, 'core/update_xlsx_step.html', {'listXlsx': xlsx_and_artics})
-        else:
-            return HttpResponse("Error no se selecciono nunguna lista")
-
-        
 
 
 # funcion temporal par ingresar todos los articulos
@@ -118,12 +164,3 @@ def view_vincular_xlsx_artic(request):
 
     return HttpResponse("echo")
 
-class ViewUpdateXlsxStep2(View):
-
-    def post(self, request, *args, **kwargs):
-        data = request.POST
-        print(data)
-        for key, value in data.items():
-            print(f'Campo: {key}, Valor: {value}')
-
-        return HttpResponse("metodo post")
