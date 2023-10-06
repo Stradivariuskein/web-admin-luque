@@ -43,7 +43,7 @@ class ViewUpdateXlsxStep1(View):
             #buscar en la db los articulos y los precios, actualiza la lista y la sube al drive
             for xlsx in lists_xlsx:
                 xlsx = xlsx.split(", ")
-                xlsx_forms = []
+                artics_forms = []
                 list_artics = ModelArtic.objects.filter(listXlsxID=xlsx[0]).order_by('code')
                 for artic in list_artics:
                     artic_dic = {
@@ -55,14 +55,14 @@ class ViewUpdateXlsxStep1(View):
                         'xlsx_id': artic.listXlsxID
                     }
                     form = UpdateXlsxForm(initial=artic_dic)
-                    xlsx_forms.append((artic,form))
+                    artics_forms.append((artic,form))
 
 
 
                 current_xlsx = {
                     'list_ID': xlsx[0],
                     'list_name': xlsx[1],
-                    'artics': xlsx_forms
+                    'artics': artics_forms
                     }
                 xlsx_and_artics.append(current_xlsx)
                 
@@ -75,26 +75,35 @@ class ViewUpdateXlsxStep2(View):
 
     def post(self, request, *args, **kwargs):
         data = request.POST
-        codes = data['code']
-        prices_auto = request.POST['price_auto']
-        price_percent = request.POST['price_percent']
-        price_manual = {'ma': request.POST['price_manual_may'], 'mi': request.POST['price_manual_min']}
-        xlsx_ids = request.POST['xlsx_id']
-        len_artics = len(codes)
+        brute_data = {
 
-        
-        print(f"\n\n{len_artics} == {len(prices_auto)} == {len(price_percent)} ==  {len(price_manual['ma'])} == {len(price_manual['mi'])} == {len(xlsx_ids)}\n\n")
+            'codes': data.getlist('code'),
+            'prices_auto': data.getlist('price_auto'),
+            'price_percent': data.getlist('price_percent'),
+            'price_manual_may': data.getlist('price_manual_may'),
+            'price_manual_min': data.getlist('price_manual_min'),
+            'xlsx_ids': data.getlist('xlsx_id'),
 
-        print(f'{data["code"]}')
-        print(prices_auto)
-        print(price_percent)
+        }
+
+        len_artics = len(brute_data['codes'])
+        to_update = {}
+        # ordeno todo en un diccionaraio para q sea mas fasil de tratar a posteriori
         for i in range(len_artics):
-            #print(f"codigo: {codes[i]}\tAutomatico: {prices_auto[i]}\tPorcentaje: {price_percent[i]}\tMayorista:{price_manual['ma'][i]}\tMinorista: {price_manual['mi'][i]}")
-            if not prices_auto:
-                if price_percent[i] > 0:
-                    # updateXlsx(percent)
-                    pass
+            to_update[brute_data['xlsx_ids'][i]][brute_data['codes'][i]] = {
+                'price_auto': brute_data['prices_auto'][i],
+                'price_percent': brute_data['price_percent'][i],
+                'price_manual_may': brute_data['price_manual_may'][i],
+                'price_manual_min': brute_data['price_manual_min'][i],
+            }
 
+        print(to_update)
+        if len_artics == len(brute_data['prices_auto']) == len(brute_data['price_percent']) ==  len(brute_data['xlsx_ids']) == len(brute_data['price_manual_may']) == len(brute_data['price_manual_min']):
+            for xlsx_id, xlsx_data in to_update.items():
+
+                pass
+
+            
                 
         
 
@@ -154,9 +163,11 @@ def view_vincular_xlsx_artic(request):
         list_codes = get_artcis_from_xlsx(current_xlsx)
         if list_codes:
             print(f"{xlsx.name}: {list_codes}")
-            for code in list_codes:
+            for code, values in list_codes.items():
                 code = code.strip().upper()
                 current_artic = ModelArtic.objects.get(code=code)
+                current_artic.col = values['col']
+                current_artic.row = values['row']
                 current_artic.listXlsxID = xlsx
                 current_artic.save()
         else:

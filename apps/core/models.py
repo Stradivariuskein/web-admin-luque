@@ -22,6 +22,8 @@ class ModelArtic(models.Model):
     priceMa = models.FloatField()
     priceMi = models.FloatField()
     listXlsxID = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)
+    row = models.IntegerField(default=0)
+    col = models.IntegerField(default=1)
 
     def __str__(self) -> str:
         return f"{self.code}: {self.description}"

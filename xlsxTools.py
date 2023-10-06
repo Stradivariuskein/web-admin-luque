@@ -96,7 +96,7 @@ def actualizarLista(bExcel, lista_num):
                     result = 0
 
 
-# dado un archivo xlsx devuelve todos los codgos de los articulos
+# dado un archivo xlsx devuelve un dic con todos los codgos descripcion, precios, y cleda
 def get_artcis_from_xlsx(rute_xlsx):
     try:
         wb = load_workbook(rute_xlsx)
@@ -106,27 +106,43 @@ def get_artcis_from_xlsx(rute_xlsx):
 
     maxRow = sheet.max_row
     
-    list_codes = []
+    code_pattern = "^[A-Z]+-"
+
+    list_codes = {}
     col = 1
-    for row in range(1,maxRow):
+    row = 1
+    while row < maxRow:
         cell=str(sheet.cell(row=row,column=col).value).upper()
         cell_title = cell
+        if cell.strip() == 'T-246':
+            print(cell)
         if cell_title == "COD" or cell_title == "COD.":
             row += 1
             cell=str(sheet.cell(row=row,column=col).value).upper()
             
             # valido q sea un codigo. el codigo se compone de letras mayusculas seguidas por un guion (ej: TIR-250)
-            result = re.findall(f"[A-Z]-", cell)
+            result = re.findall(code_pattern, cell)
             
             while result:
-                list_codes.append(cell)
+
+                if cell == 'TIR-254':
+                    print(cell)
+                print(sheet.cell(row=row,column=col+3).value)
+                list_codes[cell] = {
+                    'description': str(sheet.cell(row=row,column=col+1).value).upper(),
+                    'price': float(sheet.cell(row=row,column=col+3).value.strip()),
+                    'row': row,
+                    'col': col
+                }
+                
 
                 row += 1
                 cell=sheet.cell(row=row,column=col).value
                 if cell:                    
-                    result = re.findall(f"[A-Z]-", cell.upper())
+                    result = re.findall(code_pattern, cell.upper())
                 else:
-                    result = 0
+                    result = None
+        row += 1
 
     return list_codes
 
@@ -141,5 +157,6 @@ if __name__ == '__main__':
     resutl = get_artcis_from_xlsx(rute_xlsx)
 
     print(resutl)
+    print(len(resutl))
     
     
