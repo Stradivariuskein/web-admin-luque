@@ -1,0 +1,30 @@
+
+
+               NOTA DE PEDIDO DE CLIENTES
+
+ Pedido Numero : 15495
+ Cliente       : LEONARDO LACHNER                        
+ Fecha Pedido  : 30/03/23
+ ===============================================================================
+ CODIGO                   DESCRIPCION       CANTIDAD    P.U.      TOTAL   %DESC
+ ===============================================================================
+
+P          P  E   N   D   I   E   N   T   E                         0.00       0.00       0.00  0.00
+T-234       % TIRAFONDOS 1/4 x 2"1/2 *                              10.00   1,525.65  15,256.50  0.00
+BI-1016     12p.BISAGRA t/5005 88mm Bceada. 3"1/2                   21.00   2,138.79  44,914.65  0.00
+C-025       Mts.CINTA p/PERSIANA blanca algodon               100  700.00      91.00  63,700.00  0.00
+C-029       Mts.CINTA p/PERSIANA t/ministerio Verde           100  200.00      97.50  19,500.00  0.00
+RUEI-45     Ruedas doble 40 c/Rosca 1/4  "TT"                       40.00     131.52   5,260.96  0.00
+RUEI-47     Ruedas doble 40 c/Rosca 5/16 "TT"                       40.00     131.52   5,260.96  0.00
+RUEI-46     Ruedas doble 50 c/Rosca 1/4  "TT"                       16.00     155.85   2,493.54  0.00
+RUEI-48     Ruedas doble 50 c/Rosca 5/16 "TT"                       40.00     155.85   6,233.84  0.00
+BI-1031     12p.BISAGRA t/"T" imp.101mm (4")                         4.00   2,768.16  11,072.64  0.00
+S-002       SOPORTE LATERAL de Bce.5/8  *                      24  200.00     291.29  58,257.60  0.00
+T-234       % TIRAFONDOS 1/4 x 2"1/2 *                              15.00   1,525.65  22,884.75  0.00
+TAES-08     x 500 Tarugo FX o "ESPIGA" N§ 8                          3.00   2,362.00   7,086.00  0.00
+TAES-10     x 250 Tarugo FX o "ESPIGA" N§10                          3.00   2,356.00   7,068.00  0.00
+
+
+
+ TOTAL : 268,989.44
+  

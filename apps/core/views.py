@@ -10,7 +10,7 @@ import datetime
 
 # mis bibliotecas
 from siaacTools import reed_artics
-from xlsxTools import get_artcis_from_xlsx
+from xlsxTools import get_artcis_from_xlsx, ABC, update_xlsx
 
 from .models import ModelListXlsx, ModelArtic
 from .forms import UpdateXlsxForm
@@ -29,12 +29,34 @@ class ListXlsx(ListView):
     template_name = 'core/index.html'
     context_object_name = 'listXlsx'
 
+def update_artic(code, data):
+    db_artic = ModelArtic.objects.filter(code=code).first()
+    if db_artic:
+        db_artic.priceMa = data['priceMa']
+        db_artic.priceMi = data['priceMi']
+        db_artic.description = data['description']
+        db_artic.save()
+        return db_artic
+
+    new_artic = ModelArtic(code=code, description=data['description'], priceMa=data['priceMa'], priceMi=data['priceMi'])
+    new_artic.save()
+    return new_artic
+
+    
 
 #posterior a la seleccion de las lista te pedira si quieres actualizarlas automaticamente usando los precios de la db,
 # actualizarlo manualmente o poniendo un porsentaje
 class ViewUpdateXlsxStep1(View):
         
     def get(self, request, *args, **kwargs):
+
+        siaac_artics = reed_artics()
+        all_artics_borrar = []
+        for code, data in siaac_artics.items():
+            current_artic = update_artic(code, data)
+            all_artics_borrar.append(current_artic)
+        
+
         lists_xlsx = request.GET.getlist("lists_xlsx")
         #print(IDs_xlsx)
         if lists_xlsx:
@@ -71,6 +93,7 @@ class ViewUpdateXlsxStep1(View):
         else:
             return HttpResponse("Error no se selecciono nunguna lista")
 
+# actualiza las lista de precios seleccionadas con los datos del formulario
 class ViewUpdateXlsxStep2(View):
 
     def post(self, request, *args, **kwargs):
@@ -78,36 +101,60 @@ class ViewUpdateXlsxStep2(View):
         brute_data = {
 
             'codes': data.getlist('code'),
-            'prices_auto': data.getlist('price_auto'),
+            #'prices_auto': data.getlist('price_auto'),
             'price_percent': data.getlist('price_percent'),
             'price_manual_may': data.getlist('price_manual_may'),
             'price_manual_min': data.getlist('price_manual_min'),
             'xlsx_ids': data.getlist('xlsx_id'),
 
         }
+        
 
         len_artics = len(brute_data['codes'])
         to_update = {}
         # ordeno todo en un diccionaraio para q sea mas fasil de tratar a posteriori
         for i in range(len_artics):
-            to_update[brute_data['xlsx_ids'][i]][brute_data['codes'][i]] = {
-                'price_auto': brute_data['prices_auto'][i],
+            artic = ModelArtic.objects.get(code=brute_data['codes'][i].strip())
+            current_id = brute_data['xlsx_ids'][i].split(',')[0].strip()
+            rute = brute_data['xlsx_ids'][i].split(',')[3].strip()
+            try:
+                to_update[current_id]['rute'] = rute
+            except:
+                to_update[current_id] = {}
+                to_update[current_id]['rute'] = rute
+            to_update[current_id][brute_data['codes'][i]] = {
+                #'price_auto': brute_data['prices_auto'][i],
                 'price_percent': brute_data['price_percent'][i],
-                'price_manual_may': brute_data['price_manual_may'][i],
-                'price_manual_min': brute_data['price_manual_min'][i],
+                'price_manual_may': brute_data['price_manual_may'][i].strip(),
+                'price_manual_min': brute_data['price_manual_min'][i].strip(),
+                'row': artic.row,
+                'col': artic.col,
+                #'db_price': [artic.priceMa, artic.priceMi]
             }
 
-        print(to_update)
-        if len_artics == len(brute_data['prices_auto']) == len(brute_data['price_percent']) ==  len(brute_data['xlsx_ids']) == len(brute_data['price_manual_may']) == len(brute_data['price_manual_min']):
+            
+        if len_artics == len(brute_data['price_percent']) ==  len(brute_data['xlsx_ids']) == len(brute_data['price_manual_may']) == len(brute_data['price_manual_min']):
+            results = []
+            print(brute_data['price_manual_may'])
             for xlsx_id, xlsx_data in to_update.items():
 
-                pass
+                results.append(update_xlsx(xlsx_id, xlsx_data))
+
+            '''for res in results:
+                print("************************************************")
+                print(len(res))
+                for string in res:
+                    print(string)
+                print("************************************************")
+            '''
+          
+
 
             
                 
         
 
-        return HttpResponse("metodo post")
+        return HttpResponse(f"metodo post\n{results}")
 
         
 #funcion temporal para registrar listas xlsx en la db

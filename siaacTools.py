@@ -1,6 +1,10 @@
 from shutil import copy
 from re import findall
+from xlsxTools import buscarPrecio
 
+#RUTE_ARTIC = "Y:/SIAAC3/ARTIC.DBF" # despliegue
+RUTE_ARTIC = "./SIAAC3_test/ARTIC.DBF" # produccions
+RUTE_FILES_SIAAC = "./siaac/"
 # quita los caracteres q no son legible y los reeemplaza
 def normalizar(linea):
     linea = linea.replace('¤', 'ñ')
@@ -8,14 +12,18 @@ def normalizar(linea):
     linea = linea.replace('ø', '°')
     linea = linea.replace('£', 'Ú')
     linea = linea.replace('¥', 'ñ')
+    linea_aux = linea.replace('CAO', 'CAÑO')
+    if linea_aux != linea:
+        linea = linea_aux[:67] + linea_aux[68:]
+
     return linea
 
 
 def reed_artics():
     #PASA EL ARCHIVO DE LOS ARTICULOS DE SISTEMA A UN ARCHIVO DE TEXTO FACIL DE LEER
-    copy("Y:/SIAAC3/ARTIC.DBF","siaac/ARTIC.DBF")
-    file = open("siaac/ARTIC.DBF", errors="ignore")
-    articdb = open("siaac//articDB.txt", "w")
+    copy(RUTE_ARTIC,RUTE_FILES_SIAAC+"ARTIC.DBF")
+    file = open(RUTE_FILES_SIAAC+"ARTIC.DBF", errors="ignore")
+    articdb = open(RUTE_FILES_SIAAC+"articDB.txt", "w")
     for i in range(0,6):
     #se descarta las pimeras lineas
         linea = file.readline()
@@ -23,31 +31,42 @@ def reed_artics():
 
     linea = file.readline(2)
     linea = file.readline(200)
-
+    len_linea = 200
     dic_artics = {}
     whith_max_line = 184
     index_fin_desc = -131
     index_ini_price = 86
     index_price_1 = 84
     while linea != "":
+        linea = normalizar(linea)
+        encontr = linea.find('CAO-012')
+        if encontr >= 0:
+            print(linea)
+        final_mayus = findall("[A-Z]$", linea)
+        final_dahs = findall("[A-Z]+-.{0,6}$", linea)
         
-        result = findall("[A-Z]$", linea)
-        if result: # si termina en una letra la quito y corrijo el largo de la cadena
-            lineaAux = linea[199]
-            linea = linea[:index_fin_desc-1] + " " + linea[68:-1] + '\n' 
+        if final_mayus or final_dahs: # si termina en una letra la quito y corrijo el largo de la cadena
+            offset = 1
+            while linea[len_linea-offset-1] != ' ':
+                offset += 1
+            lineaAux = linea[len_linea-offset:]
+            linea = linea[:index_fin_desc-offset] + " " + linea[68:-offset] + '\n' 
             articLine = linea[:index_fin_desc].lstrip('\x00').lstrip() + linea[index_ini_price:]
-            #articdb.write(linea[:index_fin_desc].lstrip('\x00').lstrip() + linea[index_ini_price:])
-            linea = lineaAux + file.readline(199) # leo un caracter menos
+            linea = lineaAux + file.readline(len_linea-offset) # ajusto la siguiente lectura con el offset
+            
+            
         else:
             articLine = linea[:index_fin_desc].lstrip('\x00').lstrip() + linea[index_ini_price:] + '\n'
-            #articdb.write(linea[:index_fin_desc].lstrip('\x00').lstrip() + linea[index_ini_price:] + '\n')
-            linea = file.readline(200)
+            linea = file.readline(len_linea)
+        
         
         len_artic = len(articLine)
-        #print(f"{articLine} {len(articLine)}")
-        if len_artic > whith_max_line:
-            articLine = articLine[:64] + articLine[65:]
-            
+        while len_artic > whith_max_line:
+            articLine = articLine[:68] + articLine[69:]
+            len_artic = len(articLine)
+        while len_artic < whith_max_line:
+            articLine = articLine[:67] + ' ' + articLine[67:]
+            len_artic = len(articLine)
 
         try:
             price1 = float(articLine[79:91])
@@ -55,23 +74,31 @@ def reed_artics():
             price1 = 0
 
         if price1 != 0:
-            articLine = normalizar(articLine)
-            artic_cod = articLine[:11].strip()
-            artic_desc = articLine[11:67].strip()
+            
+            #articLine = normalizar(articLine)
+            split_code = articLine[:11].strip().split(' ')
+            if len(split_code) > 1:
+                artic_cod = split_code[0]
+                artic_desc = articLine[:11].strip().split(' ')[-1] + articLine[11:67].strip()
+            else:
+                artic_cod = articLine[:11].strip()
+                artic_desc = articLine[11:67].strip()
             artic_price_mi = float(articLine[79:90].strip())
-            artic_price_ma = float(articLine[127:138].strip())
+            artic_price_ma = float(articLine[126:137].strip())
             #usar el diccionara dic_artic para retornar
             articdb.write(articLine)
             dic_artics[artic_cod] = {
                 'description': artic_desc,
-                'price_ma': artic_price_ma,
-                'price_mi': artic_price_mi
+                'priceMa': artic_price_ma,
+                'priceMi': artic_price_mi
                 }
 
 
     file.close()
     articdb.close()
     return dic_artics
+
+
 
 
 if __name__ == '__main__':

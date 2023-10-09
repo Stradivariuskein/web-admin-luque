@@ -23,10 +23,10 @@ class ModelArtic(models.Model):
     priceMi = models.FloatField()
     listXlsxID = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)
     row = models.IntegerField(default=0)
-    col = models.IntegerField(default=1)
+    col = models.IntegerField(default=0)
 
     def __str__(self) -> str:
-        return f"{self.code}: {self.description}"
+        return f"{self.code},{self.description},{self.row},{self.col},may: {self.priceMa}, min: {self.priceMi}"
 
     # indexo el campo code
     class Meta:

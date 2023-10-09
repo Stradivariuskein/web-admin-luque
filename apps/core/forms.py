@@ -21,7 +21,7 @@ from .models import ModelArtic
 # formulario para el umento de los articulos de la lista
 class UpdateXlsxForm(forms.Form):
     code = forms.CharField(max_length=12)
-    price_auto = forms.BooleanField(required=False)
+    #price_auto = forms.BooleanField(required=False)
     price_percent = forms.FloatField(required=False)
     price_manual_may = forms.FloatField(required=False)
     price_manual_min = forms.FloatField(required=False)

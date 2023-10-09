@@ -59,7 +59,7 @@
                               <tr>
                                 <th class="text-center">Código</th>
                                 <th class="text-center">Descripción</th>
-                                <th class="text-center">Precio automático</th>
+
                                 <th class="text-center">Aumento por porcentaje</th>
                                 <th class="text-center">Precio manual</th>
                               </tr>
@@ -74,9 +74,6 @@
                                     <input type="hidden" name="xlsx_id" value="{{ form.initial.xlsx_id }}" readonly>
                                 <td class="font-size-1 text-center"><input type="text" name="code" value="{{ form.initial.code }}" readonly></td>
                                 <td class="text-center">{{ artic.description }}</td>
-                                <td class="justify-content-center">
-                                    {{ form.price_auto }}<!--<input type="checkbox" name="price_auto_{{artic.code}}" value="true">-->
-                                </td>
                                 
                                 <td><div class="col"><div class="row justify-content-center"><h3>%</h3></div><div class="row">{{form.price_percent}}</div></div></td>
                                 <td>
