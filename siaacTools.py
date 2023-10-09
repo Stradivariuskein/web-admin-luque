@@ -12,7 +12,7 @@ def normalizar(linea):
     linea = linea.replace('ø', '°')
     linea = linea.replace('£', 'Ú')
     linea = linea.replace('¥', 'ñ')
-    linea_aux = linea.replace('CAO', 'CAÑO')
+    linea_aux = linea.upper().replace('CAO', 'CAÑO')
     if linea_aux != linea:
         linea = linea_aux[:67] + linea_aux[68:]
 
@@ -39,20 +39,19 @@ def reed_artics():
     index_price_1 = 84
     while linea != "":
         linea = normalizar(linea)
-        encontr = linea.find('CAO-012')
-        if encontr >= 0:
-            print(linea)
+
         final_mayus = findall("[A-Z]$", linea)
         final_dahs = findall("[A-Z]+-.{0,6}$", linea)
         
         if final_mayus or final_dahs: # si termina en una letra la quito y corrijo el largo de la cadena
-            offset = 1
-            while linea[len_linea-offset-1] != ' ':
-                offset += 1
-            lineaAux = linea[len_linea-offset:]
-            linea = linea[:index_fin_desc-offset] + " " + linea[68:-offset] + '\n' 
+            
+            offset = -1           
+            while linea[offset-1] != ' ':
+                offset -= 1
+            lineaAux = linea[offset:]
+            linea = linea[:index_fin_desc+offset] + " " + linea[68:offset] + '\n' 
             articLine = linea[:index_fin_desc].lstrip('\x00').lstrip() + linea[index_ini_price:]
-            linea = lineaAux + file.readline(len_linea-offset) # ajusto la siguiente lectura con el offset
+            linea = lineaAux + file.readline(len_linea+offset) # ajusto la siguiente lectura con el offset
             
             
         else:

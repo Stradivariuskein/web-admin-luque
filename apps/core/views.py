@@ -3,14 +3,17 @@ from django.views.generic import ListView, CreateView
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.views import View
+from django.db import transaction
 
 import os
 from re import findall
 import datetime
+import concurrent.futures
 
 # mis bibliotecas
 from siaacTools import reed_artics
 from xlsxTools import get_artcis_from_xlsx, ABC, update_xlsx
+from configs import *
 
 from .models import ModelListXlsx, ModelArtic
 from .forms import UpdateXlsxForm
@@ -29,19 +32,36 @@ class ListXlsx(ListView):
     template_name = 'core/index.html'
     context_object_name = 'listXlsx'
 
-def update_artic(code, data):
-    db_artic = ModelArtic.objects.filter(code=code).first()
-    if db_artic:
-        db_artic.priceMa = data['priceMa']
-        db_artic.priceMi = data['priceMi']
-        db_artic.description = data['description']
-        db_artic.save()
-        return db_artic
 
-    new_artic = ModelArtic(code=code, description=data['description'], priceMa=data['priceMa'], priceMi=data['priceMi'])
-    new_artic.save()
-    return new_artic
+# sincroniza los articulos con la db
+def update_artics(artics):
+    with transaction.atomic():
+        # Obtén todos los registros
+        db_artics = ModelArtic.objects.all()
+        artic_exist = False
+    # Itera sobre cada registro y modifícalo
+        for code, data in artics.items():
+            for artic in db_artics:
+                if artic.code == code:
+                    try:
+                        artic.priceMa = data['priceMa']
+                        artic.priceMi = data['priceMi']
+                        artic.description = data['description']
+                        artic.save()
+                        artic_exist = True
+                    except KeyError:
+                        pass
+            if not artic_exist:
+                new_artic = ModelArtic(code=code, description=[data['description']], priceMa=data['priceMa'], priceMi=data['priceMi'])
+                new_artic.save()
+                db_artics.append(new_artic)
+    return db_artics
 
+    
+    
+class ViewSelectList(View):
+    def get(self, request, *args, **kwargs):
+        lists_xlsx = ModelListXlsx.objects.all().order_by('modDate')
     
 
 #posterior a la seleccion de las lista te pedira si quieres actualizarlas automaticamente usando los precios de la db,
@@ -51,10 +71,14 @@ class ViewUpdateXlsxStep1(View):
     def get(self, request, *args, **kwargs):
 
         siaac_artics = reed_artics()
-        all_artics_borrar = []
-        for code, data in siaac_artics.items():
-            current_artic = update_artic(code, data)
-            all_artics_borrar.append(current_artic)
+        start_time = datetime.datetime.now()
+        print("Inicio:", start_time)
+        results = update_artics(siaac_artics)
+        # Tiempo de fin
+        fin_time = datetime.datetime.now()
+        print("Fin:", fin_time)
+        print(f"Total: {fin_time-start_time}")
+
         
 
         lists_xlsx = request.GET.getlist("lists_xlsx")
@@ -123,13 +147,13 @@ class ViewUpdateXlsxStep2(View):
                 to_update[current_id] = {}
                 to_update[current_id]['rute'] = rute
             to_update[current_id][brute_data['codes'][i]] = {
-                #'price_auto': brute_data['prices_auto'][i],
+                
                 'price_percent': brute_data['price_percent'][i],
                 'price_manual_may': brute_data['price_manual_may'][i].strip(),
                 'price_manual_min': brute_data['price_manual_min'][i].strip(),
                 'row': artic.row,
                 'col': artic.col,
-                #'db_price': [artic.priceMa, artic.priceMi]
+                
             }
 
             
