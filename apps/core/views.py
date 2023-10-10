@@ -8,7 +8,7 @@ from django.db import transaction
 import os
 from re import findall
 import datetime
-import concurrent.futures
+from datetime import datetime
 
 # mis bibliotecas
 from siaacTools import reed_artics
@@ -36,32 +36,66 @@ class ListXlsx(ListView):
 # sincroniza los articulos con la db
 def update_artics(artics):
     with transaction.atomic():
-        # Obtén todos los registros
+        
         db_artics = ModelArtic.objects.all()
         artic_exist = False
-    # Itera sobre cada registro y modifícalo
+        to_return = {
+            'to_upate': [],
+            'no_changes': []
+            }
         for code, data in artics.items():
             for artic in db_artics:
                 if artic.code == code:
+
                     try:
-                        artic.priceMa = data['priceMa']
-                        artic.priceMi = data['priceMi']
-                        artic.description = data['description']
-                        artic.save()
-                        artic_exist = True
+                        if artic.priceMa != data['priceMa']  or artic.priceMi != data['priceMi']:
+                            artic.priceMa = data['priceMa']
+                            artic.priceMi = data['priceMi']
+                            artic.description = data['description']
+                            artic.save()
+                            to_return['to_upate'].append(artic)
+                        else:
+                            to_return['no_changes'].append(artic)
                     except KeyError:
                         pass
+                    artic_exist = True
+
             if not artic_exist:
                 new_artic = ModelArtic(code=code, description=[data['description']], priceMa=data['priceMa'], priceMi=data['priceMi'])
                 new_artic.save()
-                db_artics.append(new_artic)
-    return db_artics
+                to_return['to_upate'].append(new_artic)
+    return to_return
 
     
-    
+# autodetecta las lista q hay q actualiar segun su fecha de modificacion
 class ViewSelectList(View):
     def get(self, request, *args, **kwargs):
-        lists_xlsx = ModelListXlsx.objects.all().order_by('modDate')
+        lists_xlsx = ModelListXlsx.objects.all().order_by('-modDate')
+        msj_list = []
+        for xlsx in lists_xlsx:
+            last_update_siaac = os.path.getmtime(RUTE_SIAAC+'ARTIC.DBF')
+            last_update_siaac = datetime.fromtimestamp(last_update_siaac)
+
+            last_update_file = os.path.getmtime(RUTE_SIAAC_FILES+'articDB.txt')
+            last_update_file = datetime.fromtimestamp(last_update_file)
+
+            if last_update_siaac > last_update_file:
+                siaac_artics = reed_artics()
+                start_time = datetime.datetime.now()
+                print("Inicio:", start_time)
+                results = update_artics(siaac_artics)
+                # Tiempo de fin
+                fin_time = datetime.datetime.now()
+                print("Fin:", fin_time)
+                print(f"Total: {fin_time-start_time}")
+            
+
+        
+        return HttpResponse(results)
+            
+            
+            
+
     
 
 #posterior a la seleccion de las lista te pedira si quieres actualizarlas automaticamente usando los precios de la db,
@@ -69,17 +103,7 @@ class ViewSelectList(View):
 class ViewUpdateXlsxStep1(View):
         
     def get(self, request, *args, **kwargs):
-
-        siaac_artics = reed_artics()
-        start_time = datetime.datetime.now()
-        print("Inicio:", start_time)
-        results = update_artics(siaac_artics)
-        # Tiempo de fin
-        fin_time = datetime.datetime.now()
-        print("Fin:", fin_time)
-        print(f"Total: {fin_time-start_time}")
-
-        
+     
 
         lists_xlsx = request.GET.getlist("lists_xlsx")
         #print(IDs_xlsx)
@@ -141,11 +165,17 @@ class ViewUpdateXlsxStep2(View):
             artic = ModelArtic.objects.get(code=brute_data['codes'][i].strip())
             current_id = brute_data['xlsx_ids'][i].split(',')[0].strip()
             rute = brute_data['xlsx_ids'][i].split(',')[3].strip()
+            name = rute.split("\\")[-1]
+            rutes = []
+            for id, rute_xlsx in RUTE_XLSX_ORIGIN.items():
+                rutes.append(f"{rute_xlsx}{name}")
             try:
-                to_update[current_id]['rute'] = rute
+                to_update[current_id]['rutes'] = rutes
             except:
                 to_update[current_id] = {}
-                to_update[current_id]['rute'] = rute
+                to_update[current_id]['rutes'] = rutes
+            
+            #print(to_update[current_id]['rutes'])
             to_update[current_id][brute_data['codes'][i]] = {
                 
                 'price_percent': brute_data['price_percent'][i],
@@ -159,10 +189,15 @@ class ViewUpdateXlsxStep2(View):
             
         if len_artics == len(brute_data['price_percent']) ==  len(brute_data['xlsx_ids']) == len(brute_data['price_manual_may']) == len(brute_data['price_manual_min']):
             results = []
-            print(brute_data['price_manual_may'])
-            for xlsx_id, xlsx_data in to_update.items():
+            with transaction.atomic():
+                for xlsx_id, xlsx_data in to_update.items():
+                    #print(xlsx_data)
+                    results.append(update_xlsx(xlsx_id, xlsx_data))
+                    current_xslx = ModelListXlsx.objects.filter(id=xlsx_id)
+                    current_xslx.modDate = datetime.now()
+                    current_xslx.save()
 
-                results.append(update_xlsx(xlsx_id, xlsx_data))
+                    # !!!! falta actualizar la fecha e modificacion
 
             '''for res in results:
                 print("************************************************")

@@ -16,7 +16,7 @@ Including another URLconf
 """
 
 from django.urls import path
-from .views import ListXlsx, CreateXlsx, temp_create_listXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, tmp_create_artics, view_vincular_xlsx_artic
+from .views import ListXlsx, CreateXlsx, temp_create_listXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, tmp_create_artics, view_vincular_xlsx_artic, ViewSelectList
 
 urlpatterns = [
     path('', ListXlsx.as_view(), name='listas-xlsx'),
@@ -24,4 +24,6 @@ urlpatterns = [
     path('tmpadd/', view_vincular_xlsx_artic, name='tmp-add'),
     path('xlsxstep1/', ViewUpdateXlsxStep1.as_view(), name='udate-xlsx-step1'),
     path('xlsxstep2/', ViewUpdateXlsxStep2.as_view(), name='udate-xlsx-step2'),
+    path('tmp/', ViewSelectList.as_view(), name='tmp'),
+
 ]

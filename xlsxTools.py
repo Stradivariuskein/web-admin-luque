@@ -2,6 +2,7 @@ from openpyxl import load_workbook
 import os
 import re
 from datetime import datetime
+from configs import *
 
 
 ABC = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -156,72 +157,82 @@ def get_artcis_from_xlsx(rute_xlsx):
 
     return list_codes
 
-
+# actualiza el archio xlsx con los precios el sistema (siaac)
 def update_xlsx(xlsx_id, xlsx_data):
-    
-    #rute_xlsx = xlsx_data['rute'] # en despligue
-    rute_xlsx = "./LISTAS/" + xlsx_data['rute'].split('\\')[-1] # en desarollo
-    try:
-        wb = load_workbook(rute_xlsx)
-    except FileNotFoundError:
-        return None
-    
     list_msj = []
-    sheet = wb['Hoja1']
-    len_codes = len(xlsx_data)
-    for code, data in xlsx_data.items():
-        if code != 'rute':
-            try:
-                row = data['row']
-                col = data['col'] - 1
-                code = sheet[row][col].value 
-                if code:
-                    cell = f"{ABC[col+4]}{row}"
-                    percent = int(data['price_percent'])
-                    if percent > 0:
-                        try:  
-                            cell_value = sheet[row][col+3].value
-                            cell_value = float(cell_value)                      
-                            sheet[cell] = cell_value * (1 + (percent/100))
-                            list_msj.append(f"{code}: price_percent , value: {sheet[cell].value}, cell: {cell}")
-                        except ValueError:
-                            list_msj.append(f"{code}: el precio {cell_value} no es un numero")
-                    elif data['price_manual_may'] != None and data['price_manual_min'] != None:
-                        try:
-                            sheet[cell] = float(data['price_manual_may'].strip())
-                        except ValueError:
-                            sheet[cell] = '********'
-                        list_msj.append(f"{code}: manual , value: {sheet[cell].value}, cell: {cell}")
-                    else:
-                        list_msj.append(f"{code}: nada para hacer")
-            except Exception as e:
-                list_msj.append(f"Error: {e}")
-    list_msj.append(f"longitud: {len_codes}")
+    for rute_xlsx in xlsx_data["rutes"]:
+        #rute_xlsx = xlsx_data['rute'] # en despligue
+        #rute_xlsx = "./LISTAS/" + xlsx_data['rute'].split('\\')[-1] # en desarollo
+        try:
+            wb = load_workbook(rute_xlsx)
+        except FileNotFoundError:
+            return None
+        
+        
+        sheet = wb['Hoja1']
+        len_codes = len(xlsx_data)
+        for code, data in xlsx_data.items():
+            if code != 'rutes':
+                try:
+                    row = data['row']
+                    col = data['col'] - 1
+                    code = sheet[row][col].value 
+                    if code:
+                        cell = f"{ABC[col+4]}{row}"
+                        percent = int(data['price_percent'])
+                        if percent > 0:
+                            try:  
+                                cell_value = sheet[row][col+3].value
+                                cell_value = float(cell_value)                      
+                                sheet[cell] = cell_value * (1 + (percent/100))
+                                list_msj.append(f"{code}: price_percent , value: {sheet[cell].value}, cell: {cell}")
+                            except ValueError:
+                                list_msj.append(f"{code}: el precio {cell_value} no es un numero")
+                        elif data['price_manual_may'] != None and data['price_manual_min'] != None:
+                            try:
+                                is_ma = rute_xlsx.find("/ma/")
+                                is_mi = rute_xlsx.find("/mi/")
+                                if is_ma > -1:
+                                    sheet[cell] = float(data['price_manual_may'].strip())
+                                elif is_mi > -1:
+                                    sheet[cell] = float(data['price_manual_min'].strip())
+                            except ValueError:
+                                sheet[cell] = '********'
+                            list_msj.append(f"{code}: manual , value: {sheet[cell].value}, cell: {cell}")
+                        else:
+                            list_msj.append(f"{code}: nada para hacer")
+                except Exception as e:
+                    list_msj.append(f"Error: {e}")
+        list_msj.append(f"longitud: {len_codes}")
 
-    wb.save(rute_xlsx)
+        wb.save(rute_xlsx)
     return list_msj
 
 
 
 if __name__ == '__main__':
 
-    rute = './LISTAS/BISAGRA LIBRO-5005.xlsx'
-    result = get_artcis_from_xlsx(rute)
+    
 
-    print(result)
-    print(len(result))
-    print()
-
-    rute = 'TIRAFONDOS.xlsx'
+    rute = 'CAÑOS EXTENSIBLES - CURVOS.xlsx'
     current_id = 1
     to_update = {}
-    to_update[current_id] = {'rute': rute}
-    to_update[current_id]["T-232"] = {
+    to_update[current_id] = {'rutes': [f"{RUTE_XLSX_ORIGIN['mi']}{rute}", f"{RUTE_XLSX_ORIGIN['ma']}{rute}"]}
+    to_update[current_id]["C-400"] = {
         'price_auto': False,
         'price_percent': 0,
-        'price_manual_may': 1250.30,
-        'price_manual_min': 1600.00,
-        'row': 50,
+        'price_manual_may': "850.30",
+        'price_manual_min': "1000.00",
+        'row': 10,
+        'col': 1,
+        'db_price': [1256.33, 1565.50]
+    }
+    to_update[current_id]["C-401"] = {
+        'price_auto': False,
+        'price_percent': 0,
+        'price_manual_may': "850.30",
+        'price_manual_min': "1600.00",
+        'row': 11,
         'col': 1,
         'db_price': [1256.33, 1565.50]
     }

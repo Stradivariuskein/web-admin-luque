@@ -17,7 +17,32 @@ def normalizar(linea):
         linea = linea_aux[:67] + linea_aux[68:]
 
     return linea
+def displace_line(line,displace,dot_pos):
+     break_line = dot_pos+displace-6
+     line = line[:break_line] + ' '*abs(displace) + line[break_line+1:]
+     return line
 
+def correct_line(line):
+    dot_cost = line[72] == '.'
+    dot_pr1 = line[85] == '.'
+    dot_pr2 = line[97] == '.'
+    dot_pr3 = line[109] == '.'
+    dot_pr4 = line[121] == '.'
+    dot_pr5 = line[133] == '.'
+    if not dot_cost:
+        res = line[68:76].find('.')
+        if res > -1:
+            line = line[:62+res] + ' '*abs(68+res-72) + line[62+res:]
+            dot_pos = 68+res
+            displace = dot_pos - 72
+    try:
+        to_return = displace_line(line,displace,dot_pos)
+    except:
+        to_return = None
+    return to_return
+
+
+    
 
 def reed_artics():
     #PASA EL ARCHIVO DE LOS ARTICULOS DE SISTEMA A UN ARCHIVO DE TEXTO FACIL DE LEER
@@ -42,6 +67,9 @@ def reed_artics():
 
         final_mayus = findall("[A-Z]$", linea)
         final_dahs = findall("[A-Z]+-.{0,6}$", linea)
+        aux_res = linea.find('R-019')
+        if aux_res > -1:
+            print(linea)
         
         if final_mayus or final_dahs: # si termina en una letra la quito y corrijo el largo de la cadena
             
@@ -57,6 +85,11 @@ def reed_artics():
         else:
             articLine = linea[:index_fin_desc].lstrip('\x00').lstrip() + linea[index_ini_price:] + '\n'
             linea = file.readline(len_linea)
+            offset = whith_max_line - len(articLine)
+            if offset > 0:
+                articLine = articLine[:-1] + ' '*offset + '\n'
+        line_test = correct_line(articLine)
+        print(line_test)
         
         
         len_artic = len(articLine)
@@ -82,9 +115,9 @@ def reed_artics():
             else:
                 artic_cod = articLine[:11].strip()
                 artic_desc = articLine[11:67].strip()
-            artic_price_mi = float(articLine[79:90].strip())
-            artic_price_ma = float(articLine[126:137].strip())
-            #usar el diccionara dic_artic para retornar
+            artic_price_mi = float(articLine[78:89].strip())
+            artic_price_ma = float(articLine[125:136].strip())
+            
             articdb.write(articLine)
             dic_artics[artic_cod] = {
                 'description': artic_desc,
