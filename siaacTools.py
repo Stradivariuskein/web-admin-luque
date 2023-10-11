@@ -18,28 +18,27 @@ def normalizar(linea):
 
     return linea
 def displace_line(line,displace,dot_pos):
-     break_line = dot_pos+displace-6
-     line = line[:break_line] + ' '*abs(displace) + line[break_line+1:]
+    break_line = dot_pos+displace-6
+    if displace < 0:
+        line = line[:break_line] + ' '*abs(displace) + line[break_line+1:]
+    elif displace > 0:
+        for i in range(break_line,displace):
+            
+            line = line[:break_line]
      return line
 
 def correct_line(line):
-    dot_cost = line[72] == '.'
-    dot_pr1 = line[85] == '.'
-    dot_pr2 = line[97] == '.'
-    dot_pr3 = line[109] == '.'
-    dot_pr4 = line[121] == '.'
-    dot_pr5 = line[133] == '.'
-    if not dot_cost:
-        res = line[68:76].find('.')
-        if res > -1:
-            line = line[:62+res] + ' '*abs(68+res-72) + line[62+res:]
-            dot_pos = 68+res
-            displace = dot_pos - 72
-    try:
-        to_return = displace_line(line,displace,dot_pos)
-    except:
-        to_return = None
-    return to_return
+    dots = [71,84,96,108,120,132]
+
+    for index in dots:
+        if line[index] != '.':
+            res = line[index-3:index+3].find('.')
+            if res > -1:
+                dot_pos = index-3+res
+                displace = index - dot_pos
+                line = displace_line(line,displace,dot_pos)
+
+    return line
 
 
     
@@ -67,7 +66,7 @@ def reed_artics():
 
         final_mayus = findall("[A-Z]$", linea)
         final_dahs = findall("[A-Z]+-.{0,6}$", linea)
-        aux_res = linea.find('R-019')
+        aux_res = linea.find('TIR-246')
         if aux_res > -1:
             print(linea)
         
@@ -88,8 +87,8 @@ def reed_artics():
             offset = whith_max_line - len(articLine)
             if offset > 0:
                 articLine = articLine[:-1] + ' '*offset + '\n'
-        line_test = correct_line(articLine)
-        print(line_test)
+        articLine = correct_line(articLine)
+        
         
         
         len_artic = len(articLine)

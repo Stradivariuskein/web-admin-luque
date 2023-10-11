@@ -72,22 +72,24 @@ class ViewSelectList(View):
     def get(self, request, *args, **kwargs):
         lists_xlsx = ModelListXlsx.objects.all().order_by('-modDate')
         msj_list = []
-        for xlsx in lists_xlsx:
-            last_update_siaac = os.path.getmtime(RUTE_SIAAC+'ARTIC.DBF')
-            last_update_siaac = datetime.fromtimestamp(last_update_siaac)
+    
+        last_update_siaac = os.path.getmtime(RUTE_SIAAC+'ARTIC.DBF')
+        last_update_siaac = datetime.fromtimestamp(last_update_siaac)
 
-            last_update_file = os.path.getmtime(RUTE_SIAAC_FILES+'articDB.txt')
-            last_update_file = datetime.fromtimestamp(last_update_file)
+        last_update_file = os.path.getmtime(RUTE_SIAAC_FILES+'articDB.txt')
+        last_update_file = datetime.fromtimestamp(last_update_file)
 
-            if last_update_siaac > last_update_file:
-                siaac_artics = reed_artics()
-                start_time = datetime.datetime.now()
-                print("Inicio:", start_time)
-                results = update_artics(siaac_artics)
-                # Tiempo de fin
-                fin_time = datetime.datetime.now()
-                print("Fin:", fin_time)
-                print(f"Total: {fin_time-start_time}")
+        if last_update_siaac > last_update_file:
+            siaac_artics = reed_artics()
+            start_time = datetime.datetime.now()
+            print("Inicio:", start_time)
+            results = update_artics(siaac_artics)
+            # Tiempo de fin
+            fin_time = datetime.datetime.now()
+            print("Fin:", fin_time)
+            print(f"Total: {fin_time-start_time}")
+        else:
+            results = lists_xlsx
             
 
         
