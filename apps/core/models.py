@@ -6,6 +6,7 @@ from xlsxTools import es_numero
 from openpyxl import load_workbook
 # Create your models here.
 
+# representa un archivo de lista de precio xlsx
 class ModelListXlsx(models.Model):
     name = models.CharField(max_length=100)
     driveId = models.CharField(max_length=150, null=True, blank=True)
@@ -40,6 +41,7 @@ class ModelListDrive(models.Model):
     listXlsxID = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)
 
 
+# lista con los archivos q se nesesitan actualizar
 class ModelToUpdateList(models.Model):
     xlsxId = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)
 

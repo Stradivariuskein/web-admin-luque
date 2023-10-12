@@ -12,28 +12,16 @@ from datetime import datetime
 
 # mis bibliotecas
 from siaacTools import reed_artics, get_all_artics
-from xlsxTools import get_artcis_from_xlsx, ABC, update_xlsx
+from xlsxTools import get_artcis_from_xlsx, update_xlsx
 from configs import *
 
 from .models import ModelListXlsx, ModelArtic, ModelToUpdateList
 from .forms import UpdateXlsxForm
-# Create your views here.
 
 
-class CreateXlsx(CreateView):
-    model = ModelListXlsx
-    template_name = 'core/createXlsx.html'
-    success_url = reverse_lazy('create-list-xlsx')
-    fields = ['name', 'driveId', 'modDate', 'img', 'pathlocal']
-
-
-class ListXlsx(ListView):
-    model = ModelListXlsx
-    template_name = 'core/index.html'
-    context_object_name = 'listXlsx'
-
-
-# sincroniza los articulos con la db
+# no es una vista
+# compara si hay diferencia en los precios y devuelve una lista con todos los archivos xlsx 
+# q requieren una actualizacion
 def update_artics(artics):
     with transaction.atomic():
         
@@ -41,7 +29,11 @@ def update_artics(artics):
         artic_exist = False
         to_update = []
         no_changes = []
-        count = 0
+
+        to_change_db = ModelToUpdateList.objects.all()
+        for xlsx_change in to_change_db:
+            to_update.append(xlsx_change.xlsxId)
+        # verifico q los precios esten actualizados, si no los actualiza
         for code, data in artics.items():
             for artic in db_artics:
                 if artic.code == code:
@@ -49,21 +41,19 @@ def update_artics(artics):
                         diff_ma = abs(round(artic.priceMa,1) - round(data['priceMa'],1))
                         diff_mi = abs(round(artic.priceMi,1) - round(data['priceMi'],1))
                         if diff_ma > 0.19  or diff_mi > 0.19:
-                            count += 1
-                            print("*************************************")
-                            print(f"{count}. {artic.code}: {diff_ma}, {diff_mi}")
-                            print("*************************************")
                             
-                            #artic.priceMa = data['priceMa']
-                            #artic.priceMi = data['priceMi']
-                            #artic.description = data['description']
-                            #artic.save()
+                            
+                            artic.priceMa = data['priceMa']
+                            artic.priceMi = data['priceMi']
+                            artic.description = data['description']
+                            artic.save()
+
                             xlsx = ModelToUpdateList.objects.filter(xlsxId=artic.listXlsxID).first()
                             if xlsx == None:
                                 xlsx = ModelToUpdateList(xlsxId=artic.listXlsxID)
                                 xlsx.save()
 
-                            if not xlsx in to_update:
+                            if not xlsx.xlsxId in to_update:
                                 to_update.append(xlsx.xlsxId)
 
                         else:
@@ -80,27 +70,27 @@ def update_artics(artics):
             if not artic_exist:
                 new_artic = ModelArtic(code=code, description=[data['description']], priceMa=data['priceMa'], priceMi=data['priceMi'])
                 new_artic.save()
-                #to_return['to_upate'].append(new_artic)
-    print("***********************************")
-    print(f"to_update: {to_update}")
-    print("***********************************")
-    print(f"no_changes: {no_changes}")
-    print("***********************************")
-    return to_update + no_changes
 
     
-# autodetecta las lista q hay q actualiar segun su fecha de modificacion
+    return {
+        'to_update': to_update,
+        'no_changes': no_changes
+        }
+ 
+# muestra todas las listas de precio para q las selecione el usuario
+# arriba del todo apareceran las q se tiene q actualizar y despues las q no sufrieron cambios
 class ViewSelectList(View):
     def get(self, request, *args, **kwargs):
         lists_xlsx = ModelListXlsx.objects.all().order_by('-modDate')
 
-    
+        # comparamos la fecha del archivo de articulos de siaac con mi archivo de articulos
         last_update_siaac = os.path.getmtime(RUTE_SIAAC+'ARTIC.DBF')
         last_update_siaac = datetime.fromtimestamp(last_update_siaac)
 
         last_update_file = os.path.getmtime(RUTE_SIAAC_FILES+'articDB.txt')
         last_update_file = datetime.fromtimestamp(last_update_file)
-
+        # si la fecha de siaac es mayor entonses actualizo mi archivo
+        # si no obtengo todos los articulos
         if last_update_siaac > last_update_file:
             siaac_artics = reed_artics()
 
@@ -109,16 +99,10 @@ class ViewSelectList(View):
 
         lists_xlsx = update_artics(siaac_artics)
 
-        context = {'list_xlsx': lists_xlsx}
+        context = lists_xlsx
             
-        print(context)
-
         return render(request, 'core/index.html', context)
             
-            
-            
-
-    
 
 #posterior a la seleccion de las lista te pedira si quieres actualizarlas automaticamente usando los precios de la db,
 # actualizarlo manualmente o poniendo un porsentaje
@@ -197,7 +181,7 @@ class ViewUpdateXlsxStep2(View):
                 to_update[current_id] = {}
                 to_update[current_id]['rutes'] = rutes
             
-            #print(to_update[current_id]['rutes'])
+
             to_update[current_id][brute_data['codes'][i]] = {
                 
                 'price_percent': brute_data['price_percent'][i],
@@ -213,31 +197,28 @@ class ViewUpdateXlsxStep2(View):
             results = []
             with transaction.atomic():
                 for xlsx_id, xlsx_data in to_update.items():
-                    #print(xlsx_data)
+
                     results.append(update_xlsx(xlsx_id, xlsx_data))
-                    current_xslx = ModelListXlsx.objects.filter(id=xlsx_id)
+                    #actualiza la fecha de modificacion
+                    current_xslx = ModelListXlsx.objects.filter(id=xlsx_id).first()
                     current_xslx.modDate = datetime.now()
                     current_xslx.save()
 
-                    # !!!! falta actualizar la fecha e modificacion
-
-            '''for res in results:
-                print("************************************************")
-                print(len(res))
-                for string in res:
-                    print(string)
-                print("************************************************")
-            '''
-          
-
-
-            
-                
-        
+                    # elimina de ToUpdateList el registro q ya se actualizo
+                    current_to_update = ModelToUpdateList.objects.filter(xlsxId=xlsx_id).first()
+                    if current_to_update != None:
+                        current_to_update.delete()
 
         return HttpResponse(f"metodo post\n{results}")
 
-        
+
+class CreateXlsx(CreateView):
+    model = ModelListXlsx
+    template_name = 'core/createXlsx.html'
+    success_url = reverse_lazy('create-list-xlsx')
+    fields = ['name', 'driveId', 'modDate', 'img', 'pathlocal']
+
+
 #funcion temporal para registrar listas xlsx en la db
 def temp_create_listXlsx(request):
     carpeta = 'Y:\\Lista de Precio\\LISTA MAYORISTA\\'

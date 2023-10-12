@@ -204,7 +204,7 @@ def update_xlsx(xlsx_id, xlsx_data):
                 except Exception as e:
                     list_msj.append(f"Error: {e}")
         list_msj.append(f"longitud: {len_codes}")
-
+        sheet["A1"] = datetime.now().date()
         wb.save(rute_xlsx)
     return list_msj
 

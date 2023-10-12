@@ -56,7 +56,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for xlsx in list_xlsx %}
+                        {% for xlsx in to_update %}
+                        <!--{% if xlsx %}-->
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="lists_xlsx" value="{{xlsx}}" checked>
+                                </td>
+                                <td>{{xlsx.id}}</td>
+                                <td>{{xlsx.name}}</td>
+                                <td>{{xlsx.modDate}}</td>
+                            </tr>
+                        <!--{% endif %}-->
+                        {% endfor %}
+                        {% for xlsx in no_changes %}
                         <!--{% if xlsx %}-->
                             <tr>
                                 <td>
