@@ -11,11 +11,11 @@ import datetime
 from datetime import datetime
 
 # mis bibliotecas
-from siaacTools import reed_artics
+from siaacTools import reed_artics, get_all_artics
 from xlsxTools import get_artcis_from_xlsx, ABC, update_xlsx
 from configs import *
 
-from .models import ModelListXlsx, ModelArtic
+from .models import ModelListXlsx, ModelArtic, ModelToUpdateList
 from .forms import UpdateXlsxForm
 # Create your views here.
 
@@ -39,39 +39,61 @@ def update_artics(artics):
         
         db_artics = ModelArtic.objects.all()
         artic_exist = False
-        to_return = {
-            'to_upate': [],
-            'no_changes': []
-            }
+        to_update = []
+        no_changes = []
+        count = 0
         for code, data in artics.items():
             for artic in db_artics:
                 if artic.code == code:
-
                     try:
-                        if artic.priceMa != data['priceMa']  or artic.priceMi != data['priceMi']:
-                            artic.priceMa = data['priceMa']
-                            artic.priceMi = data['priceMi']
-                            artic.description = data['description']
-                            artic.save()
-                            to_return['to_upate'].append(artic)
+                        diff_ma = abs(round(artic.priceMa,1) - round(data['priceMa'],1))
+                        diff_mi = abs(round(artic.priceMi,1) - round(data['priceMi'],1))
+                        if diff_ma > 0.19  or diff_mi > 0.19:
+                            count += 1
+                            print("*************************************")
+                            print(f"{count}. {artic.code}: {diff_ma}, {diff_mi}")
+                            print("*************************************")
+                            
+                            #artic.priceMa = data['priceMa']
+                            #artic.priceMi = data['priceMi']
+                            #artic.description = data['description']
+                            #artic.save()
+                            xlsx = ModelToUpdateList.objects.filter(xlsxId=artic.listXlsxID).first()
+                            if xlsx == None:
+                                xlsx = ModelToUpdateList(xlsxId=artic.listXlsxID)
+                                xlsx.save()
+
+                            if not xlsx in to_update:
+                                to_update.append(xlsx.xlsxId)
+
                         else:
-                            to_return['no_changes'].append(artic)
+                            if not artic.listXlsxID in no_changes:
+                                no_changes.append(artic.listXlsxID)
                     except KeyError:
-                        pass
+                        print(KeyError("Error en la data"))
+                    except Exception as e:
+                        print("*************************************")
+                        print(f"Error: {e}")
+                        print("*************************************")
                     artic_exist = True
 
             if not artic_exist:
                 new_artic = ModelArtic(code=code, description=[data['description']], priceMa=data['priceMa'], priceMi=data['priceMi'])
                 new_artic.save()
-                to_return['to_upate'].append(new_artic)
-    return to_return
+                #to_return['to_upate'].append(new_artic)
+    print("***********************************")
+    print(f"to_update: {to_update}")
+    print("***********************************")
+    print(f"no_changes: {no_changes}")
+    print("***********************************")
+    return to_update + no_changes
 
     
 # autodetecta las lista q hay q actualiar segun su fecha de modificacion
 class ViewSelectList(View):
     def get(self, request, *args, **kwargs):
         lists_xlsx = ModelListXlsx.objects.all().order_by('-modDate')
-        msj_list = []
+
     
         last_update_siaac = os.path.getmtime(RUTE_SIAAC+'ARTIC.DBF')
         last_update_siaac = datetime.fromtimestamp(last_update_siaac)
@@ -81,19 +103,17 @@ class ViewSelectList(View):
 
         if last_update_siaac > last_update_file:
             siaac_artics = reed_artics()
-            start_time = datetime.datetime.now()
-            print("Inicio:", start_time)
-            results = update_artics(siaac_artics)
-            # Tiempo de fin
-            fin_time = datetime.datetime.now()
-            print("Fin:", fin_time)
-            print(f"Total: {fin_time-start_time}")
-        else:
-            results = lists_xlsx
-            
 
-        
-        return HttpResponse(results)
+        else:
+            siaac_artics = get_all_artics()
+
+        lists_xlsx = update_artics(siaac_artics)
+
+        context = {'list_xlsx': lists_xlsx}
+            
+        print(context)
+
+        return render(request, 'core/index.html', context)
             
             
             

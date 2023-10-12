@@ -19,13 +19,19 @@ def normalizar(linea):
     return linea
 def displace_line(line,displace,dot_pos):
     break_line = dot_pos+displace-6
-    if displace < 0:
-        line = line[:break_line] + ' '*abs(displace) + line[break_line+1:]
-    elif displace > 0:
-        for i in range(break_line,displace):
-            
-            line = line[:break_line]
-     return line
+    if displace > 0:
+        line = line[:break_line] + ' '*displace + line[break_line:]
+    elif displace < 0:
+        displace = abs(displace)
+
+        for i in range(break_line,12,-1):
+            if line[i-1] == ' ':
+                line = line[:i-1] + line[i:]
+                displace -= 1
+                if displace <= 0:
+                    break
+        
+    return line
 
 def correct_line(line):
     dots = [71,84,96,108,120,132]
@@ -39,9 +45,24 @@ def correct_line(line):
                 line = displace_line(line,displace,dot_pos)
 
     return line
+def get_price_mi(line):
+    return float(line[76:87].strip())
 
+def get_price_ma(line):
+    return float(line[124:135].strip())
 
-    
+def get_code(line):
+    return line[:11].strip()
+
+def get_all_artics():
+    with open(RUTE_FILES_SIAAC+"articDB.txt", "r") as f_artics:
+        dic_artics = {}
+        for line in f_artics:
+            dic_artics[get_code(line)] = {
+            'priceMa': get_price_ma(line),
+            'priceMi': get_price_mi(line)
+            }
+    return dic_artics
 
 def reed_artics():
     #PASA EL ARCHIVO DE LOS ARTICULOS DE SISTEMA A UN ARCHIVO DE TEXTO FACIL DE LEER
@@ -66,9 +87,6 @@ def reed_artics():
 
         final_mayus = findall("[A-Z]$", linea)
         final_dahs = findall("[A-Z]+-.{0,6}$", linea)
-        aux_res = linea.find('TIR-246')
-        if aux_res > -1:
-            print(linea)
         
         if final_mayus or final_dahs: # si termina en una letra la quito y corrijo el largo de la cadena
             
@@ -87,18 +105,19 @@ def reed_artics():
             offset = whith_max_line - len(articLine)
             if offset > 0:
                 articLine = articLine[:-1] + ' '*offset + '\n'
-        articLine = correct_line(articLine)
         
         
         
         len_artic = len(articLine)
         while len_artic > whith_max_line:
-            articLine = articLine[:68] + articLine[69:]
+            articLine = articLine[:64] + articLine[65:]
             len_artic = len(articLine)
         while len_artic < whith_max_line:
-            articLine = articLine[:67] + ' ' + articLine[67:]
+            articLine = articLine[:63] + ' ' + articLine[63:]
             len_artic = len(articLine)
 
+        articLine = correct_line(articLine)
+        
         try:
             price1 = float(articLine[79:91])
         except ValueError:
@@ -106,7 +125,7 @@ def reed_artics():
 
         if price1 != 0:
             
-            #articLine = normalizar(articLine)
+
             split_code = articLine[:11].strip().split(' ')
             if len(split_code) > 1:
                 artic_cod = split_code[0]

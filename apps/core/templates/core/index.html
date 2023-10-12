@@ -11,13 +11,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/my_styles.css' %}">
 
-<!--
+
     
-TemplateMo 554 Ocean Vibes
 
-https://templatemo.com/tm-554-ocean-vibes
-
--->
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -46,7 +42,7 @@ https://templatemo.com/tm-554-ocean-vibes
     </nav>
 
     <div class="container">
-        <h1>Tabla Responsiva con Bootstrap</h1>
+        <h1>Actualizar lista de precios</h1>
         <form method="get" action="{% url 'udate-xlsx-step1' %}">
             {% csrf_token %}
             <div class="table-responsive">
@@ -60,16 +56,19 @@ https://templatemo.com/tm-554-ocean-vibes
                         </tr>
                     </thead>
                     <tbody>
-                        {% for xlsx in listXlsx %}
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="lists_xlsx" value="{{xlsx}}">
-                            </td>
-                            <td>{{xlsx.id}}</td>
-                            <td>{{xlsx.name}}</td>
-                            <td>{{xlsx.modDate}}</td>
-                        </tr>
+                        {% for xlsx in list_xlsx %}
+                        <!--{% if xlsx %}-->
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="lists_xlsx" value="{{xlsx}}">
+                                </td>
+                                <td>{{xlsx.id}}</td>
+                                <td>{{xlsx.name}}</td>
+                                <td>{{xlsx.modDate}}</td>
+                            </tr>
+                        <!--{% endif %}-->
                         {% endfor %}
+
                     </tbody>
                 </table>
             </div>

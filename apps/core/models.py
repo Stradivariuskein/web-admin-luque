@@ -40,3 +40,6 @@ class ModelListDrive(models.Model):
     listXlsxID = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)
 
 
+class ModelToUpdateList(models.Model):
+    xlsxId = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)
+
