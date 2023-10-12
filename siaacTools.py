@@ -2,9 +2,16 @@ from shutil import copy
 from re import findall
 from xlsxTools import buscarPrecio
 
+
+
 #RUTE_ARTIC = "Y:/SIAAC3/ARTIC.DBF" # despliegue
 RUTE_ARTIC = "./SIAAC3_test/ARTIC.DBF" # produccions
 RUTE_FILES_SIAAC = "./siaac/"
+INDEX_CODE = 11
+INDEX_DESCRIPTION = [12,64]
+INDEX_PRICE1 = [78,88]
+INDEX_PRICE5 = [126,136]
+LEN_LINE = 200
 # quita los caracteres q no son legible y los reeemplaza
 def normalizar(linea):
     linea = linea.replace('¤', 'ñ')
@@ -24,7 +31,7 @@ def displace_line(line,displace,dot_pos):
     elif displace < 0:
         displace = abs(displace)
 
-        for i in range(break_line,12,-1):
+        for i in range(break_line,INDEX_DESCRIPTION[0],-1):
             if line[i-1] == ' ':
                 line = line[:i-1] + line[i:]
                 displace -= 1
@@ -46,13 +53,13 @@ def correct_line(line):
 
     return line
 def get_price_mi(line):
-    return float(line[76:87].strip())
+    return float(line[INDEX_PRICE1[0]:INDEX_PRICE1[1]].strip())
 
 def get_price_ma(line):
-    return float(line[124:135].strip())
+    return float(line[INDEX_PRICE5[0]:INDEX_PRICE5[1]].strip())
 
 def get_code(line):
-    return line[:11].strip()
+    return line[:INDEX_CODE].strip()
 
 def get_all_artics():
     with open(RUTE_FILES_SIAAC+"articDB.txt", "r") as f_artics:
@@ -75,8 +82,8 @@ def reed_artics():
 
 
     linea = file.readline(2)
-    linea = file.readline(200)
-    len_linea = 200
+    linea = file.readline(LEN_LINE)
+    len_linea = LEN_LINE
     dic_artics = {}
     whith_max_line = 184
     index_fin_desc = -131
@@ -110,16 +117,16 @@ def reed_artics():
         
         len_artic = len(articLine)
         while len_artic > whith_max_line:
-            articLine = articLine[:64] + articLine[65:]
+            articLine = articLine[:INDEX_DESCRIPTION[1]] + articLine[INDEX_DESCRIPTION[1]+1:]
             len_artic = len(articLine)
         while len_artic < whith_max_line:
-            articLine = articLine[:63] + ' ' + articLine[63:]
+            articLine = articLine[:INDEX_DESCRIPTION[1]-1] + ' ' + articLine[INDEX_DESCRIPTION[1]-1:]
             len_artic = len(articLine)
 
         articLine = correct_line(articLine)
         
         try:
-            price1 = float(articLine[79:91])
+            price1 = float(float(articLine[INDEX_PRICE1[0]:INDEX_PRICE1[1]].strip()))
         except ValueError:
             price1 = 0
 
@@ -131,10 +138,10 @@ def reed_artics():
                 artic_cod = split_code[0]
                 artic_desc = articLine[:11].strip().split(' ')[-1] + articLine[11:67].strip()
             else:
-                artic_cod = articLine[:11].strip()
-                artic_desc = articLine[11:67].strip()
-            artic_price_mi = float(articLine[78:89].strip())
-            artic_price_ma = float(articLine[125:136].strip())
+                artic_cod = articLine[:INDEX_CODE].strip()
+                artic_desc = articLine[INDEX_DESCRIPTION[0]:INDEX_DESCRIPTION[1]].strip()
+            artic_price_mi = float(articLine[INDEX_PRICE1[0]:INDEX_PRICE1[1]].strip())
+            artic_price_ma = float(articLine[INDEX_PRICE5[0]:INDEX_PRICE5[1]].strip())
             
             articdb.write(articLine)
             dic_artics[artic_cod] = {
