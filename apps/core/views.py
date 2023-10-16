@@ -103,6 +103,7 @@ class ViewSelectList(View):
             
         return render(request, 'core/index.html', context)
             
+#hola
 
 #posterior a la seleccion de las lista te pedira si quieres actualizarlas automaticamente usando los precios de la db,
 # actualizarlo manualmente o poniendo un porsentaje
