@@ -18,6 +18,20 @@ from configs import *
 from .models import ModelListXlsx, ModelArtic, ModelToUpdateList
 from .forms import UpdateXlsxForm
 
+def get_codes_to_xlsx_list(list_xlsx):
+    len_list_xlsx = len(list_xlsx)
+    for i in range(len_list_xlsx,0,-1):
+        xlsx = list_xlsx.pop()
+        if xlsx != None:
+            artics = ModelArtic.objects.filter(listXlsxID=xlsx).values("code")
+            codes = ""
+            for artic in artics:
+                codes += artic['code'] + ', '
+
+            codes = codes[:-2]
+            
+            list_xlsx = [(xlsx, codes)] + list_xlsx
+    return list_xlsx
 
 # no es una vista
 # compara si hay diferencia en los precios y devuelve una lista con todos los archivos xlsx 
@@ -71,7 +85,11 @@ def update_artics(artics):
                 new_artic = ModelArtic(code=code, description=[data['description']], priceMa=data['priceMa'], priceMi=data['priceMi'])
                 new_artic.save()
 
-    
+    # se puede crear una funcion aparte  para no repetir
+    to_update = get_codes_to_xlsx_list(to_update)
+    # no repetir
+    no_changes = get_codes_to_xlsx_list(no_changes)
+
     return {
         'to_update': to_update,
         'no_changes': no_changes
@@ -100,6 +118,7 @@ class ViewSelectList(View):
         lists_xlsx = update_artics(siaac_artics)
 
         context = lists_xlsx
+        print(context)
             
         return render(request, 'core/index.html', context)
             

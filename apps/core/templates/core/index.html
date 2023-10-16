@@ -48,11 +48,12 @@
             <div class="table-responsive">
                 <table class="table table-striped table-bordered">
                     <thead>
-                        <tr>
+                        <tr class="text-center">
                             <th>Actualizar</th>
                             <th>ID</th>
                             <th>Nombre</th>
                             <th>Ultima modificacion</th>
+                            <th>Codigos</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,9 +63,16 @@
                                 <td>
                                     <input type="checkbox" name="lists_xlsx" value="{{xlsx}}" checked>
                                 </td>
-                                <td>{{xlsx.id}}</td>
-                                <td>{{xlsx.name}}</td>
-                                <td>{{xlsx.modDate}}</td>
+                                <td>{{xlsx.0.id}}</td>
+                                <td>{{xlsx.0.name}}</td>
+                                <td>{{xlsx.0.modDate}}</td>
+                                <td>
+                                    <div class="scrollable-container">
+                                        <div class="scrollable-content" style="max-height: 3rem; overflow-y: auto;">
+                                            {{xlsx.1}}
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         <!--{% endif %}-->
                         {% endfor %}
@@ -74,9 +82,16 @@
                                 <td>
                                     <input type="checkbox" name="lists_xlsx" value="{{xlsx}}">
                                 </td>
-                                <td>{{xlsx.id}}</td>
-                                <td>{{xlsx.name}}</td>
-                                <td>{{xlsx.modDate}}</td>
+                                <td>{{xlsx.0.id}}</td>
+                                <td>{{xlsx.0.name}}</td>
+                                <td>{{xlsx.0.modDate}}</td>
+                                <td>
+                                    <div class="scrollable-container">
+                                        <div class="scrollable-content" style="max-height: 3rem; overflow-y: auto;">
+                                            {{xlsx.1}}
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         <!--{% endif %}-->
                         {% endfor %}
