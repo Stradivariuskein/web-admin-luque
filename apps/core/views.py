@@ -145,13 +145,15 @@ class ViewUpdateXlsxStep1(View):
             
             return render(request, 'core/update_xlsx_step.html', {'listXlsx': xlsx_and_artics})
         else:
-            return HttpResponse("Error no se selecciono nunguna lista")
+            return HttpResponse("[Request error 422] No se selecciono nunguna lista")
 
 # actualiza las lista de precios seleccionadas con los datos del formulario
 class ViewUpdateXlsxStep2(View):
 
     def post(self, request, *args, **kwargs):
         data = request.POST
+
+    
         brute_data = {
 
             'codes': data.getlist('code'),
@@ -198,9 +200,11 @@ class ViewUpdateXlsxStep2(View):
             with transaction.atomic():
                 for xlsx_id, xlsx_data in to_update.items():
 
-                    results.append(update_xlsx(xlsx_id, xlsx_data))
+                    
                     #actualiza la fecha de modificacion
                     current_xslx = ModelListXlsx.objects.filter(id=xlsx_id).first()
+
+                    results.append(update_xlsx(current_xslx.name, xlsx_data))
                     current_xslx.modDate = datetime.now()
                     current_xslx.save()
 
@@ -209,7 +213,7 @@ class ViewUpdateXlsxStep2(View):
                     if current_to_update != None:
                         current_to_update.delete()
 
-        return HttpResponse(f"metodo post\n{results}")
+        return render(request, 'core/update_xlsx_step.html', {'listXlsx': results})
 
 
 class CreateXlsx(CreateView):

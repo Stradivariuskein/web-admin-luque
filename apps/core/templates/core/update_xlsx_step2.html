@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luque</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet"> <!-- https://fonts.google.com/ -->
+    <link rel="stylesheet" href="fontawesome/css/all.min.css"> <!-- https://fontawesome.com/ -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/my_styles.css' %}">
+
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="#">Luque</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Listas de precios</a>
+                </li>
+                <!--
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Acerca de</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Servicios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contacto</a>
+                </li>
+                -->
+            </ul>
+        </div>
+    </nav>
+
+    <div class="w-90 margin-auto">
+        <h1>Tabla Responsiva con Bootstrap</h1>
+        <form method="post" action="{% url 'udate-xlsx-step2' %}">
+            {% csrf_token %}
+            
+            <div class="scrollable-body my-5">
+                {% for xlsx in listXlsx %}
+                <div class="dropdown">
+                    <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">
+                        {{ xlsx.0 }}
+                    </button>
+                    <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
+                        
+                        
+                        <div class="scrollable-table">
+                        <table class="table table-bordered scrollable-table">
+                            <thead>
+                              <tr>
+                                <th class="text-center">Código</th>
+                                <th class="text-center">Descripción</th>
+
+                                <th class="text-center">Aumento por porcentaje</th>
+                                <th class="text-center">Precio manual</th>
+                              </tr>
+                            </thead>
+                            
+                            
+                            
+                            
+                        
+                            <tbody>
+                                {% for code, data in xlsx.1 %}
+                                <tr>
+
+                                <td class="font-size-1 text-center">{{ code }}</td>
+                                <td class="text-center">ejemplo{{ data.description }}</td>
+                                
+                                <td><div class="col"><div class="row justify-content-center"><p>%</p></div><div class="row">{{data.percent}}</div></div></td>
+                                <td>
+                                    <div class="row">
+                                        
+                                        <div class="col">
+                                            <h3>Mayorista</h3>
+                                            {{data.price_manual_may}}  
+                                        </div>
+                                
+                                        
+                                        <div class="col">
+                                            <h3>Minorista</h3>
+                                            {{data.price_manual_min}}   
+                                        </div>
+                                    </div>
+                                </td>
+                                
+                                
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        
+                        
+                        
+                        </table>
+                        
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="text-center navbar-expand-lg navbar-light bg-light fixed-bottom justify-content-center align-items-center d-flex hight-15">
+                <button class="btn btn-primary" type="submit">Siguiente</button>
+              </div>
+        </form>
+    </div>
+
+
+
+    <footer class="tm-footer">
+        <p>Echo por Alan Luque</p>
+</footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="{%static 'js/script.js'%}"></script>
+</body>
+</html>

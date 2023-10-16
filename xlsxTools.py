@@ -158,17 +158,16 @@ def get_artcis_from_xlsx(rute_xlsx):
     return list_codes
 
 # actualiza el archio xlsx con los precios el sistema (siaac)
-def update_xlsx(xlsx_id, xlsx_data):
-    list_msj = []
+def update_xlsx(xlsx_name, xlsx_data):
+
     for rute_xlsx in xlsx_data["rutes"]:
-        #rute_xlsx = xlsx_data['rute'] # en despligue
-        #rute_xlsx = "./LISTAS/" + xlsx_data['rute'].split('\\')[-1] # en desarollo
+
         try:
             wb = load_workbook(rute_xlsx)
         except FileNotFoundError:
             return None
         
-        
+        to_return = []
         sheet = wb['Hoja1']
         len_codes = len(xlsx_data)
         for code, data in xlsx_data.items():
@@ -181,32 +180,53 @@ def update_xlsx(xlsx_id, xlsx_data):
                         cell = f"{ABC[col+4]}{row}"
                         percent = int(data['price_percent'])
                         if percent > 0:
+                            xlsx_data[code]['percent'] = percent
                             try:  
                                 cell_value = sheet[row][col+3].value
-                                cell_value = float(cell_value)                      
-                                sheet[cell] = cell_value * (1 + (percent/100))
-                                list_msj.append(f"{code}: price_percent , value: {sheet[cell].value}, cell: {cell}")
+                                cell_value = float(cell_value)
+                                result_mi = rute_xlsx.find('mi')
+                                result_ma = rute_xlsx.find('mi')
+                                if result_mi > -1:
+                                    xlsx_data[code]['price_manual_min'] = cell_value * (1 + (percent/100))           
+                                    sheet[cell] = xlsx_data[code]['price_manual_min']
+                                elif result_ma > -1:
+                                    xlsx_data[code]['price_manual_may'] = cell_value * (1 + (percent/100))           
+                                    sheet[cell] = xlsx_data[code]['price_manual_may']
+                                
                             except ValueError:
-                                list_msj.append(f"{code}: el precio {cell_value} no es un numero")
+                                print(f"error: en {code} el precio {cell_value} no es un numero")
                         elif data['price_manual_may'] != None and data['price_manual_min'] != None:
                             try:
                                 is_ma = rute_xlsx.find("/ma/")
                                 is_mi = rute_xlsx.find("/mi/")
                                 if is_ma > -1:
-                                    sheet[cell] = float(data['price_manual_may'].strip())
+                                    if isinstance(data['price_manual_may'], float):
+                                        xlsx_data[code]['price_manual_may'] = data['price_manual_may']
+                                    else:
+                                        xlsx_data[code]['price_manual_may'] = float(data['price_manual_may'].strip())
+
+                                    sheet[cell] = xlsx_data[code]['price_manual_may']
                                 elif is_mi > -1:
-                                    sheet[cell] = float(data['price_manual_min'].strip())
+                                    if isinstance(data['price_manual_min'], float):
+                                        xlsx_data[code]['price_manual_min'] = data['price_manual_min']
+                                    else:
+                                        xlsx_data[code]['price_manual_may'] = float(data['price_manual_min'].strip())
+                                    sheet[cell] = xlsx_data[code]['price_manual_min']
                             except ValueError:
+                                
                                 sheet[cell] = '********'
-                            list_msj.append(f"{code}: manual , value: {sheet[cell].value}, cell: {cell}")
+                            
                         else:
-                            list_msj.append(f"{code}: nada para hacer")
+                            print(f"{code}: el precio no cambio")
                 except Exception as e:
-                    list_msj.append(f"Error: {e}")
-        list_msj.append(f"longitud: {len_codes}")
+                    print(f"Error: {e}")
+                to_return.append((code, xlsx_data[code]))
+
+            
         sheet["A1"] = datetime.now().date()
         wb.save(rute_xlsx)
-    return list_msj
+
+    return (xlsx_name, to_return)
 
 
 

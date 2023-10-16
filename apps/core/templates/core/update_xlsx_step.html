@@ -14,6 +14,7 @@
 
 </head>
 <body>
+    <header class="pb-5">
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <a class="navbar-brand" href="#">Luque</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,82 +39,77 @@
             </ul>
         </div>
     </nav>
-
+</header>
+<main>
     <div class="w-90 margin-auto">
-        <h1>Tabla Responsiva con Bootstrap</h1>
-        <form method="post" action="{% url 'udate-xlsx-step2' %}">
-            {% csrf_token %}
             
             <div class="scrollable-body my-5">
-                {% for xlsx in listXlsx %}
+
+                {% for xlsx_tuple in listXlsx %}
                 <div class="dropdown">
                     <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">
-                        {{ xlsx.list_name }}
+                        {{ xlsx_tuple.0 }}
                     </button>
-                    <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
-                        
-                        
-                        <div class="scrollable-table">
-                        <table class="table table-bordered scrollable-table">
-                            <thead>
-                              <tr>
-                                <th class="text-center">Código</th>
-                                <th class="text-center">Descripción</th>
 
-                                <th class="text-center">Aumento por porcentaje</th>
-                                <th class="text-center">Precio manual</th>
-                              </tr>
-                            </thead>
-                            
-                            {% for artic, form in xlsx.artics %}
-                            
-                            
-                        
-                            <tbody>
-                                <tr>
-                                    <input type="hidden" name="xlsx_id" value="{{ form.initial.xlsx_id }}" readonly>
-                                <td class="font-size-1 text-center"><input type="text" name="code" value="{{ form.initial.code }}" readonly></td>
-                                <td class="text-center">{{ artic.description }}</td>
-                                
-                                <td><div class="col"><div class="row justify-content-center"><h3>%</h3></div><div class="row">{{form.price_percent}}</div></div></td>
-                                <td>
-                                    <div class="row">
-                                        
-                                        <div class="col">
-                                            <h3>Mayorista</h3>
-                                            {{form.price_manual_may}}  
-                                        </div>
-                                
-                                        
-                                        <div class="col">
-                                            <h3>Minorista</h3>
-                                            {{form.price_manual_min}}   
-                                        </div>
-                                    </div>
-                                </td>
-                                
-                                
-                                </tr>
-                            </tbody>
-                        
-                        
-                        {% endfor %}
-                        </table>
-                        
+                    <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
+                        <div class="scrollable-table">
+                            <table class="table table-bordered scrollable-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Código</th>
+                                        <th class="text-center">Descripción</th>
+                                        <th class="text-center">Aumento por porcentaje</th>
+                                        <th class="text-center">Precio manual</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    {% for artic in xlsx_tuple.1 %}
+                                        <tr>
+                                            <td class="font-size-1 text-center">{{ artic.0 }}</td>
+                                            <td class="text-center">ejemplo{{ artic.1.description }}</td>
+                                            <td>
+                                                <div class="col">
+                                                    <div class="row justify-content-center"><label>%</label></div>
+                                                    <div class="row">{{ artic.1.percent }}</div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col text-center">
+                                                        <label>Mayorista</label>
+                                                        <p>
+                                                        {{ artic.1.price_manual_may }}  
+                                                        </p>
+                                                    </div>
+                                                    <div class="col text-center">
+                                                        <label>Minorista</label>
+                                                        <p>
+                                                        {{ artic.1.price_manual_min }}  
+                                                        </p> 
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </ul>
                 </div>
-                {% endfor %}
+            {% endfor %}
+
             </div>
             <div class="text-center navbar-expand-lg navbar-light bg-light fixed-bottom justify-content-center align-items-center d-flex hight-15">
-                <button class="btn btn-primary" type="submit">Siguiente</button>
+                <a class="btn btn-primary" href="/">Volver a inicio</a>
               </div>
-        </form>
+
     </div>
 
 
-
+</main>
     <footer class="tm-footer">
-        <p>Echo por Alan Luque</p>
+        <p>By Alan Luque</p>
 </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
