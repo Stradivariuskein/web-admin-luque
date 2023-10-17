@@ -6,6 +6,8 @@ from django.views import View
 from django.db import transaction
 
 import os
+import zipfile
+import tempfile
 from re import findall
 import datetime
 from datetime import datetime
@@ -17,11 +19,13 @@ from configs import *
 
 from .models import ModelListXlsx, ModelArtic, ModelToUpdateList
 from .forms import UpdateXlsxForm
-
-def get_codes_to_xlsx_list(list_xlsx):
-    len_list_xlsx = len(list_xlsx)
+#no es una vista
+# recive una lista con todos los registros de listXlsx
+# devuelve las listas con los codigos correspondientes
+def get_codes_to_xlsx_list(lists_xlsx):
+    len_list_xlsx = len(lists_xlsx)
     for i in range(len_list_xlsx,0,-1):
-        xlsx = list_xlsx.pop()
+        xlsx = lists_xlsx.pop()
         if xlsx != None:
             artics = ModelArtic.objects.filter(listXlsxID=xlsx).values("code")
             codes = ""
@@ -30,8 +34,8 @@ def get_codes_to_xlsx_list(list_xlsx):
 
             codes = codes[:-2]
             
-            list_xlsx = [(xlsx, codes)] + list_xlsx
-    return list_xlsx
+            lists_xlsx = [(xlsx, codes)] + lists_xlsx
+    return lists_xlsx
 
 # no es una vista
 # compara si hay diferencia en los precios y devuelve una lista con todos los archivos xlsx 
@@ -94,6 +98,22 @@ def update_artics(artics):
         'to_update': to_update,
         'no_changes': no_changes
         }
+
+def compress_files(list_files):
+    # Nombre del archivo comprimido
+    zip_file = 'listas_de_precios.zip'
+    tmp_dir = tempfile.mkdtemp()
+    # Ruta completa para el archivo zip
+    rute_zip = os.path.join(tmp_dir, zip_file)
+
+    with zipfile.ZipFile(rute_zip, 'w') as archivo_zip:
+        # Recorre todos los archivos en la carpeta y agrégales al archivo zip
+
+        for file in list_files:
+
+            archivo_zip.write(file)
+
+    return rute_zip
  
 # muestra todas las listas de precio para q las selecione el usuario
 # arriba del todo apareceran las q se tiene q actualizar y despues las q no sufrieron cambios
@@ -140,7 +160,8 @@ class ViewUpdateXlsxStep1(View):
             for xlsx in lists_xlsx:
                 xlsx = xlsx.split(", ")
                 artics_forms = []
-                list_artics = ModelArtic.objects.filter(listXlsxID=xlsx[0]).order_by('code')
+                print(f"id-xlsx: {int(xlsx[0].split(' ')[1])}")
+                list_artics = ModelArtic.objects.filter(listXlsxID=int(xlsx[0].split(' ')[1])).order_by('code')
                 for artic in list_artics:
                     artic_dic = {
                         'code': artic.code,
@@ -163,7 +184,7 @@ class ViewUpdateXlsxStep1(View):
                 xlsx_and_artics.append(current_xlsx)
                 
             
-            return render(request, 'core/update_xlsx_step.html', {'listXlsx': xlsx_and_artics})
+            return render(request, 'core/update_xlsx_step1.html', {'listXlsx': xlsx_and_artics})
         else:
             return HttpResponse("[Request error 422] No se selecciono nunguna lista")
 
@@ -218,6 +239,7 @@ class ViewUpdateXlsxStep2(View):
         if len_artics == len(brute_data['price_percent']) ==  len(brute_data['xlsx_ids']) == len(brute_data['price_manual_may']) == len(brute_data['price_manual_min']):
             results = []
             with transaction.atomic():
+                xlsx_to_download = ''
                 for xlsx_id, xlsx_data in to_update.items():
 
                     
@@ -232,8 +254,14 @@ class ViewUpdateXlsxStep2(View):
                     current_to_update = ModelToUpdateList.objects.filter(xlsxId=xlsx_id).first()
                     if current_to_update != None:
                         current_to_update.delete()
+                    xlsx_to_download += str(xlsx_id) + ','
+                xlsx_to_download = xlsx_to_download[:-2]
+                context = {
+                    'listXlsx': results,
+                    'download': xlsx_to_download
+                    }
 
-        return render(request, 'core/update_xlsx_step.html', {'listXlsx': results})
+        return render(request, 'core/update_xlsx_step2.html', context)
 
 
 class CreateXlsx(CreateView):
@@ -242,6 +270,12 @@ class CreateXlsx(CreateView):
     success_url = reverse_lazy('create-list-xlsx')
     fields = ['name', 'driveId', 'modDate', 'img', 'pathlocal']
 
+
+def download_xlsx(request):
+    if request.method == "GET":
+        return HttpResponse(f"{request.GET}")
+    else:
+        return HttpResponse(f"{request.method} no allowed")
 
 #funcion temporal para registrar listas xlsx en la db
 def temp_create_listXlsx(request):
