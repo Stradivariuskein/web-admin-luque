@@ -11,6 +11,7 @@ import tempfile
 from re import findall
 import datetime
 from datetime import datetime
+import mimetypes
 
 # mis bibliotecas
 from siaacTools import reed_artics, get_all_artics
@@ -99,21 +100,7 @@ def update_artics(artics):
         'no_changes': no_changes
         }
 
-def compress_files(list_files):
-    # Nombre del archivo comprimido
-    zip_file = 'listas_de_precios.zip'
-    tmp_dir = tempfile.mkdtemp()
-    # Ruta completa para el archivo zip
-    rute_zip = os.path.join(tmp_dir, zip_file)
 
-    with zipfile.ZipFile(rute_zip, 'w') as archivo_zip:
-        # Recorre todos los archivos en la carpeta y agrégales al archivo zip
-
-        for file in list_files:
-
-            archivo_zip.write(file)
-
-    return rute_zip
  
 # muestra todas las listas de precio para q las selecione el usuario
 # arriba del todo apareceran las q se tiene q actualizar y despues las q no sufrieron cambios
@@ -245,7 +232,7 @@ class ViewUpdateXlsxStep2(View):
                     
                     #actualiza la fecha de modificacion
                     current_xslx = ModelListXlsx.objects.filter(id=xlsx_id).first()
-
+                    print(xlsx_data)
                     results.append(update_xlsx(current_xslx.name, xlsx_data))
                     current_xslx.modDate = datetime.now()
                     current_xslx.save()
@@ -272,8 +259,41 @@ class CreateXlsx(CreateView):
 
 
 def download_xlsx(request):
+    def compress_files(list_files):
+        # Nombre del archivo comprimido
+        zip_file = 'listas_de_precios.zip'
+        tmp_dir = tempfile.mkdtemp()
+        # Ruta completa para el archivo zip
+        rute_zip = os.path.join(tmp_dir, zip_file)
+
+        with zipfile.ZipFile(rute_zip, 'w') as archivo_zip:
+            # Recorre todos los archivos en la carpeta y agrégales al archivo zip
+
+            for id in list_files:
+                xlsx = ModelListXlsx.objects.filter(id=int(id)).first()
+                print(xlsx)
+                #archivo_zip.write(xlsx.pathLocal) en despliegue
+                for folder in RUTE_XLSX_ORIGIN:
+                    archivo_zip.write(f"{RUTE_XLSX_ORIGIN[folder]}/{xlsx.name}",f'./{folder}/{xlsx.name}')
+
+        return rute_zip
+
     if request.method == "GET":
-        return HttpResponse(f"{request.GET}")
+        ids_param = request.GET.get('ids', '')  # Obtiene el parámetro 'ids' de la URL
+
+        ids = ids_param.split(',') if ids_param else []  # Divide los IDs si existen, de lo contrario, lista vacía
+
+        file_path = compress_files(ids)
+        mime_type, _ = mimetypes.guess_type(file_path)
+        try:
+            file = open(file_path, 'rb')
+        except:
+            return HttpResponse("Error 500: error en la generacion del archivo")
+
+        response = HttpResponse(file, content_type = mime_type)
+
+        response['Content-Disposition'] = f"attachment; filename=listas-de-precios.zip"
+        return response
     else:
         return HttpResponse(f"{request.method} no allowed")
 

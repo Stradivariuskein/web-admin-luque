@@ -25,6 +25,6 @@ urlpatterns = [
     path('xlsxstep1/', ViewUpdateXlsxStep1.as_view(), name='udate-xlsx-step1'),
     path('xlsxstep2/', ViewUpdateXlsxStep2.as_view(), name='udate-xlsx-step2'),
     path('tmp/', ViewSelectList.as_view(), name='tmp'),
-    path('download', download_xlsx, name='download'),
+    path('download/', download_xlsx, name='download'),
 
 ]
