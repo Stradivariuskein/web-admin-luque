@@ -125,7 +125,7 @@ class ViewSelectList(View):
         lists_xlsx = update_artics(siaac_artics)
 
         context = lists_xlsx
-        print(context)
+
             
         return render(request, 'core/index.html', context)
             
@@ -147,7 +147,7 @@ class ViewUpdateXlsxStep1(View):
             for xlsx in lists_xlsx:
                 xlsx = xlsx.split(", ")
                 artics_forms = []
-                print(f"id-xlsx: {int(xlsx[0].split(' ')[1])}")
+
                 list_artics = ModelArtic.objects.filter(listXlsxID=int(xlsx[0].split(' ')[1])).order_by('code')
                 for artic in list_artics:
                     artic_dic = {
@@ -232,8 +232,9 @@ class ViewUpdateXlsxStep2(View):
                     
                     #actualiza la fecha de modificacion
                     current_xslx = ModelListXlsx.objects.filter(id=xlsx_id).first()
-                    print(xlsx_data)
+
                     results.append(update_xlsx(current_xslx.name, xlsx_data))
+                    print(results[-1])
                     current_xslx.modDate = datetime.now()
                     current_xslx.save()
 
@@ -242,7 +243,7 @@ class ViewUpdateXlsxStep2(View):
                     if current_to_update != None:
                         current_to_update.delete()
                     xlsx_to_download += str(xlsx_id) + ','
-                xlsx_to_download = xlsx_to_download[:-2]
+                xlsx_to_download = xlsx_to_download[:-1]
                 context = {
                     'listXlsx': results,
                     'download': xlsx_to_download
@@ -271,7 +272,7 @@ def download_xlsx(request):
 
             for id in list_files:
                 xlsx = ModelListXlsx.objects.filter(id=int(id)).first()
-                print(xlsx)
+
                 #archivo_zip.write(xlsx.pathLocal) en despliegue
                 for folder in RUTE_XLSX_ORIGIN:
                     archivo_zip.write(f"{RUTE_XLSX_ORIGIN[folder]}/{xlsx.name}",f'./{folder}/{xlsx.name}')
@@ -282,7 +283,7 @@ def download_xlsx(request):
         ids_param = request.GET.get('ids', '')  # Obtiene el parámetro 'ids' de la URL
 
         ids = ids_param.split(',') if ids_param else []  # Divide los IDs si existen, de lo contrario, lista vacía
-
+        print(ids)
         file_path = compress_files(ids)
         mime_type, _ = mimetypes.guess_type(file_path)
         try:
@@ -362,3 +363,8 @@ def view_vincular_xlsx_artic(request):
 
     return HttpResponse("echo")
 
+
+
+def tmp_test(request):
+    artic = ModelArtic.objects.filter(code='A-039').first()
+    return HttpResponse(artic)

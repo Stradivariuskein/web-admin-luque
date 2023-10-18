@@ -6,6 +6,22 @@ from configs import *
 
 
 ABC = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+# si el porcentaje es positivo aumenta sino hace un decuento
+# retorna el numero con el porsentaje aplicado
+def percent_apli(num, percent):
+    aux = abs(percent / 100)
+    apli_p = num * aux
+
+    if percent > 0:
+        result = num + apli_p
+    elif percent < 0:
+        result = num - apli_p
+    else:
+        result = 0
+
+    return result
+
+
 
 #verifica si es un numero
 def es_numero(num):
@@ -169,28 +185,34 @@ def update_xlsx(xlsx_name, xlsx_data):
         
         to_return = []
         sheet = wb['Hoja1']
-        len_codes = len(xlsx_data)
+
+        
         for code, data in xlsx_data.items():
+            
+            
             if code != 'rutes':
                 try:
                     row = data['row']
                     col = data['col'] - 1
                     code = sheet[row][col].value 
+                    code = code.strip()
+
                     if code:
                         cell = f"{ABC[col+4]}{row}"
                         percent = int(data['price_percent'])
-                        if percent > 0:
+                        if percent != 0:
                             xlsx_data[code]['percent'] = percent
                             try:  
                                 cell_value = sheet[row][col+3].value
                                 cell_value = float(cell_value)
                                 result_mi = rute_xlsx.find('mi')
-                                result_ma = rute_xlsx.find('mi')
+                                result_ma = rute_xlsx.find('ma')
                                 if result_mi > -1:
-                                    xlsx_data[code]['price_manual_min'] = cell_value * (1 + (percent/100))           
+                                    print(percent_apli(cell_value, percent))
+                                    xlsx_data[code]['price_manual_min'] = percent_apli(cell_value, percent)
                                     sheet[cell] = xlsx_data[code]['price_manual_min']
                                 elif result_ma > -1:
-                                    xlsx_data[code]['price_manual_may'] = cell_value * (1 + (percent/100))           
+                                    xlsx_data[code]['price_manual_may'] = percent_apli(cell_value, percent)        
                                     sheet[cell] = xlsx_data[code]['price_manual_may']
                                 
                             except ValueError:
@@ -240,8 +262,8 @@ if __name__ == '__main__':
     to_update[current_id] = {'rutes': [f"{RUTE_XLSX_ORIGIN['mi']}{rute}", f"{RUTE_XLSX_ORIGIN['ma']}{rute}"]}
     to_update[current_id]["C-400"] = {
         'price_auto': False,
-        'price_percent': 0,
-        'price_manual_may': "850.30",
+        'price_percent': -10,
+        'price_manual_may': "800.00",
         'price_manual_min': "1000.00",
         'row': 10,
         'col': 1,
@@ -250,7 +272,7 @@ if __name__ == '__main__':
     to_update[current_id]["C-401"] = {
         'price_auto': False,
         'price_percent': 0,
-        'price_manual_may': "850.30",
+        'price_manual_may': "988.30",
         'price_manual_min': "1600.00",
         'row': 11,
         'col': 1,

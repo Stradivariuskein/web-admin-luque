@@ -52,6 +52,7 @@
                     </button>
 
                     <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
+
                         <div class="scrollable-table">
                             <table class="table table-bordered scrollable-table">
                                 <thead>
@@ -69,9 +70,9 @@
                                             <td class="font-size-1 text-center">{{ artic.0 }}</td>
                                             <td class="text-center">ejemplo{{ artic.1.description }}</td>
                                             <td>
-                                                <div class="col">
-                                                    <div class="row justify-content-center"><label>%</label></div>
-                                                    <div class="row">{{ artic.1.percent }}</div>
+                                                <div class="col text-center">
+                                                    <div class="row justify-content-center"><p>%</p></div>
+                                                    <div class="row justify-content-center"><p>{{ artic.1.percent }}</p></div>
                                                 </div>
                                             </td>
                                             <td>
@@ -105,7 +106,7 @@
                 <a class="btn btn-primary" href="/">Volver a inicio</a>
               </div>
               <div class="col text-center justify-content-center align-items-center whith-2 pl-0 ml-0">
-                <a class="btn btn-primary" href="/download&ids={{download}}">Descargar <span>&darr;</span></a>
+                <a class="btn btn-primary" href="/download?ids={{download}}">Descargar <span>&darr;</span></a>
               </div>
             </div>
 
