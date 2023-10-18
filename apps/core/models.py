@@ -36,8 +36,10 @@ class ModelArtic(models.Model):
         ]
 
 class ModelListDrive(models.Model):
-    filrId = models.CharField(max_length=50)
-    parenId = models.CharField(max_length=50)
+    parentMiId = models.CharField(max_length=50) # drive normal minorista
+    parentMaId = models.CharField(max_length=50) # drive normal mayorista
+    parentOrderMiId = models.CharField(max_length=50, default=None, null=True) # drive ordena con subcarpetas minorista
+    parentOrderMaId = models.CharField(max_length=50, default=None, null=True) # drive ordena con subcarpetas mayorista
     listXlsxID = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)
 
 

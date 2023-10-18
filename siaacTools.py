@@ -1,11 +1,12 @@
 from shutil import copy
 from re import findall
 from xlsxTools import buscarPrecio
+from configs import RUTE_SIAAC
 
 
 
-#RUTE_ARTIC = "Y:/SIAAC3/ARTIC.DBF" # despliegue
-RUTE_ARTIC = "./SIAAC3_test/ARTIC.DBF" # produccions
+
+RUTE_ARTIC = f"{RUTE_SIAAC}ARTIC.DBF" 
 RUTE_FILES_SIAAC = "./siaac/"
 INDEX_CODE = 11
 INDEX_DESCRIPTION = [12,64]
