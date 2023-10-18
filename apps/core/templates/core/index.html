@@ -41,8 +41,20 @@
         </div>
     </nav>
 
-    <div class="container">
-        <h1>Actualizar lista de precios</h1>
+    <div class="container my-5">
+        <div class="my-5 text-center">
+            <h1>Actualizar lista de precios</h1>
+        </div>
+        <div class="container mb-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="input-group">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre o codigos..." onkeyup="searchTable2()">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <form method="get" action="{% url 'udate-xlsx-step1' %}">
             {% csrf_token %}
             <div class="table-responsive">
@@ -114,5 +126,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{%static 'js/script.js'%}"></script>
 </body>
 </html>
