@@ -17,7 +17,7 @@ Including another URLconf
 
 from django.urls import path
 from .views import tmp_test, CreateXlsx, temp_create_listXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, tmp_create_artics, view_vincular_xlsx_artic, ViewSelectList, download_xlsx
-from .views_drive import TmpAddFolder
+from .views_drive import TmpAddFolder, upload_file_drive
 
 urlpatterns = [
     path('test/', tmp_test, name='test'),
@@ -26,7 +26,7 @@ urlpatterns = [
     path('tmpadd/', view_vincular_xlsx_artic, name='tmp-add'),
     path('xlsxstep1/', ViewUpdateXlsxStep1.as_view(), name='udate-xlsx-step1'),
     path('xlsxstep2/', ViewUpdateXlsxStep2.as_view(), name='udate-xlsx-step2'),
-    path('tmp/', TmpAddFolder.as_view(), name='tmp'),
+    path('tmp/', upload_file_drive, name='tmp'),
     path('download/', download_xlsx, name='download'),
 
 ]

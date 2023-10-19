@@ -47,6 +47,9 @@ class ModelFileDrive(models.Model):
     name = models.CharField(max_length=300, default="")
     driveId = models.CharField(max_length=50)
 
+    def __str__(self) -> str:
+        return f"name: {self.name} | drive ID: {self.driveId} | parent: {self.parentId}"
+
 
 
 # lista con los archivos q se nesesitan actualizar

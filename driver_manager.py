@@ -108,33 +108,28 @@ class Drive_manager():
                 'name' : file_name,
                 'parents' : [folder_id]
             }
+            media = MediaFileUpload(file_path, resumable=True)
 
             file = self.service.files().create(
                 body=file_metadata,
-                media_body=file_path
+                media_body=media,
+                fields="id"
             ).execute()
             return file
-        except:
-            return None
+        except Exception as e:
+            return e
 
 
     
-    def delete(self,file_name):
-        # Buscar los archivos en la carpeta con el nombre 
-        
-        results = self.service.files().list(fields="nextPageToken, files(id, name, parents)").execute()
-        items = results.get('files', [])
-        
-        for f in items:
-            if file_name == f["name"]:
-                print(f"Borrando archivo {file_name} con id: {f['id']}")
-                try:
-                    self.service.files().delete(parents=f["id"]).execute()
-                    print("archivo eliminado")
+    def delete(self,driveId):
+        try:
+            response = self.service.files().delete(driveId).execute()
+            print("archivo eliminado")
 
-                except Exception as e:
-                    print(f"Error con el srvidor [{type(e)}].\n {e}")
-        return items
+        except Exception as e:
+            print(f"Error con el srvidor [{type(e)}].\n {e}")
+
+        return response
 
 
     def upgrade(self, file_path, file_id):
@@ -219,9 +214,9 @@ class Drive_manager():
 
 
 if __name__ == "__main__":
-    drive = Drive_manager("/home/mrkein/Documentos/python/web-admin-luque/service_account.json", "1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi")
-    #drive.upload("test.txt")
-    print(drive.list_files())
+    drive = Drive_manager("../service_account.json", "1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi")
+    file = drive.upload("./test.txt", "1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi")
+    print(file)
 
 
     

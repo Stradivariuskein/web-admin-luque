@@ -153,10 +153,6 @@ class FolderDrive(FileDrive):
 if __name__ == '__main__':
     api = ApiDriver("../service_account.json", "1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi")
 
-    test_file = FileDrive(localRute="./test.txt",parent="1O25qycAFLlP6IMTJD3IahC_fXIBwHuJ4", name="test.txt" )
+    test_file = FileDrive(localRute="./test.txt",parent="1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi", name="test.txt" )
     result = api.upload(test_file)
-    files = api.list_files()
-
-    for file in files:
-        print(file)
-        print()
+    print(f'{result}||{type(result)}')
