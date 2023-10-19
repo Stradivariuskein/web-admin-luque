@@ -63,14 +63,18 @@ def get_code(line):
     return line[:INDEX_CODE].strip()
 
 def get_all_artics():
-    with open(RUTE_FILES_SIAAC+"articDB.txt", "r") as f_artics:
-        dic_artics = {}
-        for line in f_artics:
-            dic_artics[get_code(line)] = {
-            'priceMa': get_price_ma(line),
-            'priceMi': get_price_mi(line)
-            }
-    return dic_artics
+    try:
+
+        with open(RUTE_FILES_SIAAC+"articDB.txt", "r") as f_artics:
+            dic_artics = {}
+            for line in f_artics:
+                dic_artics[get_code(line)] = {
+                'priceMa': get_price_ma(line),
+                'priceMi': get_price_mi(line)
+                }
+        return dic_artics
+    except:
+        return reed_artics()
 
 def reed_artics():
     #PASA EL ARCHIVO DE LOS ARTICULOS DE SISTEMA A UN ARCHIVO DE TEXTO FACIL DE LEER

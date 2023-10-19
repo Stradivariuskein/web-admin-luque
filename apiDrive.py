@@ -126,7 +126,7 @@ class ApiDriver(Drive_manager): # utiliza los mismo metodos pero agrega
         return None
 
     def upload(self, fileDrive):
-        return self.retry_execute(super().upload, fileDrive.localRute, fileDrive.id)
+        return self.retry_execute(super().upload, fileDrive.localRute, fileDrive.drive_id)
 
     def delete(self, file_name):
         return self.retry_execute(super().delete, file_name)
@@ -134,11 +134,11 @@ class ApiDriver(Drive_manager): # utiliza los mismo metodos pero agrega
     # actualiza un archivo existente en el drive si no se le pasa el file_id 
     # busca de forma recursiva desde la raiz
     def upgrade(self, fileDrive):
-        if not fileDrive.id:
-            file_id = self.find_file_id_by_name(fileDrive.name,ma_or_mi=fileDrive.ma_mi)
+        if not fileDrive.drive_id:
+            file_id = self.find_file_id_by_name(fileDrive.name,parent_id=fileDrive.parent)
             if not file_id:
                 raise FileNotFoundError("El archivo no existe en el drive")
-        return self.retry_execute(super().upgrade, fileDrive.localRute, fileDrive.id)
+        return self.retry_execute(super().upgrade, fileDrive.localRute, fileDrive.drive_id)
 
     def create_folder(self, folder_name, parent_folder_id=None):
         return self.retry_execute(super().upgrade,  folder_name, parent_folder_id=parent_folder_id)
@@ -149,13 +149,13 @@ class ApiDriver(Drive_manager): # utiliza los mismo metodos pero agrega
 
 
 class FileDrive:
-    def __init__(self, dic_file, ma_mi, localRute) -> None:
-        self.id = dic_file['id']
-        self.name = dic_file['name']
-        self.parent = dic_file['parents'][0]
-        self.mimeType = dic_file['mimeType']
-        self.modTime = dic_file['modifiedTime']
-        self.ma_mi = ma_mi #mayorista (ma) o minorita (mi)
+    def __init__(self, localRute, parent, name, drive_id=None) -> None:
+        self.drive_id = drive_id
+        self.name = name
+        self.parent = parent
+        #self.mimeType = dic_file['mimeType']
+        #self.modTime = dic_file['modifiedTime']
+        #self.ma_mi = ma_mi #mayorista (ma) o minorita (mi)
         self.localRute = localRute
     
     def __str__(self) -> str:
@@ -179,8 +179,10 @@ class FolderDrive(FileDrive):
 
         
 if __name__ == '__main__':
-    api = ApiDriver("service_account.json", "1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi")
+    api = ApiDriver("../service_account.json", "1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi")
 
+    test_file = FileDrive(localRute="test.txt",parent="1O25qycAFLlP6IMTJD3IahC_fXIBwHuJ4", name="test.txt" )
+    result = api.upload(test_file)
     files = api.list_files()
 
     for file in files:
