@@ -35,12 +35,18 @@ class ModelArtic(models.Model):
             models.Index(fields=['code', 'listXlsxID'])
         ]
 
-class ModelListDrive(models.Model):
-    parentMiId = models.CharField(max_length=50) # drive normal minorista
-    parentMaId = models.CharField(max_length=50) # drive normal mayorista
-    parentOrderMiId = models.CharField(max_length=50, default=None, null=True) # drive ordena con subcarpetas minorista
-    parentOrderMaId = models.CharField(max_length=50, default=None, null=True) # drive ordena con subcarpetas mayorista
+
+class ModelFolderDrive(models.Model):
+    parentId = models.ForeignKey(to='self', blank=True, on_delete=models.SET_NULL, null=True) # id de la carpeta condetnedora del drive
+    driveId = models.CharField(max_length=50)
+    name = models.CharField(max_length=300, default="")
+
+class ModelFileDrive(models.Model):
+    parentId = models.ForeignKey(to=ModelFolderDrive, on_delete=models.SET_NULL, null=True) # id de la carpeta condetnedora del drive
     listXlsxID = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)
+    name = models.CharField(max_length=300, default="")
+    driveId = models.CharField(max_length=50)
+
 
 
 # lista con los archivos q se nesesitan actualizar

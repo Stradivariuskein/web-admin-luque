@@ -56,48 +56,20 @@ class ApiDriver(Drive_manager): # utiliza los mismo metodos pero agrega
             files = self.retry_execute(super().list_files, folder_id=None, query=query)
         listDrive = []
         max = len(files)
-        for i in range(0,max,4): # listo de a varios para aumentar el rendimiento en cada iteracion
-            file1 = files[i]
-            file2 = files[i+1]
-            file3 = files[i+2]
-            file4 = files[i+3]
+        for i in range(0,max): # listo de a varios para aumentar el rendimiento en cada iteracion
+            file = files[i]
+            
+            ma_mi = self.ma_or_mi(file['parents'][0])
+            
 
-            ma_mi1 = self.ma_or_mi(file1['parents'][0])
-            ma_mi2 = self.ma_or_mi(file2['parents'][0])
-            ma_mi3 = self.ma_or_mi(file3['parents'][0])
-            ma_mi4 = self.ma_or_mi(file4['parents'][0])
-            #if 1
-            if ma_mi1:
-                if file1['mimeType'] == 'application/vnd.google-apps.folder':
+            if ma_mi:
+                if file['mimeType'] == 'application/vnd.google-apps.folder':
                     
-                    listDrive.append(FolderDrive(file1, ma_mi1, "C:/ruta/drive" ))
-                elif file1['mimeType'] == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                    listDrive.append(FolderDrive(file, ma_mi, "C:/ruta/drive" ))
+                elif file['mimeType'] == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                     
-                    listDrive.append(FileDrive(file1, ma_mi1, "C:/ruta.xlsx" ))
-            # if 2
-            if ma_mi2:
-                if file2['mimeType'] == 'application/vnd.google-apps.folder':
-                    
-                    listDrive.append(FolderDrive(file2, ma_mi2, "C:/ruta/drive" ))
-                elif file2['mimeType'] == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                    
-                    listDrive.append(FileDrive(file2, ma_mi2, "C:/ruta.xlsx" ))
-            # if 3
-            if ma_mi3:
-                if file3['mimeType'] == 'application/vnd.google-apps.folder':
-                    
-                    listDrive.append(FolderDrive(file3, ma_mi3, "C:/ruta/drive" ))
-                elif file3['mimeType'] == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                    
-                    listDrive.append(FileDrive(file3, ma_mi3, "C:/ruta.xlsx" ))
-            #if 4
-            if ma_mi4:
-                if file4['mimeType'] == 'application/vnd.google-apps.folder':
-                    
-                    listDrive.append(FolderDrive(file4, ma_mi4, "C:/ruta/drive" ))
-                elif file4['mimeType'] == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                    
-                    listDrive.append(FileDrive(file4, ma_mi4, "C:/ruta.xlsx" ))
+                    listDrive.append(FileDrive(file, ma_mi, "C:/ruta.xlsx" ))
+          
         return listDrive
     
 
@@ -159,7 +131,7 @@ class FileDrive:
         self.localRute = localRute
     
     def __str__(self) -> str:
-        return f"Id:\t{self.id}\nName:\t{self.name}\nMa_mi:\t{self.ma_mi}\nModifi:\t{self.modTime}\n"
+        return f"Id:\t{self.drive_id}\nName:\t{self.name}\n" #Modifi:\t{self.modTime}\n
 
 
 class FolderDrive(FileDrive):
@@ -181,7 +153,7 @@ class FolderDrive(FileDrive):
 if __name__ == '__main__':
     api = ApiDriver("../service_account.json", "1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi")
 
-    test_file = FileDrive(localRute="test.txt",parent="1O25qycAFLlP6IMTJD3IahC_fXIBwHuJ4", name="test.txt" )
+    test_file = FileDrive(localRute="./test.txt",parent="1O25qycAFLlP6IMTJD3IahC_fXIBwHuJ4", name="test.txt" )
     result = api.upload(test_file)
     files = api.list_files()
 

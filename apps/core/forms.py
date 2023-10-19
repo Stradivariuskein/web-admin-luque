@@ -1,5 +1,5 @@
 from django import forms
-from .models import ModelArtic
+from .models import ModelArtic, ModelFolderDrive
 
 '''class UpdateXlsxForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -29,3 +29,11 @@ class UpdateXlsxForm(forms.Form):
 
 
 
+class CreateFolderForm(forms.ModelForm):
+    class Meta:
+        model = ModelFolderDrive
+        fields = ['parentId', 'driveId', 'name']
+        
+    def __init__(self, *args, **kwargs):
+        super(CreateFolderForm, self).__init__(*args, **kwargs)
+        self.fields['driveId'].required = False
