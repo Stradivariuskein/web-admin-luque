@@ -73,7 +73,8 @@ def get_all_artics():
                 'priceMi': get_price_mi(line)
                 }
         return dic_artics
-    except:
+    except Exception as e:
+        print(e)
         return reed_artics()
 
 def reed_artics():
@@ -164,4 +165,4 @@ def reed_artics():
 
 
 if __name__ == '__main__':
-    print(reed_artics())
+    print(get_all_artics())

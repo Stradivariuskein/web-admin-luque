@@ -64,6 +64,7 @@
         <form method="get" action="{% url 'udate-xlsx-step1' %}">
             {% csrf_token %}
             <div class="table-responsive">
+                <a class="btn btn-primary" href="{% url 'update-artics'%}">Detectar</a>
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr class="text-center">

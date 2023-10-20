@@ -28,5 +28,6 @@ urlpatterns = [
     path('xlsxstep2/', ViewUpdateXlsxStep2.as_view(), name='udate-xlsx-step2'),
     path('tmp/', upload_file_drive, name='tmp'),
     path('download/', download_xlsx, name='download'),
+    path('update-artics/', tmp_test, name='update-artics'),
 
 ]

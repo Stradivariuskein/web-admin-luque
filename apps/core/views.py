@@ -71,11 +71,16 @@ def update_artics(artics):
                             if xlsx == None:
                                 xlsx = ModelToUpdateList(xlsxId=artic.listXlsxID)
                                 xlsx.save()
-
+                            
                             if not xlsx.xlsxId in to_update:
                                 to_update.append(xlsx.xlsxId)
 
                         else:
+                            if code.upper().strip() == 'T-232':
+                                print("*************************************")
+                                print(not artic.listXlsxID in no_changes)
+                                print(f"not {artic.listXlsxID} in {no_changes}")
+                                print("*************************************")
                             if not artic.listXlsxID in no_changes:
                                 no_changes.append(artic.listXlsxID)
                     except KeyError:
@@ -106,22 +111,27 @@ def update_artics(artics):
 # arriba del todo apareceran las q se tiene q actualizar y despues las q no sufrieron cambios
 class ViewSelectList(View):
     def get(self, request, *args, **kwargs):
-        lists_xlsx = ModelListXlsx.objects.all().order_by('-modDate')
 
-        # comparamos la fecha del archivo de articulos de siaac con mi archivo de articulos
+        '''# comparamos la fecha del archivo de articulos de siaac con mi archivo de articulos
         last_update_siaac = os.path.getmtime(RUTE_SIAAC+'ARTIC.DBF')
         last_update_siaac = datetime.fromtimestamp(last_update_siaac)
 
         last_update_file = os.path.getmtime(RUTE_SIAAC_FILES+'articDB.txt')
         last_update_file = datetime.fromtimestamp(last_update_file)
+        print('***********************')
+        print(f"DBF:\t{last_update_siaac} > mi-file:\t{last_update_file}")
+        print(last_update_siaac > last_update_file)
+        print('***********************')
         # si la fecha de siaac es mayor entonses actualizo mi archivo
         # si no obtengo todos los articulos
         if last_update_siaac > last_update_file:
+            print("actualizando articulos")
             siaac_artics = reed_artics()
 
         else:
-            siaac_artics = get_all_artics()
-
+            print("obteniendo articulos")
+            siaac_artics = get_all_artics()'''
+        siaac_artics = reed_artics()
         lists_xlsx = update_artics(siaac_artics)
 
         context = lists_xlsx

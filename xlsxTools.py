@@ -19,7 +19,7 @@ def percent_apli(num, percent):
     else:
         result = 0
 
-    return result
+    return round(result,2)
 
 
 
@@ -232,7 +232,7 @@ def update_xlsx(xlsx_name, xlsx_data):
                                     if isinstance(data['price_manual_min'], float):
                                         xlsx_data[code]['price_manual_min'] = data['price_manual_min']
                                     else:
-                                        xlsx_data[code]['price_manual_may'] = float(data['price_manual_min'].strip())
+                                        xlsx_data[code]['price_manual_min'] = float(data['price_manual_min'].strip())
                                     sheet[cell] = xlsx_data[code]['price_manual_min']
                             except ValueError:
                                 
