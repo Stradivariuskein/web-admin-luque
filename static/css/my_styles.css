@@ -21,7 +21,9 @@ td{
   margin: auto;
 }
 
-
+.flex-g-0 {
+  flex-grow: 0;
+}
 .whith-2 {
   width: 2rem;
 }

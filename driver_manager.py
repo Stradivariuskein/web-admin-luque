@@ -123,11 +123,12 @@ class Drive_manager():
     
     def delete(self,driveId):
         try:
-            response = self.service.files().delete(driveId).execute()
+            response = self.service.files().delete(fileId=driveId).execute()
             print("archivo eliminado")
 
         except Exception as e:
-            print(f"Error con el srvidor [{type(e)}].\n {e}")
+            print(f"Error con el srvidor [{type(e).__name__}].\n {e}")
+            response = e
 
         return response
 
