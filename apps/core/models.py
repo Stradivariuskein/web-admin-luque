@@ -41,6 +41,9 @@ class ModelFolderDrive(models.Model):
     driveId = models.CharField(max_length=50)
     name = models.CharField(max_length=300, default="")
 
+    def __str__(self) -> str:
+        return f"{self.driveId}"
+
 class ModelFileDrive(models.Model):
     parentId = models.ForeignKey(to=ModelFolderDrive, on_delete=models.SET_NULL, null=True) # id de la carpeta condetnedora del drive
     listXlsxID = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)

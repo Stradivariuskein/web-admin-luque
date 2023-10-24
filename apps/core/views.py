@@ -49,13 +49,12 @@ def update_artics(artics):
         to_update = []
         no_changes = []
 
-        to_change_db = ModelToUpdateList.objects.all()
-        for xlsx_change in to_change_db:
-            to_update.append(xlsx_change.xlsxId)
+        
         # verifico q los precios esten actualizados, si no los actualiza
         for code, data in artics.items():
             for artic in db_artics:
                 if artic.code == code:
+
                     try:
                         diff_ma = abs(round(artic.priceMa,1) - round(data['priceMa'],1))
                         diff_mi = abs(round(artic.priceMi,1) - round(data['priceMi'],1))
@@ -74,31 +73,45 @@ def update_artics(artics):
                             
                             if not xlsx.xlsxId in to_update:
                                 to_update.append(xlsx.xlsxId)
+                            
+                               
 
-                        else:
-                            if code.upper().strip() == 'T-232':
-                                print("*************************************")
-                                print(not artic.listXlsxID in no_changes)
-                                print(f"not {artic.listXlsxID} in {no_changes}")
-                                print("*************************************")
-                            if not artic.listXlsxID in no_changes:
-                                no_changes.append(artic.listXlsxID)
+
+                        elif not artic.listXlsxID in no_changes and not artic.listXlsxID in to_update:
+                            no_changes.append(artic.listXlsxID)
                     except KeyError:
                         print(KeyError("Error en la data"))
                     except Exception as e:
                         print("*************************************")
                         print(f"Error: {e}")
-                        print("*************************************")
+                        xlsx_change
                     artic_exist = True
+                
 
             if not artic_exist:
                 new_artic = ModelArtic(code=code, description=[data['description']], priceMa=data['priceMa'], priceMi=data['priceMi'])
                 new_artic.save()
 
-    # se puede crear una funcion aparte  para no repetir
+            
+    to_change_db = ModelToUpdateList.objects.all()
+    for xlsx_change in to_change_db:
+        if not xlsx_change.xlsxId in to_update:
+            to_update.append(xlsx_change.xlsxId)
+        try:
+            no_changes.remove(xlsx.xlsxId)
+        except:
+            pass
+
+
     to_update = get_codes_to_xlsx_list(to_update)
-    # no repetir
+
     no_changes = get_codes_to_xlsx_list(no_changes)
+
+    # esto es un parche porque no entiendo porque se repiten las listas
+    for update_xlsx in to_update:
+        if update_xlsx in no_changes:
+            no_changes.remove(update_xlsx)
+
 
     return {
         'to_update': to_update,
@@ -131,6 +144,8 @@ class ViewSelectList(View):
         else:
             print("obteniendo articulos")
             siaac_artics = get_all_artics()'''
+
+        
         siaac_artics = reed_artics()
         lists_xlsx = update_artics(siaac_artics)
 

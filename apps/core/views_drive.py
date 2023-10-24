@@ -51,3 +51,10 @@ def upload_file_drive(request):
     #else:
     #    return HttpResponse(f"Error 500: Method no allowed")
     
+
+def view_get_drive(request):
+    drive = ApiDrive("../service_account.json", "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
+    files = drive.list_drive()
+    for id, value in files.items():
+        print(f"{value['name']}\tID: {id}")
+    return HttpResponse(files)

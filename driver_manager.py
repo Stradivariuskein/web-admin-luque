@@ -7,6 +7,7 @@ from googleapiclient.errors import HttpError
 import time
 
 import os
+from apps.core.models import ModelFolderDrive
 
 SCOPES = ['https://www.googleapis.com/auth/drive']
 SERVICE_ACCOUNT_FILE = 'service_account.json'
@@ -48,10 +49,38 @@ class Drive_manager():
             ).execute()
         return result
 
+    def list_drive(self, parent_id=None, query=None):
+        
+        if not parent_id:
+            folders_drive = ModelFolderDrive.objects.all()
+            print(folders_drive)
+            results = []
+            for parent_id in folders_drive:
+                
+                if not query:
+                    query = f"'{parent_id}' in parents"
+                results += self.service.files().list(
+                q=query,
+                pageSize=500,
+                fields="nextPageToken, files(id, name, mimeType, parents, modifiedTime)"
+                ).execute().get('files', [])
+                print(parent_id)
+                print(results)
+                
 
-################################################################
-#       FALTA TESTEAR
-################################################################
+        else:
+            results = self.service.files().list(
+                q=f"'{parent_id}' in parents",
+                pageSize=500,
+                fields="nextPageToken, files(id, name, mimeType, parents, modifiedTime)"
+                ).execute().get('files', [])
+        all_files = {}
+        for element in results:
+            if not element['id'] in all_files.items():
+                all_files[element['id']] = element
+        return all_files
+
+
     def list_files(self, folder_id=None, query=None):
         # hace una consulta a google para obtener 
         # los archivos q esten dentro de folrder_id
