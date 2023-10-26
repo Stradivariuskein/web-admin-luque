@@ -50,22 +50,23 @@ class Drive_manager():
         return result
 
     def list_drive(self, parent_id=None, query=None):
+        if parent_id != None and query != None:
+            raise ValueError("Parameter error: No se puede usar 'query' si se le pasa el 'parent_id'")
         
         if not parent_id:
             folders_drive = ModelFolderDrive.objects.all()
-            print(folders_drive)
+            print(f"folders Drive: {folders_drive}")
             results = []
             for parent_id in folders_drive:
                 
-                if not query:
-                    query = f"'{parent_id}' in parents"
+                
+                query = f"'{parent_id}' in parents"
                 results += self.service.files().list(
                 q=query,
                 pageSize=500,
                 fields="nextPageToken, files(id, name, mimeType, parents, modifiedTime)"
                 ).execute().get('files', [])
-                print(parent_id)
-                print(results)
+
                 
 
         else:
@@ -76,7 +77,7 @@ class Drive_manager():
                 ).execute().get('files', [])
         all_files = {}
         for element in results:
-            if not element['id'] in all_files.items():
+            if not element['id'] in all_files:
                 all_files[element['id']] = element
         return all_files
 

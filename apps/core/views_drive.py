@@ -55,6 +55,19 @@ def upload_file_drive(request):
 def view_get_drive(request):
     drive = ApiDrive("../service_account.json", "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
     files = drive.list_drive()
+
     for id, value in files.items():
-        print(f"{value['name']}\tID: {id}")
+        folder_exist_db = ModelFolderDrive.objects.filter(driveId=id).first()
+        print(f"existe folder:\r{folder_exist_db}")
+        if not folder_exist_db:
+            parent_folder = ModelFolderDrive.objects.filter(driveId=value['parents'][0]).first()
+
+            if parent_folder:
+                new_folder = ModelFolderDrive(parentId=parent_folder, driveId=value['id'], name=value['name'])
+                new_folder.save()
+            else:
+                print(f"La carpeta con id {value['parents'][0]} no existe")
+
+                
+
     return HttpResponse(files)
