@@ -52,21 +52,25 @@ def upload_file_drive(request):
     #    return HttpResponse(f"Error 500: Method no allowed")
     
 
-def view_get_drive(request):
+def view_sinc_folder_drive(request):
     drive = ApiDrive("../service_account.json", "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
     files = drive.list_drive()
 
     for id, value in files.items():
-        folder_exist_db = ModelFolderDrive.objects.filter(driveId=id).first()
-        print(f"existe folder:\r{folder_exist_db}")
-        if not folder_exist_db:
-            parent_folder = ModelFolderDrive.objects.filter(driveId=value['parents'][0]).first()
+        name = value['name'].strip().lower()
+        if name[-5:] != '.xlsx':
+            folder_exist_db = ModelFolderDrive.objects.filter(driveId=id).first()
 
-            if parent_folder:
-                new_folder = ModelFolderDrive(parentId=parent_folder, driveId=value['id'], name=value['name'])
-                new_folder.save()
-            else:
-                print(f"La carpeta con id {value['parents'][0]} no existe")
+            if folder_exist_db == None:
+
+                parent_folder = ModelFolderDrive.objects.filter(driveId=value['parents'][0]).first()
+
+                if parent_folder:
+                    new_folder = ModelFolderDrive(parentId=parent_folder, driveId=value['id'], name=value['name'])
+                    print(f"save:\t {value['name']}\tID:\t{id}")
+                    new_folder.save()
+                else:
+                    print(f"La carpeta con id {value['parents'][0]} no existe")
 
                 
 

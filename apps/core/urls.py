@@ -17,10 +17,10 @@ Including another URLconf
 
 from django.urls import path
 from .views import tmp_test, CreateXlsx, temp_create_listXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, tmp_create_artics, view_vincular_xlsx_artic, ViewSelectList, download_xlsx
-from .views_drive import TmpAddFolder, upload_file_drive, view_get_drive
+from .views_drive import TmpAddFolder, upload_file_drive, view_sinc_folder_drive
 
 urlpatterns = [
-    path('test/', view_get_drive, name='test'),
+    path('test/', view_sinc_folder_drive, name='test'),
     path('', ViewSelectList.as_view(), name='listas-xlsx'),
     path('create/', CreateXlsx.as_view(), name='create-list-xlsx'),
     path('tmpadd/', view_vincular_xlsx_artic, name='tmp-add'),

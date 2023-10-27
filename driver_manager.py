@@ -8,6 +8,7 @@ import time
 
 import os
 from apps.core.models import ModelFolderDrive
+from django.db.models import Q
 
 SCOPES = ['https://www.googleapis.com/auth/drive']
 SERVICE_ACCOUNT_FILE = 'service_account.json'
@@ -54,8 +55,7 @@ class Drive_manager():
             raise ValueError("Parameter error: No se puede usar 'query' si se le pasa el 'parent_id'")
         
         if not parent_id:
-            folders_drive = ModelFolderDrive.objects.all()
-            print(f"folders Drive: {folders_drive}")
+            folders_drive = ModelFolderDrive.objects.filter(Q(name='ma') | Q(name='mi'))
             results = []
             for parent_id in folders_drive:
                 

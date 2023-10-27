@@ -108,6 +108,7 @@ def update_artics(artics):
     no_changes = get_codes_to_xlsx_list(no_changes)
 
     # esto es un parche porque no entiendo porque se repiten las listas
+    # solucion: en vez de utilizar 2 diccionarios hay q usar 1 solo y agregar un campo extra q diga a actualizar 
     for update_xlsx in to_update:
         if update_xlsx in no_changes:
             no_changes.remove(update_xlsx)
