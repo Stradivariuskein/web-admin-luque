@@ -6,6 +6,18 @@ from xlsxTools import es_numero
 from openpyxl import load_workbook
 # Create your models here.
 
+
+
+
+
+class ModelFolderDrive(models.Model):
+    parentId = models.ForeignKey(to='self', blank=True, on_delete=models.SET_NULL, null=True) # id de la carpeta condetnedora del drive
+    driveId = models.CharField(max_length=50)
+    name = models.CharField(max_length=300, default="")
+
+    def __str__(self) -> str:
+        return f"{self.driveId}"
+
 # representa un archivo de lista de precio xlsx
 class ModelListXlsx(models.Model):
     name = models.CharField(max_length=100)
@@ -16,7 +28,7 @@ class ModelListXlsx(models.Model):
 
     def __str__(self) -> str:
         return f"{self.id}, {self.name}, {self.modDate}, {self.pathLocal}"
-
+    
 class ModelArtic(models.Model):
     code = models.CharField(max_length=10)
     description = models.CharField(max_length=150)
@@ -36,14 +48,6 @@ class ModelArtic(models.Model):
         ]
 
 
-class ModelFolderDrive(models.Model):
-    parentId = models.ForeignKey(to='self', blank=True, on_delete=models.SET_NULL, null=True) # id de la carpeta condetnedora del drive
-    driveId = models.CharField(max_length=50)
-    name = models.CharField(max_length=300, default="")
-
-    def __str__(self) -> str:
-        return f"{self.driveId}"
-
 class ModelFileDrive(models.Model):
     parentId = models.ForeignKey(to=ModelFolderDrive, on_delete=models.SET_NULL, null=True) # id de la carpeta condetnedora del drive
     listXlsxID = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)
@@ -51,7 +55,12 @@ class ModelFileDrive(models.Model):
     driveId = models.CharField(max_length=50)
 
     def __str__(self) -> str:
-        return f"name: {self.name} | drive ID: {self.driveId} | parent: {self.parentId}"
+        name = self.name
+        driveId = self.driveId
+        return f"name: {name}"
+    
+
+
 
 
 

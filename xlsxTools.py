@@ -250,36 +250,23 @@ def update_xlsx(xlsx_name, xlsx_data):
 
     return (xlsx_name, to_return)
 
+def list_xlsx_to_folder(path):
+    archivos_xlsx = []
+
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            if file.endswith(".xlsx"):
+                archivos_xlsx.append((file, os.path.basename(root)))
+
+    return archivos_xlsx
 
 
 if __name__ == '__main__':
 
     
 
-    rute = 'CAÑOS EXTENSIBLES - CURVOS.xlsx'
-    current_id = 1
-    to_update = {}
-    to_update[current_id] = {'rutes': [f"{RUTE_XLSX_ORIGIN['mi']}{rute}", f"{RUTE_XLSX_ORIGIN['ma']}{rute}"]}
-    to_update[current_id]["C-400"] = {
-        'price_auto': False,
-        'price_percent': -10,
-        'price_manual_may': "800.00",
-        'price_manual_min': "1000.00",
-        'row': 10,
-        'col': 1,
-        'db_price': [1256.33, 1565.50]
-    }
-    to_update[current_id]["C-401"] = {
-        'price_auto': False,
-        'price_percent': 0,
-        'price_manual_may': "988.30",
-        'price_manual_min': "1600.00",
-        'row': 11,
-        'col': 1,
-        'db_price': [1256.33, 1565.50]
-    }
-
-    results = update_xlsx('1', to_update[1])
+    results = list_xlsx_to_folder(RUTE_XLSX_AGRUPS['ma'])
+    
 
     print(results)
 

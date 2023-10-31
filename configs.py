@@ -8,3 +8,10 @@ RUTE_XLSX_ORIGIN = { #RUTE_XLSX_ORIGIN = ["./Listas de preios/lista minorista/",
                     } 
 RUTE_SIAAC = "./SIAAC3_test/"
 RUTE_SIAAC_FILES = "./siaac/"
+
+XLSX_RUTE = "./LISTAS/"
+
+ROOTS_DRIVE_IDS={
+    'order': '1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi',
+    'common': '1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW'
+}

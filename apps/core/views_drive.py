@@ -10,7 +10,7 @@ from .models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
 from .forms import CreateFolderForm
 
 from apiDriveV2 import ApiDrive
-from configs import RUTE_XLSX_AGRUPS
+from configs import RUTE_XLSX_AGRUPS, ROOTS_DRIVE_IDS
 
 
 class TmpAddFolder(CreateView):
@@ -56,11 +56,12 @@ def view_sinc_folder_drive(request):
     drive = ApiDrive("../service_account.json", "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
     files = drive.list_drive()
 
+    folder_list = []
     for id, value in files.items():
         name = value['name'].strip().lower()
         if name[-5:] != '.xlsx':
             folder_exist_db = ModelFolderDrive.objects.filter(driveId=id).first()
-
+            
             if folder_exist_db == None:
 
                 parent_folder = ModelFolderDrive.objects.filter(driveId=value['parents'][0]).first()
@@ -71,7 +72,62 @@ def view_sinc_folder_drive(request):
                     new_folder.save()
                 else:
                     print(f"La carpeta con id {value['parents'][0]} no existe")
+            else:
+                # si no existe el archivo lo tengo q borrar
+                folder_list.append(folder_exist_db)
+            
+            childrens_files = drive.list_drive(parent_id=id)
+            for child_id, child_values in childrens_files.items():
+                name = child_values['name'].strip().lower()
+                if name[-5:] == '.xlsx':
+                    file = ModelFileDrive.objects.filter(driveId=child_id).first()
+                    if file is None:
+                        xlsx = ModelListXlsx.objects.filter(name=child_values['name']).first()
+                        if xlsx is not None:
+                            folder = ModelFolderDrive.objects.filter(driveId=child_values['parents'][0]).first()
+                            if folder is not None:
+                                file = ModelFileDrive(driveId=child_id, listXlsxID=xlsx, name=child_values['name'], parentId=folder)
+                                file.save()
+
+
+
+        else:
+            file = ModelFileDrive.objects.filter(driveId=id).first()
+            if file is None:
+                xlsx = ModelListXlsx.objects.filter(name=value['name']).first()
+                if xlsx is not None:
+                    folder = ModelFolderDrive.objects.filter(driveId=value['parents'][0]).first()
+                    if folder is not None:
+                        file = ModelFileDrive(driveId=id, listXlsxID=xlsx, name=value['name'], parentId=folder)
+                        file.save()
+            
+
+    # si hay una carpeta q no este en el drive la eliminamos
+    folders_drive = ModelFolderDrive.objects.all()        
+    for folder in folders_drive:
+        if not folder in folder_list:
+            folder.adelete()
 
                 
 
     return HttpResponse(files)
+
+def tmp_view_duplicate_xlsx(request):
+    files = ModelFileDrive.objects.filter(parentId__isnull=False, driveId__isnull=False)
+    drive = ApiDrive("../service_account.json", "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
+    new_files = []
+    for file in files:
+        id = ROOTS_DRIVE_IDS['common']
+        folders = ModelFolderDrive.objects.filter(parentId__driveId=id)
+
+        for folder in folders:
+            folder = ModelFolderDrive.objects.filter(driveId=folder.driveId).first()
+            if folder is not None:
+                new_file = ModelFileDrive(name=file.name, parentId=folder, listXlsxID=file.listXlsxID)
+                driveId = drive.upload(new_file)
+                new_file.driveId = driveId
+                new_file.save()
+                new_files.append(new_file)
+
+    return HttpResponse(new_files)
+

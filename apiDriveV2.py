@@ -27,8 +27,11 @@ class ApiDrive(Drive_manager):
         if fileDrive.driveId:
             result = super().delete(fileDrive.driveId)
             print(result)
-        # response = super().upload( fileDrive.listXlsxID.pathLocal, fileDrive.parentId.driveId) en despliegue
-        response = super().upload( RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
+
+        if fileDrive.parentId.parentId.name == "ma" or fileDrive.parentId.name == "ma":
+            response = super().upload( RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
+        elif fileDrive.parentId.parentId.name == "mi" or fileDrive.parentId.name == "mi":
+            response = super().upload( RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
         fileDrive.driveId = response['id']
         return fileDrive
 

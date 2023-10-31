@@ -17,8 +17,9 @@ import mimetypes
 from siaacTools import reed_artics, get_all_artics
 from xlsxTools import get_artcis_from_xlsx, update_xlsx
 from configs import *
+from apiDriveV2 import ApiDrive
 
-from .models import ModelListXlsx, ModelArtic, ModelToUpdateList
+from .models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive
 from .forms import UpdateXlsxForm
 #no es una vista
 # recive una lista con todos los registros de listXlsx
@@ -251,6 +252,7 @@ class ViewUpdateXlsxStep2(View):
             
         if len_artics == len(brute_data['price_percent']) ==  len(brute_data['xlsx_ids']) == len(brute_data['price_manual_may']) == len(brute_data['price_manual_min']):
             results = []
+            drive = ApiDrive("../service_account.json", "!sw3")
             with transaction.atomic():
                 xlsx_to_download = ''
                 for xlsx_id, xlsx_data in to_update.items():
@@ -258,8 +260,18 @@ class ViewUpdateXlsxStep2(View):
                     
                     #actualiza la fecha de modificacion
                     current_xslx = ModelListXlsx.objects.filter(id=xlsx_id).first()
-
+                    
                     results.append(update_xlsx(current_xslx.name, xlsx_data))
+                    files_drive = ModelFileDrive.objects.filter(listXlsxID=current_xslx)
+                    print("********************************")
+                    print(f"{current_xslx}")
+                    print(f"{files_drive}")
+                    print("********************************")
+                    for file in files_drive:
+                        print("********************************")
+                        print(drive.upload(file))
+                        print("********************************")
+
                     print(results[-1])
                     current_xslx.modDate = datetime.now()
                     current_xslx.save()
@@ -394,3 +406,4 @@ def view_vincular_xlsx_artic(request):
 def tmp_test(request):
     artic = ModelArtic.objects.filter(code='A-039').first()
     return HttpResponse(artic)
+
