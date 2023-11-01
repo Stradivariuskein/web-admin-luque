@@ -17,6 +17,7 @@ from siaacTools import reed_artics
 from xlsxTools import update_xlsx, update_artics
 from configs import *
 from apiDriveV2 import ApiDrive
+from googleapiclient.errors import HttpError
 
 from .models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive
 from .forms import UpdateXlsxForm
@@ -151,7 +152,7 @@ class ViewUpdateXlsxStep2(View):
             
         if len_artics == len(brute_data['price_percent']) ==  len(brute_data['xlsx_ids']) == len(brute_data['price_manual_may']) == len(brute_data['price_manual_min']):
             results = []
-            drive = ApiDrive("../service_account.json", "!sw3")
+            drive = ApiDrive("../service_account.json")
             with transaction.atomic():
                 xlsx_to_download = ''
                 for xlsx_id, xlsx_data in to_update.items():
@@ -159,13 +160,15 @@ class ViewUpdateXlsxStep2(View):
                     
                     #actualiza la fecha de modificacion
                     current_xslx = ModelListXlsx.objects.filter(id=xlsx_id).first()
-                    
-                    results.append(update_xlsx(current_xslx.name, xlsx_data))
                     files_drive = ModelFileDrive.objects.filter(listXlsxID=current_xslx)
+                    
+                    update = update_xlsx(current_xslx.name, xlsx_data)
+                    
 
                     for file in files_drive:
 
-                        drive.upload(file)
+                        response = drive.upload(file)
+
 
 
                     current_xslx.modDate = datetime.now()
@@ -176,6 +179,13 @@ class ViewUpdateXlsxStep2(View):
                     if current_to_update != None:
                         current_to_update.delete()
                     xlsx_to_download += str(xlsx_id) + ','
+
+                    links = []
+                    for file in files_drive:
+                        print(f"id:\t{file.driveId},\tname:\t{file.name}")
+                        links.append(f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=1379805933")
+                    results.append(update+[links])
+
                 xlsx_to_download = xlsx_to_download[:-1]
                 context = {
                     'listXlsx': results,

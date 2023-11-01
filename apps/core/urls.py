@@ -17,10 +17,11 @@ Including another URLconf
 
 from django.urls import path
 from .views import CreateXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, ViewSelectList, download_xlsx
+from .views_tmp import view_check_drive_id
 
 
 urlpatterns = [
-    #path('test/', view_test, name='test'),
+    path('test/', view_check_drive_id, name='test'),
     path('', ViewSelectList.as_view(), name='listas-xlsx'),
     path('create/', CreateXlsx.as_view(), name='create-list-xlsx'),
     path('xlsxstep1/', ViewUpdateXlsxStep1.as_view(), name='udate-xlsx-step1'),

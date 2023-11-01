@@ -52,7 +52,13 @@
                     </button>
 
                     <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
-
+                        <div>
+                            
+                            {% for link in xlsx_tuple.2 %}
+                                <a href="{{link}}" target="_blank">link {{ forloop.counter }}</a>
+                            {% endfor %}
+                                
+                        </div>
                         <div class="scrollable-table">
                             <table class="table table-bordered scrollable-table">
                                 <thead>

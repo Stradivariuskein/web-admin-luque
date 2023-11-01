@@ -5,6 +5,8 @@ from .models import ModelListXlsx, ModelArtic, ModelFolderDrive, ModelFileDrive
 from siaacTools import reed_artics
 from xlsxTools import get_artcis_from_xlsx
 from apiDriveV2 import ApiDrive
+from googleapiclient.errors import HttpError
+
 from configs import RUTE_XLSX_AGRUPS, ROOTS_DRIVE_IDS
 
 from re import findall
@@ -102,19 +104,83 @@ def tmp_view_duplicate_xlsx(request):
     return HttpResponse(new_files)
 
 
-def tmp_view_delet_files(request):
-        res = ModelFileDrive.objects.all().delete()
-        '''drive = ApiDrive("../service_account.json", "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
-        folders = drive.list_drive(parent_id=ROOTS_DRIVE_IDS['common'])
-        msj = []
-        print("*******************************")
-        print(folders)
-        print("*******************************")
-        for id_folder, folder in folders.items():
-            files = drive.list_drive(parent_id=id_folder)
-            for id_file, file in files.items():
-                msj.append(f"{drive.delete(id_file)}")'''
-        return HttpResponse(res)
+def tmp_view_delet_duplicate_drive(request):
+    drive = ApiDrive("../service_account.json")
+    files = ModelFileDrive.objects.all()
+    msj = []
+    for file in files:
+        files_drive = drive.find_file_id_by_name(file.name,parent_id=file.parentId.driveId)
+        len_files = len(files_drive) 
+        
+        if len_files > 1:
+            print("************************")
+            print(len_files)
+            print(files_drive)
+            
+            for i in range(len_files-1,0,-1): # bucle inverso dejando el primero
+                tmp_file = ModelFileDrive(driveId=files_drive[i][0])
+                drive.delete(tmp_file)
+                print(f"i:\t{i}")
+                msj.append(f"archivo eliminado:\t{files_drive[i]}")
+                print(f"archivo eliminado:\t{files_drive[i]}")
+                del files_drive[i]
+            len_files = len(files_drive) 
+            print(len_files)
+            if len_files == 1:
+                msj.append(files_drive)
+                file.driveId = files_drive[0][0]
+                file.save()
+                print(files_drive)
+                print(f"name:\t{file.name}\tid:\t{file.driveId}")
+                msj.append(f"name:\t{file.name}\tid:\t{file.driveId}")
+            print("************************")
+
+        
+
+        
+        
+    return HttpResponse(msj)
+# cheque q el id del drive este bien si no puede scceder al archivo entonse lo busca por nombre eb la carpeta padre y le reasigna el nuevo id
+def view_check_drive_id(request):
+    drive = ApiDrive("../service_account.json")
+    files = ModelFileDrive.objects.all()
+    not_funds = []
+    for file in files:
+        response = drive.get_file(file.driveId)
+        if isinstance(response, HttpError):
+            not_funds.append(file)
+            files_drive = drive.find_file_id_by_name(file.name,parent_id=file.parentId.driveId)
+            len_files = len(files_drive) 
+            if len_files > 1:
+                print("************************")
+                print(len_files)
+                print(files_drive)
+                
+                for i in range(len_files-1,0,-1): # bucle inverso dejando el primero
+                    tmp_file = ModelFileDrive(driveId=files_drive[i][0])
+                    drive.delete(tmp_file)
+                    print(f"archivo eliminado:\t{files_drive[i]}")
+                    del files_drive[i]
+                len_files = len(files_drive) 
+
+                if len_files == 1:
+                    file.driveId = files_drive[0][0]
+                    file.save()
+                    print(files_drive)
+                    print(f"name:\t{file.name}\tid:\t{file.driveId}")
+
+                print("************************")
+            else:
+                print("************************")
+                file.driveId = files_drive[0][0]
+                file.save()
+                print(files_drive)
+                print(f"name:\t{file.name}\tid:\t{file.driveId}")
+                print("************************")
+
+        
+
+    return HttpResponse(not_funds)
 
 
 def view_test(request):

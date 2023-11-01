@@ -1,4 +1,5 @@
 from driver_manager import Drive_manager
+from googleapiclient.errors import HttpError
 
 from apps.core.models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
 from configs import RUTE_XLSX_ORIGIN
@@ -33,9 +34,18 @@ class ApiDrive(Drive_manager):
             response = super().upload( RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
         if not isinstance(response,FileNotFoundError):
             fileDrive.driveId = response['id']
+            fileDrive.save()
             return fileDrive
         else:
             return response
+        
+    def delete(self, fileDrive: ModelFileDrive):
+        response = super().delete(fileDrive.driveId)
+        if isinstance(response,HttpError):
+            result = super().find_file_id_by_name(file_name=fileDrive.name, parent_id=fileDrive.parentId.driveId)
+            if result:
+                response = super().delete(fileDrive.driveId)
+        return response
 
 
 if __name__ == '__main__':

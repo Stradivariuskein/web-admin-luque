@@ -192,7 +192,7 @@ def update_xlsx(xlsx_name, xlsx_data):
         sheet["A1"] = datetime.now().date()
         wb.save(rute_xlsx)
 
-    return (xlsx_name, to_return)
+    return [xlsx_name, to_return]
 
 # retorna todos los archivos excel de un directorio
 def list_xlsx_to_folder(path):

@@ -1,6 +1,7 @@
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from googleapiclient.http import MediaFileUpload
+from googleapiclient.errors import HttpError
 
 import os
 from apps.core.models import ModelFolderDrive
@@ -11,25 +12,27 @@ SERVICE_ACCOUNT_FILE = 'service_account.json'
 FOLDER_ID = "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW"
 
 class Drive_manager():
-    def __init__(self, cred_file, folder_id):
+    def __init__(self, cred_file):
          self.creds = service_account.Credentials.from_service_account_file(cred_file, scopes=SCOPES)
          self.service = build('drive', 'v3', credentials=self.creds)
-         self.folder_id = folder_id
+         self.folder_id = "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW"
 
 
     def get_file(self, id):
-
-        result = self.service.files().get(
-            fileId=id,
-            fields="id, name, mimeType, parents, modifiedTime"
-            ).execute()
+        try:
+            result = self.service.files().get(
+                fileId=id,
+                fields="id, name, mimeType, parents, modifiedTime"
+                ).execute()
+        except HttpError as e:
+            result = e
         return result
 
     def list_drive(self, parent_id=None, query=None):
-        if parent_id != None and query != None:
-            raise ValueError("Parameter error: No se puede usar 'query' si se le pasa el 'parent_id'")
-        
-        if not parent_id:
+        if not query:
+            query = ""
+
+        if parent_id is None:
             folders_drive = ModelFolderDrive.objects.filter(Q(name='ma') | Q(name='mi'))
             results = []
             for parent_id in folders_drive:
@@ -61,11 +64,13 @@ class Drive_manager():
         # si no le pas el parent busca en la raiz de forma No recursiva
         if not parent_id:
             parent_id = self.folder_id
-        files = self.list_drive(folder_id=parent_id)
-        for file in files:            
+        files = self.list_drive(parent_id=parent_id)
+        
+        maches = []
+        for id, file in files.items():       
             if file['name'] == file_name and file['parents'][0] == parent_id:
-                return file['id']
-        return None
+                maches.append((file['id'], file['name']))
+        return maches
     
 
     def upload(self, file_path, folder_id):
