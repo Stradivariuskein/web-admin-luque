@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView
+from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.views import View
@@ -8,119 +8,18 @@ from django.db import transaction
 import os
 import zipfile
 import tempfile
-from re import findall
 import datetime
 from datetime import datetime
 import mimetypes
 
 # mis bibliotecas
-from siaacTools import reed_artics, get_all_artics
-from xlsxTools import get_artcis_from_xlsx, update_xlsx
+from siaacTools import reed_artics
+from xlsxTools import update_xlsx, update_artics
 from configs import *
 from apiDriveV2 import ApiDrive
 
 from .models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive
 from .forms import UpdateXlsxForm
-#no es una vista
-# recive una lista con todos los registros de listXlsx
-# devuelve las listas con los codigos correspondientes
-def get_codes_to_xlsx_list(lists_xlsx):
-    len_list_xlsx = len(lists_xlsx)
-    for i in range(len_list_xlsx,0,-1):
-        xlsx = lists_xlsx.pop()
-        if xlsx != None:
-            artics = ModelArtic.objects.filter(listXlsxID=xlsx).values("code")
-            codes = ""
-            for artic in artics:
-                codes += artic['code'] + ', '
-
-            codes = codes[:-2]
-            
-            lists_xlsx = [(xlsx, codes)] + lists_xlsx
-    return lists_xlsx
-
-# no es una vista
-# compara si hay diferencia en los precios y devuelve una lista con todos los archivos xlsx 
-# q requieren una actualizacion
-def update_artics(artics):
-    with transaction.atomic():
-        
-        db_artics = ModelArtic.objects.all()
-        artic_exist = False
-        to_update = []
-        no_changes = []
-
-        
-        # verifico q los precios esten actualizados, si no los actualiza
-        for code, data in artics.items():
-            for artic in db_artics:
-                if artic.code == code:
-
-                    try:
-                        diff_ma = abs(round(artic.priceMa,1) - round(data['priceMa'],1))
-                        diff_mi = abs(round(artic.priceMi,1) - round(data['priceMi'],1))
-                        if diff_ma > 0.19  or diff_mi > 0.19:
-                            
-                            
-                            artic.priceMa = data['priceMa']
-                            artic.priceMi = data['priceMi']
-                            artic.description = data['description']
-                            artic.save()
-
-                            xlsx = ModelToUpdateList.objects.filter(xlsxId=artic.listXlsxID).first()
-                            if xlsx == None:
-                                xlsx = ModelToUpdateList(xlsxId=artic.listXlsxID)
-                                xlsx.save()
-                            
-                            if not xlsx.xlsxId in to_update:
-                                to_update.append(xlsx.xlsxId)
-                            
-                               
-
-
-                        elif not artic.listXlsxID in no_changes and not artic.listXlsxID in to_update:
-                            no_changes.append(artic.listXlsxID)
-                    except KeyError:
-                        print(KeyError("Error en la data"))
-                    except Exception as e:
-                        print("*************************************")
-                        print(f"Error: {e}")
-                        xlsx_change
-                    artic_exist = True
-                
-
-            if not artic_exist:
-                new_artic = ModelArtic(code=code, description=[data['description']], priceMa=data['priceMa'], priceMi=data['priceMi'])
-                new_artic.save()
-
-            
-    to_change_db = ModelToUpdateList.objects.all()
-    for xlsx_change in to_change_db:
-        if not xlsx_change.xlsxId in to_update:
-            to_update.append(xlsx_change.xlsxId)
-        try:
-            no_changes.remove(xlsx.xlsxId)
-        except:
-            pass
-
-
-    to_update = get_codes_to_xlsx_list(to_update)
-
-    no_changes = get_codes_to_xlsx_list(no_changes)
-
-    # esto es un parche porque no entiendo porque se repiten las listas
-    # solucion: en vez de utilizar 2 diccionarios hay q usar 1 solo y agregar un campo extra q diga a actualizar 
-    for update_xlsx in to_update:
-        if update_xlsx in no_changes:
-            no_changes.remove(update_xlsx)
-
-
-    return {
-        'to_update': to_update,
-        'no_changes': no_changes
-        }
-
-
  
 # muestra todas las listas de precio para q las selecione el usuario
 # arriba del todo apareceran las q se tiene q actualizar y despues las q no sufrieron cambios
@@ -166,7 +65,7 @@ class ViewUpdateXlsxStep1(View):
      
 
         lists_xlsx = request.GET.getlist("lists_xlsx")
-        #print(IDs_xlsx)
+
         if lists_xlsx:
             xlsx_and_artics = []
             
@@ -263,16 +162,12 @@ class ViewUpdateXlsxStep2(View):
                     
                     results.append(update_xlsx(current_xslx.name, xlsx_data))
                     files_drive = ModelFileDrive.objects.filter(listXlsxID=current_xslx)
-                    print("********************************")
-                    print(f"{current_xslx}")
-                    print(f"{files_drive}")
-                    print("********************************")
-                    for file in files_drive:
-                        print("********************************")
-                        print(drive.upload(file))
-                        print("********************************")
 
-                    print(results[-1])
+                    for file in files_drive:
+
+                        drive.upload(file)
+
+
                     current_xslx.modDate = datetime.now()
                     current_xslx.save()
 
@@ -321,7 +216,7 @@ def download_xlsx(request):
         ids_param = request.GET.get('ids', '')  # Obtiene el parámetro 'ids' de la URL
 
         ids = ids_param.split(',') if ids_param else []  # Divide los IDs si existen, de lo contrario, lista vacía
-        print(ids)
+
         file_path = compress_files(ids)
         mime_type, _ = mimetypes.guess_type(file_path)
         try:
@@ -336,74 +231,6 @@ def download_xlsx(request):
     else:
         return HttpResponse(f"{request.method} no allowed")
 
-#funcion temporal para registrar listas xlsx en la db
-def temp_create_listXlsx(request):
-    carpeta = 'Y:\\Lista de Precio\\LISTA MAYORISTA\\'
-    if os.path.exists(carpeta):
-        # Obtener una lista de todos los archivos en la carpeta
-        archivos = os.listdir(carpeta)
-
-    filtered_archs = []
-    # Imprimir el nombre de cada archivo
-    for archivo in archivos:
-        is_xlsx = findall(".xlsx$", archivo)
-        is_tmp_file = findall("^~", archivo)
-        if is_xlsx and not is_tmp_file:
-            local_rute_file = carpeta + archivo
-            mod_date_file = os.path.getmtime(local_rute_file)
-            # Convertir el timestamp a un objeto datetime
-            mod_date_datetime = datetime.datetime.fromtimestamp(mod_date_file)
-            # Extraer la fecha del objeto datetime
-            mod_date_file = mod_date_datetime.date()
-            print(f"{mod_date_file}\n\n\n\n")
-            xlsx_file = ModelListXlsx(name=archivo, modDate=mod_date_file, pathLocal=local_rute_file)
-            if xlsx_file:
-                print(xlsx_file)
-                xlsx_file.save()
-            print(xlsx_file)
-            filtered_archs.append(archivo)
-    print(len(filtered_archs))
-    return HttpResponse(archivos)
 
 
-# funcion temporal par ingresar todos los articulos
-def tmp_create_artics(request):
-    dic_artics = reed_artics()
-
-    for cod, artic in dic_artics.items():
-
-        artic = ModelArtic(code=cod, description=artic['description'], priceMa=artic['price_ma'], priceMi=artic['price_mi'])
-        artic.save()
-    
-    return HttpResponse("Echo")
-
-
-# funcion temporal para vincular los articulos con las listas
-def view_vincular_xlsx_artic(request):
-    list_xlsx = ModelListXlsx.objects.all()
-    lists_rute = '/home/mrkein/Documentos/python/web-admin-luque/web-admin-luque/LISTAS/'
-    
-    for xlsx in list_xlsx:
-        current_xlsx = f"{lists_rute}{xlsx.name}"
-        
-        list_codes = get_artcis_from_xlsx(current_xlsx)
-        if list_codes:
-            print(f"{xlsx.name}: {list_codes}")
-            for code, values in list_codes.items():
-                code = code.strip().upper()
-                current_artic = ModelArtic.objects.get(code=code)
-                current_artic.col = values['col']
-                current_artic.row = values['row']
-                current_artic.listXlsxID = xlsx
-                current_artic.save()
-        else:
-            print("el archivo no exites")
-
-    return HttpResponse("echo")
-
-
-
-def tmp_test(request):
-    artic = ModelArtic.objects.filter(code='A-039').first()
-    return HttpResponse(artic)
 

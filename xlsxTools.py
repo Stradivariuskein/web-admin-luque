@@ -3,6 +3,10 @@ import os
 import re
 from datetime import datetime
 from configs import *
+from apps.core.models import ModelArtic, ModelToUpdateList
+
+from django.db import transaction
+
 
 
 ABC = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -20,16 +24,6 @@ def percent_apli(num, percent):
         result = 0
 
     return round(result,2)
-
-
-
-#verifica si es un numero
-def es_numero(num):
-    try:
-        float(num)
-        return True
-    except ValueError:
-        return False
 
 
 def buscarPrecio(cod, lista_num):
@@ -63,56 +57,6 @@ def buscarPrecio(cod, lista_num):
 
     print(f"\n\n*********************************************\n ERROR: codigo {cod} no encontrado reviselo\n*********************************************\n")    
     return -1
-
-
-def actualizarPrecio (wb,row,cod,lista_num):
-    #ACTUALIZA EL PRECIO EN EL EXCEL
-    
-    sheet = wb['Hoja1']
-    cell = 'D' + str(row)
-    precio = buscarPrecio(cod, lista_num)
-    if precio != -1:
-        sheet[cell] = float(precio)
-
-
-def actualizarLista(bExcel, lista_num):
-    #recorre una lista de precios, obtiene los codigo, los busca en articDB.txt y actualiza el precio
-    try:
-        sh = bExcel['Hoja1']
-    except:
-        print ("Error no exixte la Hoja1 en el archivo excel!!!!")
-   
-    cell=""
-    i=0
-    columna = 1
-
-    now = datetime.now()    
-    sh['A1'] = now
-
-    maxFila = sh.max_row
-
-    for i in range(1,maxFila):
-        cell=str(sh.cell(row=i,column=columna).value).upper()
-    
-        celda = str(cell).upper()
-        
-        
-        if celda == "COD" or celda == "COD.":
-            i += 1
-            cell=str(sh.cell(row=i,column=columna).value).upper()
-            result = re.findall(f"[A-Z]-", cell)
-
-            while result:
-                precioActual = str(sh.cell(row=i,column=columna+3).value)
-                if es_numero(precioActual):
-                    actualizarPrecio(bExcel,i,cell,lista_num)
-                    
-                i+=1
-                cell=sh.cell(row=i,column=columna).value
-                if cell:                    
-                    result = re.findall(f"[A-Z]-", cell.upper())
-                else:
-                    result = 0
 
 
 # dado un archivo xlsx devuelve un dic con todos los codgos descripcion, precios, y cleda
@@ -250,6 +194,7 @@ def update_xlsx(xlsx_name, xlsx_data):
 
     return (xlsx_name, to_return)
 
+# retorna todos los archivos excel de un directorio
 def list_xlsx_to_folder(path):
     archivos_xlsx = []
 
@@ -260,6 +205,103 @@ def list_xlsx_to_folder(path):
 
     return archivos_xlsx
 
+# recive una lista con todos los registros de listXlsx
+# devuelve las listas con los codigos correspondientes
+def get_codes_to_xlsx_list(lists_xlsx):
+    len_list_xlsx = len(lists_xlsx)
+    for i in range(len_list_xlsx,0,-1):
+        xlsx = lists_xlsx.pop()
+        if xlsx != None:
+            artics = ModelArtic.objects.filter(listXlsxID=xlsx).values("code")
+            codes = ""
+            for artic in artics:
+                codes += artic['code'] + ', '
+
+            codes = codes[:-2]
+            
+            lists_xlsx = [(xlsx, codes)] + lists_xlsx
+    return lists_xlsx
+
+
+# compara si hay diferencia en los precios y devuelve una lista con todos los archivos xlsx 
+# q requieren una actualizacion
+def update_artics(artics):
+    with transaction.atomic():
+        
+        db_artics = ModelArtic.objects.all()
+        artic_exist = False
+        to_update = []
+        no_changes = []
+
+        
+        # verifico q los precios esten actualizados, si no los actualiza
+        for code, data in artics.items():
+            for artic in db_artics:
+                if artic.code == code:
+
+                    try:
+                        diff_ma = abs(round(artic.priceMa,1) - round(data['priceMa'],1))
+                        diff_mi = abs(round(artic.priceMi,1) - round(data['priceMi'],1))
+                        if diff_ma > 0.19  or diff_mi > 0.19:
+                            
+                            
+                            artic.priceMa = data['priceMa']
+                            artic.priceMi = data['priceMi']
+                            artic.description = data['description']
+                            artic.save()
+
+                            xlsx = ModelToUpdateList.objects.filter(xlsxId=artic.listXlsxID).first()
+                            if xlsx == None:
+                                xlsx = ModelToUpdateList(xlsxId=artic.listXlsxID)
+                                xlsx.save()
+                            
+                            if not xlsx.xlsxId in to_update:
+                                to_update.append(xlsx.xlsxId)
+                            
+                               
+
+
+                        elif not artic.listXlsxID in no_changes and not artic.listXlsxID in to_update:
+                            no_changes.append(artic.listXlsxID)
+                    except KeyError:
+                        print(KeyError("Error en la data"))
+                    except Exception as e:
+                        print("*************************************")
+                        print(f"Error: {e}")
+                        xlsx_change
+                    artic_exist = True
+                
+
+            if not artic_exist:
+                new_artic = ModelArtic(code=code, description=[data['description']], priceMa=data['priceMa'], priceMi=data['priceMi'])
+                new_artic.save()
+
+            
+    to_change_db = ModelToUpdateList.objects.all()
+    for xlsx_change in to_change_db:
+        if not xlsx_change.xlsxId in to_update:
+            to_update.append(xlsx_change.xlsxId)
+        try:
+            no_changes.remove(xlsx.xlsxId)
+        except:
+            pass
+
+
+    to_update = get_codes_to_xlsx_list(to_update)
+
+    no_changes = get_codes_to_xlsx_list(no_changes)
+
+    # esto es un parche porque no entiendo porque se repiten las listas
+    # solucion: en vez de utilizar 2 diccionarios hay q usar 1 solo y agregar un campo extra q diga a actualizar 
+    for update_xlsx in to_update:
+        if update_xlsx in no_changes:
+            no_changes.remove(update_xlsx)
+
+
+    return {
+        'to_update': to_update,
+        'no_changes': no_changes
+        }
 
 if __name__ == '__main__':
 

@@ -1,6 +1,5 @@
 from shutil import copy
 from re import findall
-from xlsxTools import buscarPrecio
 from configs import RUTE_SIAAC
 
 

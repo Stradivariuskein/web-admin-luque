@@ -1,4 +1,3 @@
-from googleapiclient.errors import HttpError
 from driver_manager import Drive_manager
 
 from apps.core.models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
@@ -32,8 +31,11 @@ class ApiDrive(Drive_manager):
             response = super().upload( RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
         elif fileDrive.parentId.parentId.name == "mi" or fileDrive.parentId.name == "mi":
             response = super().upload( RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
-        fileDrive.driveId = response['id']
-        return fileDrive
+        if not isinstance(response,FileNotFoundError):
+            fileDrive.driveId = response['id']
+            return fileDrive
+        else:
+            return response
 
 
 if __name__ == '__main__':

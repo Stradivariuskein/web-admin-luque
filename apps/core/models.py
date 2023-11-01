@@ -1,9 +1,8 @@
 from django.db import models
 
-import re
-from datetime import datetime
-from xlsxTools import es_numero
-from openpyxl import load_workbook
+
+
+
 # Create your models here.
 
 
@@ -58,6 +57,8 @@ class ModelFileDrive(models.Model):
         name = self.name
         driveId = self.driveId
         return f"name: {name}"
+    
+    
     
 
 

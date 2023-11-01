@@ -1,24 +1,13 @@
 import os
-from django.shortcuts import render
-from django.views.generic import ListView, CreateView
+from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.http import HttpResponse
-from django.views import View
-from django.db import transaction
 
 from .models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
 from .forms import CreateFolderForm
 
 from apiDriveV2 import ApiDrive
-from configs import RUTE_XLSX_AGRUPS, ROOTS_DRIVE_IDS
-
-
-class TmpAddFolder(CreateView):
-    model = ModelFolderDrive
-    template_name = 'core/createXlsx.html'
-    form_class = CreateFolderForm
-    success_url = reverse_lazy('tmp')
-
+from configs import RUTE_XLSX_AGRUPS
 
 def upload_file_drive(request):
     def listar_archivos_recursivamente(ruta):
@@ -55,7 +44,7 @@ def upload_file_drive(request):
 def view_sinc_folder_drive(request):
     drive = ApiDrive("../service_account.json", "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
     files = drive.list_drive()
-
+    print(f"archs: {files}")
     folder_list = []
     for id, value in files.items():
         name = value['name'].strip().lower()
@@ -111,23 +100,3 @@ def view_sinc_folder_drive(request):
                 
 
     return HttpResponse(files)
-
-def tmp_view_duplicate_xlsx(request):
-    files = ModelFileDrive.objects.filter(parentId__isnull=False, driveId__isnull=False)
-    drive = ApiDrive("../service_account.json", "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
-    new_files = []
-    for file in files:
-        id = ROOTS_DRIVE_IDS['common']
-        folders = ModelFolderDrive.objects.filter(parentId__driveId=id)
-
-        for folder in folders:
-            folder = ModelFolderDrive.objects.filter(driveId=folder.driveId).first()
-            if folder is not None:
-                new_file = ModelFileDrive(name=file.name, parentId=folder, listXlsxID=file.listXlsxID)
-                driveId = drive.upload(new_file)
-                new_file.driveId = driveId
-                new_file.save()
-                new_files.append(new_file)
-
-    return HttpResponse(new_files)
-
