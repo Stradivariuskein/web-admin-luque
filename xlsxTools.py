@@ -78,8 +78,6 @@ def get_artcis_from_xlsx(rute_xlsx):
     while row < maxRow:
         cell=str(sheet.cell(row=row,column=col).value).upper()
         cell_title = cell
-        if cell.strip() == 'T-246':
-            print(cell)
         if cell_title == "COD" or cell_title == "COD.":
             row += 1
             cell=str(sheet.cell(row=row,column=col).value).upper()
@@ -152,7 +150,6 @@ def update_xlsx(xlsx_name, xlsx_data):
                                 result_mi = rute_xlsx.find('mi')
                                 result_ma = rute_xlsx.find('ma')
                                 if result_mi > -1:
-                                    print(percent_apli(cell_value, percent))
                                     xlsx_data[code]['price_manual_min'] = percent_apli(cell_value, percent)
                                     sheet[cell] = xlsx_data[code]['price_manual_min']
                                 elif result_ma > -1:
@@ -238,12 +235,10 @@ def update_artics(artics):
         for code, data in artics.items():
             for artic in db_artics:
                 if artic.code == code:
-
                     try:
                         diff_ma = abs(round(artic.priceMa,1) - round(data['priceMa'],1))
                         diff_mi = abs(round(artic.priceMi,1) - round(data['priceMi'],1))
                         if diff_ma > 0.19  or diff_mi > 0.19:
-                            
                             
                             artic.priceMa = data['priceMa']
                             artic.priceMi = data['priceMi']

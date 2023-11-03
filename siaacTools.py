@@ -93,7 +93,7 @@ def reed_artics():
     whith_max_line = 184
     index_fin_desc = -131
     index_ini_price = 86
-    index_price_1 = 84
+
     while linea != "":
         linea = normalizar(linea)
 

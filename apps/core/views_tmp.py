@@ -103,7 +103,7 @@ def tmp_view_duplicate_xlsx(request):
 
     return HttpResponse(new_files)
 
-
+# recorrre todos los archivos de la db y verifica q solo alla 1 solo si hay mas los borra
 def tmp_view_delet_duplicate_drive(request):
     drive = ApiDrive("../service_account.json")
     files = ModelFileDrive.objects.all()

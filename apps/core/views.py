@@ -12,12 +12,15 @@ import datetime
 from datetime import datetime
 import mimetypes
 
+import time
+
 # mis bibliotecas
 from siaacTools import reed_artics
 from xlsxTools import update_xlsx, update_artics
 from configs import *
 from apiDriveV2 import ApiDrive
 from googleapiclient.errors import HttpError
+import multiprocessing
 
 from .models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive
 from .forms import UpdateXlsxForm
@@ -33,7 +36,7 @@ class ViewSelectList(View):
 
         last_update_file = os.path.getmtime(RUTE_SIAAC_FILES+'articDB.txt')
         last_update_file = datetime.fromtimestamp(last_update_file)
-        print('***********************')
+        ('***********************')
         print(f"DBF:\t{last_update_siaac} > mi-file:\t{last_update_file}")
         print(last_update_siaac > last_update_file)
         print('***********************')
@@ -152,8 +155,10 @@ class ViewUpdateXlsxStep2(View):
             
         if len_artics == len(brute_data['price_percent']) ==  len(brute_data['xlsx_ids']) == len(brute_data['price_manual_may']) == len(brute_data['price_manual_min']):
             results = []
+            files = []
             drive = ApiDrive("../service_account.json")
             with transaction.atomic():
+                processes = []
                 xlsx_to_download = ''
                 for xlsx_id, xlsx_data in to_update.items():
 
@@ -164,11 +169,10 @@ class ViewUpdateXlsxStep2(View):
                     
                     update = update_xlsx(current_xslx.name, xlsx_data)
                     
-
                     for file in files_drive:
-
-                        response = drive.upload(file)
-
+                        process = multiprocessing.Process(target=drive.upload, args=(file,))
+                        processes.append(process)
+                        process.start()
 
 
                     current_xslx.modDate = datetime.now()
@@ -180,16 +184,14 @@ class ViewUpdateXlsxStep2(View):
                         current_to_update.delete()
                     xlsx_to_download += str(xlsx_id) + ','
 
-                    links = []
-                    for file in files_drive:
-                        print(f"id:\t{file.driveId},\tname:\t{file.name}")
-                        links.append(f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=1379805933")
-                    results.append(update+[links])
+
+                    results.append(update)
 
                 xlsx_to_download = xlsx_to_download[:-1]
                 context = {
                     'listXlsx': results,
                     'download': xlsx_to_download
+
                     }
 
         return render(request, 'core/update_xlsx_step2.html', context)

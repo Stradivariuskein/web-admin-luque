@@ -25,8 +25,8 @@ class ApiDrive(Drive_manager):
 
     def upload(self, fileDrive: ModelFileDrive):
         if fileDrive.driveId:
-            result = super().delete(fileDrive.driveId)
-            print(result)
+            super().delete(fileDrive.driveId)
+
 
         if fileDrive.parentId.parentId.name == "ma" or fileDrive.parentId.name == "ma":
             response = super().upload( RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
