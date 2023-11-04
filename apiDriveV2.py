@@ -3,6 +3,7 @@ from googleapiclient.errors import HttpError
 
 from apps.core.models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
 from configs import RUTE_XLSX_ORIGIN
+from django.db.utils import OperationalError
 
 import time
 
@@ -32,10 +33,11 @@ class ApiDrive(Drive_manager):
             response = super().upload( RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
         elif fileDrive.parentId.parentId.name == "mi" or fileDrive.parentId.name == "mi":
             response = super().upload( RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
+        # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
         if not isinstance(response,FileNotFoundError):
             fileDrive.driveId = response['id']
             fileDrive.save()
-            return fileDrive
+            return fileDrive                
         else:
             return response
         

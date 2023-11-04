@@ -29,27 +29,6 @@ from .forms import UpdateXlsxForm
 # arriba del todo apareceran las q se tiene q actualizar y despues las q no sufrieron cambios
 class ViewSelectList(View):
     def get(self, request, *args, **kwargs):
-
-        '''# comparamos la fecha del archivo de articulos de siaac con mi archivo de articulos
-        last_update_siaac = os.path.getmtime(RUTE_SIAAC+'ARTIC.DBF')
-        last_update_siaac = datetime.fromtimestamp(last_update_siaac)
-
-        last_update_file = os.path.getmtime(RUTE_SIAAC_FILES+'articDB.txt')
-        last_update_file = datetime.fromtimestamp(last_update_file)
-        ('***********************')
-        print(f"DBF:\t{last_update_siaac} > mi-file:\t{last_update_file}")
-        print(last_update_siaac > last_update_file)
-        print('***********************')
-        # si la fecha de siaac es mayor entonses actualizo mi archivo
-        # si no obtengo todos los articulos
-        if last_update_siaac > last_update_file:
-            print("actualizando articulos")
-            siaac_artics = reed_artics()
-
-        else:
-            print("obteniendo articulos")
-            siaac_artics = get_all_artics()'''
-
         
         siaac_artics = reed_artics()
         lists_xlsx = update_artics(siaac_artics)
@@ -168,7 +147,7 @@ class ViewUpdateXlsxStep2(View):
                     files_drive = ModelFileDrive.objects.filter(listXlsxID=current_xslx)
                     
                     update = update_xlsx(current_xslx.name, xlsx_data)
-                    
+                    # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
                     for file in files_drive:
                         process = multiprocessing.Process(target=drive.upload, args=(file,))
                         processes.append(process)

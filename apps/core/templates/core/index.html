@@ -75,14 +75,28 @@
                         </tr>
                     </thead>
                     <tbody>
+                        
                         {% for xlsx in to_update %}
-                        <!--{% if xlsx %}-->
+                        
                             <tr>
+                                
                                 <td>
                                     <input type="checkbox" name="lists_xlsx" value="{{xlsx}}" checked>
                                 </td>
                                 <td>{{xlsx.0.id}}</td>
-                                <td>{{xlsx.0.name}}</td>
+                                <td >
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">                                        {{xlsx.0.name}} </button>
+                                        <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
+                                            {% for link in xlsx.2 %}
+                                                <div class="text-center btn-link">
+                                                <a target="_blank" href="{{link.1}}">{{link.0}}</a>
+                                                </div>
+
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </td>
                                 <td>{{xlsx.0.modDate}}</td>
                                 <td>
                                     <div class="scrollable-container">
@@ -91,8 +105,10 @@
                                         </div>
                                     </div>
                                 </td>
+
                             </tr>
-                        <!--{% endif %}-->
+
+
                         {% endfor %}
                         {% for xlsx in no_changes %}
                         <!--{% if xlsx %}-->
@@ -101,7 +117,21 @@
                                     <input type="checkbox" name="lists_xlsx" value="{{xlsx}}">
                                 </td>
                                 <td>{{xlsx.0.id}}</td>
-                                <td>{{xlsx.0.name}}</td>
+                                <td >
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">                                        {{xlsx.0.name}} </button>
+                                        <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item">
+
+                                            {% for link in xlsx.2 %}
+                                                <div class="text-center btn-link">
+                                                <a target="_blank" href="{{link.1}}">{{link.0}}</a>
+                                                </div>
+
+                                            {% endfor %}
+
+                                        </ul>
+                                    </div>
+                                </td>
                                 <td>{{xlsx.0.modDate}}</td>
                                 <td>
                                     <div class="scrollable-container">

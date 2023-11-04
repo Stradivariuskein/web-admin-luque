@@ -3,7 +3,7 @@ import os
 import re
 from datetime import datetime
 from configs import *
-from apps.core.models import ModelArtic, ModelToUpdateList
+from apps.core.models import ModelArtic, ModelToUpdateList, ModelFileDrive
 
 from django.db import transaction
 
@@ -215,8 +215,23 @@ def get_codes_to_xlsx_list(lists_xlsx):
                 codes += artic['code'] + ', '
 
             codes = codes[:-2]
-            
-            lists_xlsx = [(xlsx, codes)] + lists_xlsx
+            files_drive = ModelFileDrive.objects.filter(listXlsxID=xlsx)
+
+            links = []
+            for file in files_drive:
+                if file.parentId.name == "ma":
+                    label = "Link comun Mayorista"
+                elif file.parentId.name == "mi":
+                    label = "Link comun Minorista"
+                elif file.parentId.parentId.name == "ma":
+                    label = "Link ordenado Mayorista"
+                elif file.parentId.parentId.name == "mi":
+                    label = "Link ordenado Minorista"
+                else:
+                    label = "no label"
+                links.append((label,f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=1660344131"))
+            lists_xlsx = [(xlsx, codes, links)] + lists_xlsx
+            print((xlsx, codes, links))
     return lists_xlsx
 
 
