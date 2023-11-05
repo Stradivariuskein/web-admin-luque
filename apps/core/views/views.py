@@ -22,8 +22,8 @@ from apiDriveV2 import ApiDrive
 from googleapiclient.errors import HttpError
 import multiprocessing
 
-from .models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive
-from .forms import UpdateXlsxForm
+from apps.core.models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive
+from apps.core.forms import UpdateXlsxForm
  
 # muestra todas las listas de precio para q las selecione el usuario
 # arriba del todo apareceran las q se tiene q actualizar y despues las q no sufrieron cambios

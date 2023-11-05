@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 
-from .models import ModelListXlsx, ModelArtic, ModelFolderDrive, ModelFileDrive
+from apps.core.models import ModelListXlsx, ModelArtic, ModelFolderDrive, ModelFileDrive
 
 from siaacTools import reed_artics
 from xlsxTools import get_artcis_from_xlsx

@@ -16,12 +16,13 @@ Including another URLconf
 """
 
 from django.urls import path
-from .views import CreateXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, ViewSelectList, download_xlsx
-from .views_tmp import tmp_view_delet_duplicate_drive
+from apps.core.views.views import CreateXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, ViewSelectList, download_xlsx
+from apps.core.views.views_tmp import tmp_view_delet_duplicate_drive
+from apps.core.views.view_search import ViewSearchArtic
 
 
 urlpatterns = [
-    path('test/', tmp_view_delet_duplicate_drive, name='test'),
+    path('test/', ViewSearchArtic.as_view(), name='test'),
     path('', ViewSelectList.as_view(), name='listas-xlsx'),
     path('create/', CreateXlsx.as_view(), name='create-list-xlsx'),
     path('xlsxstep1/', ViewUpdateXlsxStep1.as_view(), name='udate-xlsx-step1'),

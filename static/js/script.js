@@ -48,7 +48,7 @@ function searchTable() {
       var shouldShowRow = false;
 
       // Verifica cada celda de la fila para el término de búsqueda
-      for (var j = 1; j < cells.length; j++) {  // Comienza en 1 para omitir la primera celda con el checkbox
+      for (var j = 0; j < cells.length; j++) {  
           var cellText = cells[j].textContent || cells[j].innerText;
           if (cellText.toUpperCase().indexOf(filter) > -1) {
               shouldShowRow = true;
@@ -86,7 +86,7 @@ function searchTable2() {
           var found = false;  // Asume que la palabra no se ha encontrado en la fila
 
           // Verifica cada celda de la fila para la palabra de búsqueda
-          for (var j = 1; j < cells.length; j++) {  // Comienza en 1 para omitir la primera celda con el checkbox
+          for (var j = 0; j < cells.length; j++) {  // Comienza en 1 para omitir la primera celda con el checkbox
               var cellText = cells[j].textContent || cells[j].innerText;
               if (cellText.toUpperCase().indexOf(keyword) > -1) {
                   found = true;

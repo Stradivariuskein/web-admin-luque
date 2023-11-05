@@ -3,8 +3,8 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 
-from .models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
-from .forms import CreateFolderForm
+from apps.core.models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
+from apps.core.forms import CreateFolderForm
 
 from apiDriveV2 import ApiDrive
 from configs import RUTE_XLSX_AGRUPS
