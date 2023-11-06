@@ -112,17 +112,30 @@ function searchTable2() {
 
 // Función para realizar las acciones en segundo plano
 function uploadDrive() {
-    // Simula un proceso en segundo plano, puedes reemplazarlo con tus propias acciones
-    $.ajax({
-        type: "POST",
-        url: "{% url 'acciones_segundo_plano' %}",
-        data: {},
-        success: function(data) {
-            // Redirige al usuario cuando las acciones se completan
-            window.location.href = "{% url 'otra_vista' %}";
-        }
-    });
+    // Obtener el atributo href de la etiqueta <a>
+    var link = document.getElementById("btn-download").getAttribute("href");
+    var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+    // Extraer el valor de 'ids' de la URL
+    var data = link.split('?')[1].split('=')[1];
+
+    // Luego, puedes usar 'data' en tu solicitud AJAX
+    for (var id in data) {
+        $.ajax({
+            type: "POST",
+            url: "/uploadDrive/",
+            data: {'ids': id},
+            headers: {
+                "X-CSRFToken": csrfToken.value  // Agrega el token CSRF a la cabecera
+            },
+            success: function(data) {
+                // cambiar el estado a subido y un tilde
+                let status = document.getElementById(data.status)
+                status.innerText = "Subido"
+                console.log(`subido ${data.status}`)
+            }
+        });
+    }
+
 }
 
-// Llamar a la función para realizar las acciones en segundo plano
-realizarAcciones();

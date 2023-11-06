@@ -191,6 +191,7 @@ class ViewUploadDrive(View):
         data = request.POST
         drive = ApiDrive("../service_account.json")
         xlsx = data['xlsx']
+        xlsx = ModelListXlsx.objects.filter(id=xlsx)
         files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
         pool = multiprocessing.Pool()
 
@@ -203,7 +204,7 @@ class ViewUploadDrive(View):
         with transaction.atomic():
             for file in results:
                 file.save()
-        return JsonResponse({'status': True})
+        return JsonResponse({'status': xlsx.name})
     
 
 def download_xlsx(request):

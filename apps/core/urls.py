@@ -16,7 +16,7 @@ Including another URLconf
 """
 
 from django.urls import path
-from apps.core.views.views import CreateXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, ViewSelectList, download_xlsx
+from apps.core.views.views import CreateXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, ViewSelectList, download_xlsx, ViewUploadDrive
 from apps.core.views.views_tmp import tmp_view_delet_duplicate_drive
 from apps.core.views.view_search import ViewSearchArtic
 
@@ -28,6 +28,7 @@ urlpatterns = [
     path('xlsxstep1/', ViewUpdateXlsxStep1.as_view(), name='udate-xlsx-step1'),
     path('xlsxstep2/', ViewUpdateXlsxStep2.as_view(), name='udate-xlsx-step2'),
     path('download/', download_xlsx, name='download'),
+    path('uploadDrive/', ViewUploadDrive.as_view(), name='upload-drive'),
 
 
 ]
