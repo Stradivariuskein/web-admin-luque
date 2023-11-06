@@ -41,6 +41,7 @@ class ModelArtic(models.Model):
         return f"{self.code},{self.description},{self.row},{self.col},may: {self.priceMa}, min: {self.priceMi}"
 
     # indexo el campo code
+    # aumenta el rendimiento en la db
     class Meta:
         indexes = [
             models.Index(fields=['code', 'listXlsxID'])
@@ -58,7 +59,10 @@ class ModelFileDrive(models.Model):
         driveId = self.driveId
         return f"name: {name}"
     
-    
+
+class ModelUploadingDrive(models.Model):
+    fileDrive = models.ForeignKey(to=ModelFolderDrive, on_delete=models.SET_NULL, null=True)
+    uploaded = models.BooleanField(default=False)
     
 
 

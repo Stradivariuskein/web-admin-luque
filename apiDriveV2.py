@@ -3,7 +3,7 @@ from googleapiclient.errors import HttpError
 
 from apps.core.models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
 from configs import RUTE_XLSX_ORIGIN
-from django.db.utils import OperationalError
+import multiprocessing
 
 import time
 
@@ -36,7 +36,7 @@ class ApiDrive(Drive_manager):
         # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
         if not isinstance(response,FileNotFoundError):
             fileDrive.driveId = response['id']
-            fileDrive.save()
+            #fileDrive.save()
             return fileDrive                
         else:
             return response
@@ -48,6 +48,14 @@ class ApiDrive(Drive_manager):
             if result:
                 response = super().delete(fileDrive.driveId)
         return response
+
+
+def upload_drive_and_update_db(files_drive: ModelFileDrive, api_drive: ApiDrive):
+    processes = []
+    for file in files_drive:
+        process = multiprocessing.Process(target=drive.upload, args=(file,))
+        processes.append(process)
+        process.start()
 
 
 if __name__ == '__main__':

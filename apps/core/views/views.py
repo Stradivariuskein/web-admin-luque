@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import View
 from django.db import transaction
 
@@ -18,18 +18,18 @@ import time
 from siaacTools import reed_artics
 from xlsxTools import update_xlsx, update_artics
 from configs import *
-from apiDriveV2 import ApiDrive
+from apiDriveV2 import ApiDrive, upload_drive_and_update_db
 from googleapiclient.errors import HttpError
 import multiprocessing
 
-from apps.core.models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive
+from apps.core.models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive, ModelUploadingDrive
 from apps.core.forms import UpdateXlsxForm
  
 # muestra todas las listas de precio para q las selecione el usuario
 # arriba del todo apareceran las q se tiene q actualizar y despues las q no sufrieron cambios
 class ViewSelectList(View):
     def get(self, request, *args, **kwargs):
-        
+        #agregar lo q se esta subiendo al drive
         siaac_artics = reed_artics()
         lists_xlsx = update_artics(siaac_artics)
 
@@ -137,7 +137,8 @@ class ViewUpdateXlsxStep2(View):
             files = []
             drive = ApiDrive("../service_account.json")
             with transaction.atomic():
-                processes = []
+                files_upload = {}
+
                 xlsx_to_download = ''
                 for xlsx_id, xlsx_data in to_update.items():
 
@@ -147,11 +148,14 @@ class ViewUpdateXlsxStep2(View):
                     files_drive = ModelFileDrive.objects.filter(listXlsxID=current_xslx)
                     
                     update = update_xlsx(current_xslx.name, xlsx_data)
+                    
+                    # se agregan a una tabla todos los archivos q se tiene q subir
+                    
                     # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
-                    for file in files_drive:
+                    '''for file in files_drive:
                         process = multiprocessing.Process(target=drive.upload, args=(file,))
                         processes.append(process)
-                        process.start()
+                        process.start()'''
 
 
                     current_xslx.modDate = datetime.now()
@@ -182,6 +186,25 @@ class CreateXlsx(CreateView):
     success_url = reverse_lazy('create-list-xlsx')
     fields = ['name', 'driveId', 'modDate', 'img', 'pathlocal']
 
+class ViewUploadDrive(View):
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        drive = ApiDrive("../service_account.json")
+        xlsx = data['xlsx']
+        files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
+        pool = multiprocessing.Pool()
+
+        # Utiliza pool.map para ejecutar la función en paralelo para cada archivo
+        results = pool.map(drive.upload, files)
+
+        # Cierra el pool de procesos
+        pool.close()
+        pool.join()
+        with transaction.atomic():
+            for file in results:
+                file.save()
+        return JsonResponse({'status': True})
+    
 
 def download_xlsx(request):
     def compress_files(list_files):

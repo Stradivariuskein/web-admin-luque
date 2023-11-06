@@ -110,6 +110,19 @@ function searchTable2() {
   }
 }
 
-// Agrega un event listener para llamar a la función de búsqueda cuando se escriba en el campo de búsqueda
-//var searchInput = document.getElementById('searchInput');
-//searchInput.addEventListener('input', searchTable);
+// Función para realizar las acciones en segundo plano
+function uploadDrive() {
+    // Simula un proceso en segundo plano, puedes reemplazarlo con tus propias acciones
+    $.ajax({
+        type: "POST",
+        url: "{% url 'acciones_segundo_plano' %}",
+        data: {},
+        success: function(data) {
+            // Redirige al usuario cuando las acciones se completan
+            window.location.href = "{% url 'otra_vista' %}";
+        }
+    });
+}
+
+// Llamar a la función para realizar las acciones en segundo plano
+realizarAcciones();
