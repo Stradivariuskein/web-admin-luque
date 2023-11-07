@@ -117,25 +117,27 @@ function uploadDrive() {
     var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
     // Extraer el valor de 'ids' de la URL
-    var data = link.split('?')[1].split('=')[1];
+    var ids = link.split('?')[1].split('=')[1];
 
-    // Luego, puedes usar 'data' en tu solicitud AJAX
-    for (var id in data) {
-        $.ajax({
-            type: "POST",
-            url: "/uploadDrive/",
-            data: {'ids': id},
-            headers: {
-                "X-CSRFToken": csrfToken.value  // Agrega el token CSRF a la cabecera
-            },
-            success: function(data) {
-                // cambiar el estado a subido y un tilde
-                let status = document.getElementById(data.status)
+
+    
+    $.ajax({
+        type: "POST",
+        url: "/uploadDrive/",
+        data: {'xlsx_id': ids},
+        headers: {
+            "X-CSRFToken": csrfToken  // Agrega el token CSRF a la cabecera
+        },
+        success: function(data) {
+            // cambiar el estado a subido y un tilde
+            for (let name of data.names) {
+                let status = document.getElementById(name)
                 status.innerText = "Subido"
-                console.log(`subido ${data.status}`)
+                console.log(`subido ${name}`)
             }
-        });
-    }
+        }
+    });
+    
 
 }
 

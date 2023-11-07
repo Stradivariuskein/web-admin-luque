@@ -45,10 +45,7 @@ def buscarPrecio(cod, lista_num):
     for linea in file:
        
         result = re.findall(patron, linea)
-        #i+=1
-        
-        #if i == 4909 and cod == 'TUA-104':
-        #    print(linea)
+
        
         if result:
             precio = linea[inicioPrecio:finprecio]
@@ -231,7 +228,7 @@ def get_codes_to_xlsx_list(lists_xlsx):
                     label = "no label"
                 links.append((label,f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=1660344131"))
             lists_xlsx = [(xlsx, codes, links)] + lists_xlsx
-            print((xlsx, codes, links))
+
     return lists_xlsx
 
 

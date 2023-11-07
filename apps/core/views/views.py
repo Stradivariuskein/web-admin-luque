@@ -190,9 +190,19 @@ class ViewUploadDrive(View):
     def post(self, request, *args, **kwargs):
         data = request.POST
         drive = ApiDrive("../service_account.json")
-        xlsx = data['xlsx']
-        xlsx = ModelListXlsx.objects.filter(id=xlsx)
-        files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
+        xlsx_ids = data['xlsx_id'].split(',')
+        files = ModelFileDrive.objects.none()
+        names_xlsx = []
+        for id in xlsx_ids:
+            try:
+                xlsx = ModelListXlsx.objects.get(id=id)
+                names_xlsx.append(xlsx.name)
+            except ModelListXlsx.DoesNotExist:
+                xlsx = None
+            current_files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
+            files |= current_files
+
+
         pool = multiprocessing.Pool()
 
         # Utiliza pool.map para ejecutar la función en paralelo para cada archivo
@@ -204,7 +214,8 @@ class ViewUploadDrive(View):
         with transaction.atomic():
             for file in results:
                 file.save()
-        return JsonResponse({'status': xlsx.name})
+
+        return JsonResponse({'names': names_xlsx})
     
 
 def download_xlsx(request):
