@@ -20,7 +20,7 @@ from apps.core.tools.xlsxTools import update_xlsx, update_artics
 from configs import *
 from apps.core.tools.apiDriveV2 import ApiDrive, upload_drive_and_update_db
 from googleapiclient.errors import HttpError
-import multiprocessing
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from apps.core.models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive, ModelUploadingDrive
 from apps.core.forms import UpdateXlsxForm
@@ -207,20 +207,19 @@ class ViewUploadDrive(View):
             files |= current_files
 
 
-        pool = multiprocessing.Pool()
+        with ThreadPoolExecutor(max_workers=4) as executor:  # Ajusta el número de subprocesos según tus necesidades
+            futures = {executor.submit(drive.upload, file): file for file in files}
 
-        # Utiliza pool.map para ejecutar la función en paralelo para cada archivo
-        results = pool.map(drive.upload, files)
-
-        # Cierra el pool de procesos
-        pool.close()
-        pool.join()
-        with transaction.atomic():
-            for file in results:
-                file.save()
-                print("************************")
-                print(f"subido: {file.name}")
-                print("************************")
+            for future in as_completed(futures):
+                
+                file = futures[future]
+                
+                try:
+                    
+                    file.save()
+                    
+                except Exception as e:
+                    print(f"Error al guardar en la db {file.name}: {e}")
 
         return JsonResponse({'names': names_xlsx})
     
