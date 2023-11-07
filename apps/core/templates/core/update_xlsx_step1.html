@@ -1,50 +1,16 @@
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luque</title>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet"> <!-- https://fonts.google.com/ -->
-    <link rel="stylesheet" href="fontawesome/css/all.min.css"> <!-- https://fontawesome.com/ -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/my_styles.css' %}">
+{% extends "core/base.html" %}
 
+{% block content %}
 
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a class="navbar-brand" href="#">Luque</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Listas de precios</a>
-                </li>
-                <!--
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Acerca de</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Servicios</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contacto</a>
-                </li>
-                -->
-            </ul>
+    <div class="my-5">
+        <div class="pt-5 my-5 text-center">
+            <h1>Actializar listas paso 1</h1>
         </div>
-    </nav>
-
-    <div class="w-90 margin-auto">
-        <h1>Tabla Responsiva con Bootstrap</h1>
         <form method="post" action="{% url 'udate-xlsx-step2' %}">
             {% csrf_token %}
             
-            <div class="scrollable-body my-5">
+            <div class="scrollable-body">
                 {% for xlsx in listXlsx %}
                 <div class="dropdown">
                     <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">
@@ -130,14 +96,4 @@
     </div>
 
 
-
-    <footer class="tm-footer">
-        <p>Echo por Alan Luque</p>
-</footer>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script src="{%static 'js/script.js'%}"></script>
-</body>
-</html>
+{% endblock content %} 

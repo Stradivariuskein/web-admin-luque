@@ -1,4 +1,4 @@
-from driver_manager import Drive_manager
+from apps.core.tools.driver_manager import Drive_manager
 from googleapiclient.errors import HttpError
 
 from apps.core.models import ModelFileDrive, ModelFolderDrive, ModelListXlsx

@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.views.generic import ListView
 
 from apps.core.models import ModelArtic
-from siaacTools import reed_artics
-from xlsxTools import update_artics
+from apps.core.tools.siaacTools import reed_artics
+from apps.core.tools.xlsxTools import update_artics
 
 class ViewSearchArtic(ListView):
     model= ModelArtic

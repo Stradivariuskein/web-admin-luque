@@ -2,9 +2,9 @@ from django.http import HttpResponse
 
 from apps.core.models import ModelListXlsx, ModelArtic, ModelFolderDrive, ModelFileDrive
 
-from siaacTools import reed_artics
-from xlsxTools import get_artcis_from_xlsx
-from apiDriveV2 import ApiDrive
+from apps.core.tools.siaacTools import reed_artics
+from apps.core.tools.xlsxTools import get_artcis_from_xlsx
+from apps.core.tools.apiDriveV2 import ApiDrive
 from googleapiclient.errors import HttpError
 
 from configs import RUTE_XLSX_AGRUPS, ROOTS_DRIVE_IDS

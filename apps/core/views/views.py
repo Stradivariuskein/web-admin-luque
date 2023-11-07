@@ -15,10 +15,10 @@ import mimetypes
 import time
 
 # mis bibliotecas
-from siaacTools import reed_artics
-from xlsxTools import update_xlsx, update_artics
+from apps.core.tools.siaacTools import reed_artics
+from apps.core.tools.xlsxTools import update_xlsx, update_artics
 from configs import *
-from apiDriveV2 import ApiDrive, upload_drive_and_update_db
+from apps.core.tools.apiDriveV2 import ApiDrive, upload_drive_and_update_db
 from googleapiclient.errors import HttpError
 import multiprocessing
 
@@ -188,6 +188,7 @@ class CreateXlsx(CreateView):
 
 class ViewUploadDrive(View):
     def post(self, request, *args, **kwargs):
+        print("subiendo")
         data = request.POST
         drive = ApiDrive("../service_account.json")
         xlsx_ids = data['xlsx_id'].split(',')
@@ -197,6 +198,9 @@ class ViewUploadDrive(View):
             try:
                 xlsx = ModelListXlsx.objects.get(id=id)
                 names_xlsx.append(xlsx.name)
+                print("************************")
+                print(f"obteniendo: {xlsx}")
+                print("************************")
             except ModelListXlsx.DoesNotExist:
                 xlsx = None
             current_files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
@@ -214,6 +218,9 @@ class ViewUploadDrive(View):
         with transaction.atomic():
             for file in results:
                 file.save()
+                print("************************")
+                print(f"subido: {file.name}")
+                print("************************")
 
         return JsonResponse({'names': names_xlsx})
     

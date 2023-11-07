@@ -42,6 +42,10 @@ td{
   display: none;
 }
 
+.card {
+  background-color: rgb(230, 241, 128);
+  border-radius: 10px;
+}
 
 .scrollable-table {
 

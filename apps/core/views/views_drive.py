@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from apps.core.models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
 from apps.core.forms import CreateFolderForm
 
-from apiDriveV2 import ApiDrive
+from apps.core.tools.apiDriveV2 import ApiDrive
 from configs import RUTE_XLSX_AGRUPS
 
 def upload_file_drive(request):
