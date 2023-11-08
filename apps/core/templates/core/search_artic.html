@@ -1,6 +1,22 @@
 
 {% extends "core/base.html" %}
 
+
+{% block search_table %}
+
+<div class="container"> 
+    <div class="w-75 p-auto mx-auto"> 
+
+        <div class="input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre o códigos..." onkeyup="searchTable()">
+        </div>
+
+    </div>
+</div>
+    
+{% endblock search_table %}
+    
+
 {% block content %}
 
     <div class="container my-5">

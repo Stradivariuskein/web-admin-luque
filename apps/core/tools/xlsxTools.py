@@ -241,6 +241,7 @@ def update_artics(artics):
         artic_exist = False
         to_update = []
         no_changes = []
+        counter = 0
 
         
         # verifico q los precios esten actualizados, si no los actualiza
@@ -268,14 +269,35 @@ def update_artics(artics):
                                
 
 
-                        elif not artic.listXlsxID in no_changes and not artic.listXlsxID in to_update:
-                            no_changes.append(artic.listXlsxID)
+                        elif artic.listXlsxID is not None:
+                            
+                            if not artic.listXlsxID in no_changes and not artic.listXlsxID in to_update:
+                                    # ordeno las listas por fecha
+                                    len_no_changes = len(no_changes)
+                                    if len_no_changes > 0:
+                                        
+                                        if no_changes[-1].modDate > artic.listXlsxID.modDate:
+                                            no_changes.append(artic.listXlsxID)
+                                        else:
+                                            for i in range(len_no_changes-1,0,-1):
+                                               
+                                                if no_changes[i].modDate > artic.listXlsxID.modDate:
+                                                    no_changes.insert(i, artic.listXlsxID)
+                                                    break
+                                            else:
+                                                no_changes.insert(0, artic.listXlsxID)
+                                    else:
+                                        no_changes.append(artic.listXlsxID)
+
+                                    
+
+                                
                     except KeyError:
                         print(KeyError("Error en la data"))
                     except Exception as e:
                         print("*************************************")
-                        print(f"Error: {e}")
-                        xlsx_change
+                        print(f"Error xlsxTools.update_artics: {e}")
+
                     artic_exist = True
                 
 
@@ -303,7 +325,9 @@ def update_artics(artics):
     for update_xlsx in to_update:
         if update_xlsx in no_changes:
             no_changes.remove(update_xlsx)
-
+    print("*************************************")
+    print(f"len_nochange: {len(no_changes)}")
+    print("*************************************")
 
     return {
         'to_update': to_update,

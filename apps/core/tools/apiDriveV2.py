@@ -34,7 +34,7 @@ class ApiDrive(Drive_manager):
         elif fileDrive.parentId.parentId.name == "mi" or fileDrive.parentId.name == "mi":
             response = super().upload( RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
         # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
-        if not isinstance(response,FileNotFoundError):
+        if isinstance(response,ModelFileDrive):
             fileDrive.driveId = response['id']
             #fileDrive.save()
             return fileDrive                

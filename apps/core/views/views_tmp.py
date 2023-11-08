@@ -147,36 +147,12 @@ def view_check_drive_id(request):
     not_funds = []
     for file in files:
         response = drive.get_file(file.driveId)
+        # validar si el archivo esta en el drive si no esta hay q subirlo
         if isinstance(response, HttpError):
+            # falta validar si existe en la carpeta contenedora
+            file = drive.upload(file)
+            file.save()
             not_funds.append(file)
-            files_drive = drive.find_file_id_by_name(file.name,parent_id=file.parentId.driveId)
-            len_files = len(files_drive) 
-            if len_files > 1:
-                print("************************")
-                print(len_files)
-                print(files_drive)
-                
-                for i in range(len_files-1,0,-1): # bucle inverso dejando el primero
-                    tmp_file = ModelFileDrive(driveId=files_drive[i][0])
-                    drive.delete(tmp_file)
-                    print(f"archivo eliminado:\t{files_drive[i]}")
-                    del files_drive[i]
-                len_files = len(files_drive) 
-
-                if len_files == 1:
-                    file.driveId = files_drive[0][0]
-                    file.save()
-                    print(files_drive)
-                    print(f"name:\t{file.name}\tid:\t{file.driveId}")
-
-                print("************************")
-            else:
-                print("************************")
-                file.driveId = files_drive[0][0]
-                file.save()
-                print(files_drive)
-                print(f"name:\t{file.name}\tid:\t{file.driveId}")
-                print("************************")
 
         
 

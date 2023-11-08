@@ -20,16 +20,11 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <a class="navbar-brand" href="#">Luque</a>
-
-        <div class="container"> 
-            <div class="w-75 p-auto mx-auto"> 
-
-                <div class="input-group">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre o códigos..." onkeyup="searchTable2()">
-                </div>
-
-            </div>
-        </div>
+        
+        {% block search_table %}
+            
+        {% endblock search_table %}
+            
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

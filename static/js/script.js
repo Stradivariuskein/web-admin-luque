@@ -33,39 +33,9 @@ function handleCheckboxClick(checkbox) {
 }
 
 
+
+
 function searchTable() {
-  // Obtén el término de búsqueda
-  var input = document.getElementById('searchInput');
-  var filter = input.value.toUpperCase();
-
-  // Obtén la tabla y las filas
-  var table = document.querySelector('.table');
-  var rows = table.getElementsByTagName('tr');
-
-  // Recorre las filas y oculta las que no coincidan con el término de búsqueda
-  for (var i = 1; i < rows.length; i++) {  // Comienza en 1 para omitir la fila de encabezado
-      var cells = rows[i].getElementsByTagName('td');
-      var shouldShowRow = false;
-
-      // Verifica cada celda de la fila para el término de búsqueda
-      for (var j = 0; j < cells.length; j++) {  
-          var cellText = cells[j].textContent || cells[j].innerText;
-          if (cellText.toUpperCase().indexOf(filter) > -1) {
-              shouldShowRow = true;
-              break;
-          }
-      }
-
-      // Muestra u oculta la fila
-      if (shouldShowRow) {
-          rows[i].style.display = '';
-      } else {
-          rows[i].style.display = 'none';
-      }
-  }
-}
-
-function searchTable2() {
   // Obtén el término de búsqueda
   var input = document.getElementById('searchInput');
   var filter = input.value.toUpperCase();

@@ -38,7 +38,7 @@ class ViewSelectList(View):
             
         return render(request, 'core/index.html', context)
             
-#hola
+
 
 #posterior a la seleccion de las lista te pedira si quieres actualizarlas automaticamente usando los precios de la db,
 # actualizarlo manualmente o poniendo un porsentaje
@@ -145,18 +145,10 @@ class ViewUpdateXlsxStep2(View):
                     
                     #actualiza la fecha de modificacion
                     current_xslx = ModelListXlsx.objects.filter(id=xlsx_id).first()
-                    files_drive = ModelFileDrive.objects.filter(listXlsxID=current_xslx)
                     
                     update = update_xlsx(current_xslx.name, xlsx_data)
                     
-                    # se agregan a una tabla todos los archivos q se tiene q subir
-                    
-                    # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
-                    '''for file in files_drive:
-                        process = multiprocessing.Process(target=drive.upload, args=(file,))
-                        processes.append(process)
-                        process.start()'''
-
+                   
 
                     current_xslx.modDate = datetime.now()
                     current_xslx.save()
@@ -186,6 +178,10 @@ class CreateXlsx(CreateView):
     success_url = reverse_lazy('create-list-xlsx')
     fields = ['name', 'driveId', 'modDate', 'img', 'pathlocal']
 
+# recive los ids separados por ','(ej: '1,50,28,36...') de 
+# las lista a subir busca en la db todos los archivos q tenga esos ids
+# los sube al drive y actualiza la db
+# es una pecion ajax por post
 class ViewUploadDrive(View):
     def post(self, request, *args, **kwargs):
         print("subiendo")
@@ -195,39 +191,42 @@ class ViewUploadDrive(View):
         files = ModelFileDrive.objects.none()
         names_xlsx = []
         for id in xlsx_ids:
+
             try:
                 xlsx = ModelListXlsx.objects.get(id=id)
                 names_xlsx.append(xlsx.name)
-                print("************************")
-                print(f"obteniendo: {xlsx}")
-                print("************************")
             except ModelListXlsx.DoesNotExist:
                 xlsx = None
             current_files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
             files |= current_files
 
 
-        with ThreadPoolExecutor(max_workers=4) as executor:  # Ajusta el número de subprocesos según tus necesidades
+        with ThreadPoolExecutor(max_workers=2) as executor:  # Ajusta el número de subprocesos según tus necesidades
             futures = {executor.submit(drive.upload, file): file for file in files}
-
-            for future in as_completed(futures):
-                
-                file = futures[future]
-                
-                try:
+            with transaction.atomic():
+                for future in as_completed(futures):
                     
-                    file.save()
+                    file = futures[future]
+                    print(f"file: {file}")
                     
-                except Exception as e:
-                    print(f"Error al guardar en la db {file.name}: {e}")
+                    try:
+                        
+                        file.save()
+                        
+                    except Exception as e:
+                        print(f"Error al guardar en la db {file.name}: {e}")
 
         return JsonResponse({'names': names_xlsx})
     
 
+# recive los ids separados por ','(ej: '1,50,28,36...') de 
+# las listas a descargar, las comprime en un zip 
 def download_xlsx(request):
+    #comprime los archivo en un zip
     def compress_files(list_files):
         # Nombre del archivo comprimido
-        zip_file = 'listas_de_precios.zip'
+        date_now_str = datetime.now().date().strftime("%d-%m-%Y")
+        zip_file = f'listas_de_precios-{date_now_str}.zip'
         tmp_dir = tempfile.mkdtemp()
         # Ruta completa para el archivo zip
         rute_zip = os.path.join(tmp_dir, zip_file)

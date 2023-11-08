@@ -1,9 +1,31 @@
 
 {% extends "core/base.html" %}
 
+
+{% block search_table %}
+    
+<div class="container"> 
+    <div class="w-75 p-auto mx-auto"> 
+
+        <div class="input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre o códigos..." onkeyup="searchTable()">
+        </div>
+
+    </div>
+</div>
+
+{% endblock search_table %}
+    
+
 {% block content %}
-
-
+    <!-- faltan agregar esta funcionalidades
+    <div>
+     <a type="btn-secondary" href="#">restaurar drive</a>
+     <a type="btn-secondary" href="#">restaurar listas xlsx</a>
+     <a type="btn-secondary" href="#">editar drive</a>
+     <a type="btn-secondary" href="#">agregar lista</a>
+    </div>
+    -->
     
     <div class="py-5 my-5">
         <div class="pt-5 my-5 text-center">
