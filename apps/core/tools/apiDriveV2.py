@@ -28,19 +28,25 @@ class ApiDrive(Drive_manager):
         if fileDrive.driveId:
             super().delete(fileDrive.driveId)
 
+        try:
+            if fileDrive.parentId.parentId.name == "ma" or fileDrive.parentId.name == "ma":
+                response = super().upload( RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
+            elif fileDrive.parentId.parentId.name == "mi" or fileDrive.parentId.name == "mi":
+                response = super().upload( RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
+        except Exception as e:
+            print(f"error con el dirve: {e}")
 
-        if fileDrive.parentId.parentId.name == "ma" or fileDrive.parentId.name == "ma":
-            response = super().upload( RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
-        elif fileDrive.parentId.parentId.name == "mi" or fileDrive.parentId.name == "mi":
-            response = super().upload( RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
         # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
-        if isinstance(response,ModelFileDrive):
+        if not isinstance(response,ModelFileDrive):
             fileDrive.driveId = response['id']
             #fileDrive.save()
-            return fileDrive                
+            msj = f"output upload: {fileDrive}"
+            return fileDrive       
         else:
+            msj = f"output upload: {response}"
             return response
         
+
     def delete(self, fileDrive: ModelFileDrive):
         response = super().delete(fileDrive.driveId)
         if isinstance(response,HttpError):

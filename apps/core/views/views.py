@@ -21,6 +21,7 @@ from configs import *
 from apps.core.tools.apiDriveV2 import ApiDrive, upload_drive_and_update_db
 from googleapiclient.errors import HttpError
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
 
 from apps.core.models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive, ModelUploadingDrive
 from apps.core.forms import UpdateXlsxForm
@@ -184,6 +185,11 @@ class CreateXlsx(CreateView):
 # es una pecion ajax por post
 class ViewUploadDrive(View):
     def post(self, request, *args, **kwargs):
+        results_threads = []
+        def upload_save_file(file):
+            drive = ApiDrive("../service_account.json")
+            results_threads.append(drive.upload(file))
+
         print("subiendo")
         data = request.POST
         drive = ApiDrive("../service_account.json")
@@ -201,20 +207,33 @@ class ViewUploadDrive(View):
             files |= current_files
 
 
-        with ThreadPoolExecutor(max_workers=2) as executor:  # Ajusta el número de subprocesos según tus necesidades
+        '''with ThreadPoolExecutor(max_workers=2) as executor:  # Ajusta el número de subprocesos según tus necesidades
             futures = {executor.submit(drive.upload, file): file for file in files}
-            with transaction.atomic():
-                for future in as_completed(futures):
+           
+            for future in as_completed(futures):
+                
+                file, msj = futures[future]
+                print(type(file))
+                print(f"file: {file} || {msj}")
+                
+                try:
                     
-                    file = futures[future]
-                    print(f"file: {file}")
+                    file.save()
                     
-                    try:
-                        
-                        file.save()
-                        
-                    except Exception as e:
-                        print(f"Error al guardar en la db {file.name}: {e}")
+                except Exception as e:
+                    print(f"Error al guardar en la db {file.name}: {e}")'''
+        threads = []
+
+        for file in files:
+            thread = threading.Thread(target=upload_save_file, args=(file,))
+            threads.append(thread)
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+
+        for file in results_threads:
+            file.save()
 
         return JsonResponse({'names': names_xlsx})
     
