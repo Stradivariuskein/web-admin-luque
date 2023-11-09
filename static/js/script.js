@@ -1,5 +1,5 @@
-function toggleDropdown(index) {
-  const dropdownMenu = $(`#dropdown-menu-${index}`);
+function toggleDropdown(id) {
+  const dropdownMenu = $(`#${id}`);
   dropdownMenu.toggle();
   
   // Hide other dropdown menus

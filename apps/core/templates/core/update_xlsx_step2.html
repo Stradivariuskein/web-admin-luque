@@ -7,7 +7,7 @@
         <div class="pt-5 my-5 text-center">
             <h1>Actualizar listas paso final</h1>
         </div>
-        <div class="pt-5 my-5 text-center card justify-content-center">
+        <div id="msj" class="pt-5 my-5 text-center card justify-content-center">
             <p>Espere a que todas las listas digan subido</p>
         </div>
             <div class="scrollable-body my-5">
@@ -18,7 +18,7 @@
                     
                     <tr class="w-100">
                         <td class="w-90">
-                            <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">
+                            <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('dropdown-menu-{{ forloop.counter }}')">
                             {{ xlsx_tuple.0 }}                        
                             </button>
                         
@@ -69,7 +69,15 @@
                                 </div>
                             </ul>
                         </td>
-                    <td class="w-10 px-0 ml-0"><div id="{{ xlsx_tuple.0 }}" class="margin-auto">Subiendo al drive...</div></td>
+                    <td class="w-10 px-0 ml-0">
+                        <div class="dropdown" id="{{ xlsx_tuple.0 }}" class="margin-auto">
+                            
+                            <button type="button" onclick="toggleDropdown('links-{{ forloop.counter }}')">Subiendo al drive...</button>
+
+                            <ul id="links-{{ forloop.counter }}" class="pl-0 ofusqued-item w-100"></ul>
+                        </div>
+                    
+                </td>
 
                 </tr>
             

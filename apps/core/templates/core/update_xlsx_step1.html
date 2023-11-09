@@ -13,7 +13,7 @@
             <div class="scrollable-body">
                 {% for xlsx in listXlsx %}
                 <div class="dropdown">
-                    <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">
+                    <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('dropdown-menu-{{ forloop.counter }}')">
                         {{ xlsx.list_name }}
                     </button>
                     <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">

@@ -58,7 +58,7 @@
                                 <td>{{xlsx.0.id}}</td>
                                 <td >
                                     <div class="dropdown">
-                                        <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">                                        {{xlsx.0.name}} </button>
+                                        <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('dropdown-menu-{{ forloop.counter }}')">                                        {{xlsx.0.name}} </button>
                                         <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
                                             {% for link in xlsx.2 %}
                                                 <div class="text-center btn-link">
@@ -91,7 +91,7 @@
                                 <td>{{xlsx.0.id}}</td>
                                 <td >
                                     <div class="dropdown">
-                                        <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('{{ forloop.counter }}')">                                        {{xlsx.0.name}} </button>
+                                        <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('dropdown-menu-{{ forloop.counter }}')">                                        {{xlsx.0.name}} </button>
                                         <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item">
 
                                             {% for link in xlsx.2 %}
