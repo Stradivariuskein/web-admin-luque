@@ -56,13 +56,6 @@ class ApiDrive(Drive_manager):
         return response
 
 
-def upload_drive_and_update_db(files_drive: ModelFileDrive, api_drive: ApiDrive):
-    processes = []
-    for file in files_drive:
-        process = multiprocessing.Process(target=drive.upload, args=(file,))
-        processes.append(process)
-        process.start()
-
 
 if __name__ == '__main__':
 

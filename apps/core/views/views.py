@@ -18,9 +18,8 @@ import time
 from apps.core.tools.siaacTools import reed_artics
 from apps.core.tools.xlsxTools import update_xlsx, update_artics
 from configs import *
-from apps.core.tools.apiDriveV2 import ApiDrive, upload_drive_and_update_db
-from googleapiclient.errors import HttpError
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from apps.core.tools.apiDriveV2 import ApiDrive
+
 import threading
 
 from apps.core.models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive, ModelUploadingDrive
@@ -190,38 +189,26 @@ class ViewUploadDrive(View):
             drive = ApiDrive("../service_account.json")
             results_threads.append(drive.upload(file))
 
+        results = {}
         print("subiendo")
         data = request.POST
         drive = ApiDrive("../service_account.json")
         xlsx_ids = data['xlsx_id'].split(',')
         files = ModelFileDrive.objects.none()
-        names_xlsx = []
+        
         for id in xlsx_ids:
 
             try:
                 xlsx = ModelListXlsx.objects.get(id=id)
-                names_xlsx.append(xlsx.name)
+                if not xlsx.name in results:
+                    results[xlsx.name] = {'succes': True}
             except ModelListXlsx.DoesNotExist:
-                xlsx = None
+                results[xlsx.name] = {'succes': False}
+            results
             current_files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
             files |= current_files
 
 
-        '''with ThreadPoolExecutor(max_workers=2) as executor:  # Ajusta el número de subprocesos según tus necesidades
-            futures = {executor.submit(drive.upload, file): file for file in files}
-           
-            for future in as_completed(futures):
-                
-                file, msj = futures[future]
-                print(type(file))
-                print(f"file: {file} || {msj}")
-                
-                try:
-                    
-                    file.save()
-                    
-                except Exception as e:
-                    print(f"Error al guardar en la db {file.name}: {e}")'''
         threads = []
 
         for file in files:
@@ -233,9 +220,23 @@ class ViewUploadDrive(View):
             thread.join()
 
         for file in results_threads:
-            file.save()
+            if isinstance(file, ModelFileDrive):
+                file.save()
+                if file.parentId.name == "ma":
+                    results[file.name]['common_ma'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                elif file.parentId.name == "mi":
+                    results[file.name]['common_mi'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                elif file.parentId.parentId.name == "ma":
+                    results[file.name]['order_ma'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                elif file.parentId.parentId.name == "mi":
+                    results[file.name]['order_mi'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"
+                
+                print(f"Guardando: {file.name} en {file.driveId}")
+            else:
+                results[file.name]['succes'] = False
 
-        return JsonResponse({'names': names_xlsx})
+
+        return JsonResponse(results)
     
 
 # recive los ids separados por ','(ej: '1,50,28,36...') de 

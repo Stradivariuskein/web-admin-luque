@@ -84,13 +84,13 @@
                 <a class="btn btn-primary" href="/">Volver a inicio</a>
               </div>
               <div class="col text-center justify-content-center align-items-center whith-2 pl-0 ml-0" >
-                <a class="btn btn-primary" id="btn-download" href="/download?ids={{download}}" onload="uploadDrive()">Descargar <span>&darr;</span></a>
+                <a class="btn btn-primary" id="btn-download" href="/download?ids={{download}}">Descargar <span>&darr;</span></a>
               </div>
             </div>
 
     </div>
     {% csrf_token %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{%static 'js/upload-drive.js'%}" onload="uploadDrive()"></script>
+    <script src="{%static 'js/upload-drive.js'%}" onload="uploadDrive2()"></script>
 
 {% endblock content %} 
