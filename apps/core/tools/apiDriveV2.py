@@ -26,13 +26,13 @@ class ApiDrive(Drive_manager):
 
     def upload(self, fileDrive: ModelFileDrive):
         if fileDrive.driveId:
-            super().delete(fileDrive.driveId)
+             self.retry_execute(super().delete, fileDrive.driveId)
 
         try:
             if fileDrive.parentId.parentId.name == "ma" or fileDrive.parentId.name == "ma":
-                response = super().upload( RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
+                response = self.retry_execute(super().upload, RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
             elif fileDrive.parentId.parentId.name == "mi" or fileDrive.parentId.name == "mi":
-                response = super().upload( RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
+                response = self.retry_execute(super().upload, RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
         except Exception as e:
             print(f"error con el dirve: {e}")
 
@@ -48,12 +48,15 @@ class ApiDrive(Drive_manager):
         
 
     def delete(self, fileDrive: ModelFileDrive):
-        response = super().delete(fileDrive.driveId)
+        response = self.retry_execute(super().delete, fileDrive.driveId)
         if isinstance(response,HttpError):
-            result = super().find_file_id_by_name(file_name=fileDrive.name, parent_id=fileDrive.parentId.driveId)
+            result =  self.retry_execute(super().find_file_id_by_name, file_name=fileDrive.name, parent_id=fileDrive.parentId.driveId)
             if result:
-                response = super().delete(fileDrive.driveId)
+                response =  self.retry_execute(super().delete, fileDrive.driveId)
         return response
+
+    def get_file(self, drive_id: str):
+        return self.retry_execute(super().get_file, drive_id)
 
 
 

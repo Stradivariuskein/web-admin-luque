@@ -68,18 +68,19 @@ function uploadDrive2() {
                 // Crear el elemento <a>
                 for (let key in fileInfo) {
                     if (key !== 'succes') {
-                        let drop_ul = document.createElement('ul')
-                        drop_ul.style.padding = 0;
-                        drop_ul.style.margin = "5%";
 
                         let link = document.createElement('a');
                         link.style.margin = '5%';
-                        link.className = 'btn-link';
-                        link.href = fileInfo[key];    
-                        link.textContent = key;
-                        
-                        drop_ul.appendChild(link);
-                        dropBox[1].appendChild(drop_ul);
+                        link.href = fileInfo[key];
+                        link.target = "_blank" 
+                        link.className = 'card text-center'; 
+
+                        let drop_div = document.createElement('div')
+                        drop_div.textContent = key;
+                        drop_div.style.margin = "5%";
+                   
+                        link.appendChild(drop_div);
+                        dropBox[1].appendChild(link);
                     }
                     
                 }

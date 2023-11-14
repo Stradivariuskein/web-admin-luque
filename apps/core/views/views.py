@@ -223,15 +223,15 @@ class ViewUploadDrive(View):
             if isinstance(file, ModelFileDrive):
                 file.save()
                 if file.parentId.name == "ma":
-                    results[file.name]['common_ma'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                    results[file.name]['Link comun mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
                 elif file.parentId.name == "mi":
-                    results[file.name]['common_mi'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                    results[file.name]['Link comun minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
                 elif file.parentId.parentId.name == "ma":
-                    results[file.name]['order_ma'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                    results[file.name]['Link ordenado mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
                 elif file.parentId.parentId.name == "mi":
-                    results[file.name]['order_mi'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"
+                    results[file.name]['Link ordenado minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"
                 
-                print(f"Guardando: {file.name} en {file.driveId}")
+                
             else:
                 results[file.name]['succes'] = False
 
