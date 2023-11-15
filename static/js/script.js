@@ -1,3 +1,4 @@
+var table_html = document.querySelector('.table').innerHTML;
 function toggleDropdown(id) {
   const dropdownMenu = $(`#${id}`);
   dropdownMenu.toggle();
@@ -43,11 +44,12 @@ function searchTable() {
     console.log(keywords)
   // Obtén la tabla y las filas
   var table = document.querySelector('.table');
+  table.innerHTML = table_html
   var rows = table.getElementsByTagName('tr');
 
   // Recorre las filas y oculta las que no coincidan con las palabras de búsqueda
-  for (var i = 1; i < rows.length; i++) {  // Comienza en 1 para omitir la fila de encabezado
-      var cells = rows[i].getElementsByTagName('td');
+  for (let row of rows) {  // Comienza en 1 para omitir la fila de encabezado
+      var cells = row.getElementsByTagName('td');
       var shouldShowRow = true;  // Asume que la fila debe mostrarse inicialmente
       
       // Verifica cada palabra de búsqueda
@@ -56,12 +58,13 @@ function searchTable() {
           let found = false;  // Asume que la palabra no se ha encontrado en la fila
           
           // Verifica cada celda de la fila para la palabra de búsqueda
-          for (let j = 0; j < cells.length; j++) {  
-              let cellText = cells[j].textContent || cells[j].innerText;
-              let index = cellText.toUpperCase().indexOf(keyword);
+          for (let cell of cells) {  
+              let cellText = cell.innerHTML;
+              if (keyword !== "") {
+              let index = cellText.toUpperCase().indexOf(keyword.toUpperCase());
               if (index > -1) {
                     console.log(keyword)
-                    console.log(cells)
+                    
       
                     found = true
                     // Resalta la coincidencia con color rojo
@@ -70,12 +73,15 @@ function searchTable() {
                     cellText.substring(index, index + keyword.length) +
                     '</span>' +
                     cellText.substring(index + keyword.length);
+                    console.log("cellTetx: "+cellText)
+                    console.log("nueva: "+highlightedText)
 
-                    cells[j].innerHTML = highlightedText;
+                    cell.innerHTML = highlightedText;
                     
 
                     
               } 
+            }
           }
 
           // Si la palabra de búsqueda no se encuentra en ninguna celda, oculta la fila
@@ -88,11 +94,10 @@ function searchTable() {
 
       // Muestra u oculta la fila
       if (shouldShowRow) {
-          rows[i].style.display = '';
+          row.style.display = '';
       } else {
-          rows[i].style.display = 'none';
+          row.style.display = 'none';
       }
   }
 }
-
 
