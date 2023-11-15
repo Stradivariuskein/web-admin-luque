@@ -4,6 +4,12 @@
   margin-top: 10%;
   margin-bottom: 10%;
   font-size: 18px;
+  color: black;
+}
+
+.font-28 {
+  font-size: 28px;
+  line-height: 2px;
 }
 
 .hight-10 {

@@ -19,7 +19,8 @@
                     <tr class="w-100">
                         <td class="w-90">
                             <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('dropdown-menu-{{ forloop.counter }}')">
-                            {{ xlsx_tuple.0 }}                        
+                            {{ xlsx_tuple.0 }}
+                            <div class="font-28"> &blacktriangledown;</div>   
                             </button>
                         
 
@@ -69,10 +70,10 @@
                                 </div>
                             </ul>
                         </td>
-                    <td class="w-20 ml-0">
+                    <td class="w-20 ml-0 text-center">
                         <div class="dropdown" id="{{ xlsx_tuple.0 }}" class="margin-auto">
                             
-                            <button type="button" onclick="toggleDropdown('links-{{ forloop.counter }}')">Subiendo al drive...</button>
+                            <button class="btn-secondary" type="button" onclick="toggleDropdown('links-{{ forloop.counter }}')">Subiendo al drive...</button>
 
                             <ul id="links-{{ forloop.counter }}" class="pl-0 ofusqued-item w-100"></ul>
                         </div>

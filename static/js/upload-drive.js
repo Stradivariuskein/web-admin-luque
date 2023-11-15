@@ -57,14 +57,19 @@ function uploadDrive2() {
                 all_ok = true
                 // Modificar el estado y el color de fondo
                 if (fileInfo['succes']) {
-                    
+
                     dropBox[0].innerText = "Subido";
+                    
+
                     dropBox[0].style.backgroundColor = "lightgreen";
                 } else {
                     all_ok = false
                     dropBox[0].innerText = "Error";
                     dropBox[0].style.backgroundColor = "lightcoral";
                 }
+                dropBox[0].className = "btn-link"
+                // agrego una flecha
+                dropBox[0].innerHTML += "<div class='font-28 my-1'> &blacktriangledown;</div>";
                 // Crear el elemento <a>
                 for (let key in fileInfo) {
                     if (key !== 'succes') {
@@ -73,11 +78,12 @@ function uploadDrive2() {
                         link.style.margin = '5%';
                         link.href = fileInfo[key];
                         link.target = "_blank" 
-                        link.className = 'card text-center'; 
+                        link.className = 'card card-green text-center'; 
 
                         let drop_div = document.createElement('div')
                         drop_div.textContent = key;
                         drop_div.style.margin = "5%";
+                        drop_div.className = 'btn-link'
                    
                         link.appendChild(drop_div);
                         dropBox[1].appendChild(link);

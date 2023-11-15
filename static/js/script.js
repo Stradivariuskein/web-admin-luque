@@ -40,7 +40,7 @@ function searchTable() {
   var input = document.getElementById('searchInput');
   var filter = input.value.toUpperCase();
   var keywords = filter.split(' ');  // Divide el término de búsqueda en palabras
-
+    console.log(keywords)
   // Obtén la tabla y las filas
   var table = document.querySelector('.table');
   var rows = table.getElementsByTagName('tr');
@@ -49,24 +49,39 @@ function searchTable() {
   for (var i = 1; i < rows.length; i++) {  // Comienza en 1 para omitir la fila de encabezado
       var cells = rows[i].getElementsByTagName('td');
       var shouldShowRow = true;  // Asume que la fila debe mostrarse inicialmente
-
+      
       // Verifica cada palabra de búsqueda
-      for (var k = 0; k < keywords.length; k++) {
-          var keyword = keywords[k];
-          var found = false;  // Asume que la palabra no se ha encontrado en la fila
+      for (let keyword of keywords) {
 
+          let found = false;  // Asume que la palabra no se ha encontrado en la fila
+          
           // Verifica cada celda de la fila para la palabra de búsqueda
-          for (var j = 0; j < cells.length; j++) {  // Comienza en 1 para omitir la primera celda con el checkbox
-              var cellText = cells[j].textContent || cells[j].innerText;
-              if (cellText.toUpperCase().indexOf(keyword) > -1) {
-                  found = true;
-                  break;
-              }
+          for (let j = 0; j < cells.length; j++) {  
+              let cellText = cells[j].textContent || cells[j].innerText;
+              let index = cellText.toUpperCase().indexOf(keyword);
+              if (index > -1) {
+                    console.log(keyword)
+                    console.log(cells)
+      
+                    found = true
+                    // Resalta la coincidencia con color rojo
+                    let highlightedText = cellText.substring(0, index) +
+                    '<span style="color: red;">' +
+                    cellText.substring(index, index + keyword.length) +
+                    '</span>' +
+                    cellText.substring(index + keyword.length);
+
+                    cells[j].innerHTML = highlightedText;
+                    
+
+                    
+              } 
           }
 
           // Si la palabra de búsqueda no se encuentra en ninguna celda, oculta la fila
           if (!found) {
               shouldShowRow = false;
+              
               break;  // No es necesario verificar más palabras si una no se encuentra
           }
       }
