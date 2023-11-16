@@ -1,4 +1,4 @@
-const { sleep } = require('timers/promises');
+
 
 function toggleDropdown(id) {
   const dropdownMenu = $(`#${id}`);
@@ -35,76 +35,20 @@ function handleCheckboxClick(checkbox) {
 }
 
 
-var table_html = document.querySelector('.table').innerHTML;
+let searchTimer;
 
-function searchTable() {
-  // Obtén el término de búsqueda
-  let input = document.getElementById('searchInput');
-  let filter = input.value.toUpperCase();
-  let keywords = filter.split(' ');  // Divide el término de búsqueda en palabras
-    console.log(keywords)
-  // Obtén la tabla y las filas
-  let table = document.querySelector('.table');
-  table.innerHTML = table_html // variable global
-  let rows = table.getElementsByTagName('tr');
+function startSearchTimer(func) {
+  // Cancela el temporizador existente si lo hay
+  clearTimeout(searchTimer);
 
-  // Recorre las filas y oculta las que no coincidan con las palabras de búsqueda
-  for (let row of rows) {  // Comienza en 1 para omitir la fila de encabezado
-      let cells = row.getElementsByTagName('td');
-      let shouldShowRow = true;  // Asume que la fila debe mostrarse inicialmente
-      
-      // Verifica cada palabra de búsqueda
-      for (let keyword of keywords) {
-
-          let found = false;  // Asume que la palabra no se ha encontrado en la fila
-          
-          // Verifica cada celda de la fila para la palabra de búsqueda
-          for (let cell of cells) {  
-              let cellText = cell.innerHTML;
-              if (keyword !== "" || keyword !== " ") {
-              let index = cellText.toUpperCase().indexOf(keyword.toUpperCase());
-              if (index > -1) {
-                    console.log(keyword)
-                    
-      
-                    found = true
-                    // Resalta la coincidencia con color rojo
-                    let highlightedText = cellText.substring(0, index) +
-                    '<span style="color: red;">' +
-                    cellText.substring(index, index + keyword.length) +
-                    '</span>' +
-                    cellText.substring(index + keyword.length);
-                    console.log("cellTetx: "+cellText)
-                    console.log("nueva: "+highlightedText)
-
-                    cell.innerHTML = highlightedText;
-                    
-
-                    
-              } 
-            }
-          }
-
-          // Si la palabra de búsqueda no se encuentra en ninguna celda, oculta la fila
-          if (!found) {
-              shouldShowRow = false;
-              
-              break;  // No es necesario verificar más palabras si una no se encuentra
-          }
-      }
-
-      // Muestra u oculta la fila
-      if (shouldShowRow) {
-          row.style.display = '';
-      } else {
-          row.style.display = 'none';
-      }
-  }
+  // Inicia un nuevo temporizador después de 2 segundos
+  searchTimer = setTimeout(func, 1000);
 }
 
-function searchTable2() {
-  //await sleep(2000);
-  console.log("empezo")
+var table_html = document.querySelector('.table').innerHTML;
+
+function searchXlsx() {
+
   // Obtén el término de búsqueda
   let input = document.getElementById('searchInput');
   let filter = input.value.toUpperCase();
@@ -112,6 +56,63 @@ function searchTable2() {
 
   // Obtén la tabla y las filas
   let table = document.querySelector('.table');
+
+  let rows = table.getElementsByTagName('tr');
+
+
+  
+  // Recorre las filas y oculta las que no coincidan con las palabras de búsqueda
+  for (let row of rows) { 
+
+    let row_html = row.innerHTML;
+
+    // Verifica cada palabra de búsqueda
+    for (let keyword of keywords) {
+      let found = false;  // Asume que la palabra no se ha encontrado en la fila
+
+      // Verifica cada celda de la fila para la palabra de búsqueda
+
+        if (keyword !== "" || keyword !== " ") {
+          let index = row_html.toUpperCase().indexOf(keyword.toUpperCase());
+
+          if (index > -1) {
+            found = true;
+
+          } 
+
+        }
+      
+
+      // Si la palabra de búsqueda no se encuentra en ninguna celda, oculta la fila
+      if (!found) {
+        is_header = row_html.toUpperCase().indexOf("ACTUALIZAR");
+        if (is_header === -1) {
+          row.style.display = 'none';
+          break; 
+        } // No es necesario verificar más palabras si una no se encuentra
+      } else {
+        row.style.display = ''; // Muestra la fila si se encontró la palabra
+      }
+    }
+
+  
+}
+}
+
+
+function searchArtic() {
+ 
+
+  // Obtén el término de búsqueda
+  let input = document.getElementById('searchInput');
+  let table = document.querySelector('.table');
+  console.log(input.innerText)
+  if (input.value !== "") {
+  let filter = input.value.toUpperCase();
+  let keywords = filter.split(' ');  // Divide el término de búsqueda en palabras
+
+  // Obtén la tabla y las filas
+  
   table.innerHTML = table_html; // variable global
   let rows = table.getElementsByTagName('tr');
 
@@ -120,73 +121,60 @@ function searchTable2() {
 
   
   // Recorre las filas y oculta las que no coincidan con las palabras de búsqueda
-  for (let row of rows) {  // Comienza en 1 para omitir la fila de encabezado
+  for (let row of rows) { 
 
-    // Crea un fragmento de documento para las celdas de la fila
-    let rowFragment = document.createDocumentFragment();
+    let row_html = row.innerHTML;
 
-    let cells = row.getElementsByTagName('td');
 
-    let shouldShowRow = true;  // Asume que la fila debe mostrarse inicialmente
-    if (cells.length !== 0) {
+
       
       
 
-      // Verifica cada palabra de búsqueda
-      for (let keyword of keywords) {
-        let found = false;  // Asume que la palabra no se ha encontrado en la fila
+    // Verifica cada palabra de búsqueda
+    for (let keyword of keywords) {
+      let found = false;  // Asume que la palabra no se ha encontrado en la fila
 
-        // Verifica cada celda de la fila para la palabra de búsqueda
-        for (let cell of cells) {
-          if (cell.innerText === "Codigo") {
-            console.log(cells)
+      // Verifica cada celda de la fila para la palabra de búsqueda
+      
+        
+
+      
+        if (keyword !== "" || keyword !== " ") {
+          let index = row_html.toUpperCase().indexOf(keyword.toUpperCase());
+          let highlightedText = "";
+
+          if (index > -1) {
+            found = true;
+
+            // Resalta la coincidencia con color rojo
+            highlightedText = row_html.substring(0, index) +
+              '<span style="color: red;">' +
+              row_html.substring(index, index + keyword.length) +
+              '</span>' +
+              row_html.substring(index + keyword.length);
+            row_html = highlightedText
+          } else {
+            highlightedText = row_html;
           }
-          let cellText = cell.innerHTML;
 
-          if (keyword !== "" || keyword !== " ") {
-            let index = cellText.toUpperCase().indexOf(keyword.toUpperCase());
-            let highlightedText = ""
-            if (index > -1) {
-              found = true;
-              
-              // Resalta la coincidencia con color rojo
-              highlightedText = cellText.substring(0, index) +
-                '<span style="color: red;">' +
-                cellText.substring(index, index + keyword.length) +
-                '</span>' +
-                cellText.substring(index + keyword.length);
-
-              
-            } else {
-              highlightedText = cell.innerHTML
-            }
-            // Agrega el contenido resaltado al fragmento de la celda
-            let aux_cell = document.createElement('td');
-            aux_cell.innerHTML = highlightedText;
-            rowFragment.appendChild(aux_cell);
-          }
+          // Actualiza el contenido de la celda
+          row.innerHTML = highlightedText;
         }
+      
 
-        // Si la palabra de búsqueda no se encuentra en ninguna celda, oculta la fila
-        if (!found) {
-          shouldShowRow = false;
-          break;  // No es necesario verificar más palabras si una no se encuentra
-        }
+      // Si la palabra de búsqueda no se encuentra en ninguna celda, oculta la fila
+      if (!found) {
+        row.style.display = 'none';
+        break;  // No es necesario verificar más palabras si una no se encuentra
+      } else {
+        row.style.display = ''; // Muestra la fila si se encontró la palabra
       }
-  }
+    }
 
-    // Limpia el contenido de la fila antes de agregar el fragmento
-    row.innerHTML = '';
-
-    // Agrega las celdas al fragmento de fila
-    row.appendChild(rowFragment);
-
-    // Muestra u oculta la fila
-    row.style.display = shouldShowRow ? '' : 'none';
-
-    // Agrega la fila al fragmento principal
-    fragment.appendChild(row);
-  }
+  // Agrega la fila al fragmento principal
+  fragment.appendChild(row);
+  
+}
 
   // Limpia el contenido de la tabla antes de agregar el fragmento principal
   table.innerHTML = `<tr class="text-center" id="">
@@ -197,4 +185,7 @@ function searchTable2() {
 </tr>`;
   // Agrega el fragmento principal al DOM
   table.appendChild(fragment);
+} else {
+  table.innerHTML = table_html
+}
 }
