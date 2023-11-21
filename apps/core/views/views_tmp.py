@@ -12,6 +12,7 @@ from configs import RUTE_XLSX_AGRUPS, ROOTS_DRIVE_IDS
 from re import findall
 from datetime import datetime
 import os
+import PyPDF2
 
 #funcion temporal para registrar listas xlsx en la db
 def temp_create_listXlsx(request):
@@ -197,3 +198,43 @@ def view_test(request):
             msj.append(f"{files_drive}")
 
     return HttpResponse(msj)
+
+# a los articulos q no estene en el pdf (quiere decir q no se actualizan desde el 2019) pone el atributo active en false
+def deactivate_artics(request):
+
+    pdf_path = os.path.abspath('./PRICES-PDF/prices_L_5.pdf')
+    fin_cod = 13
+
+    
+    # Abre el archivo PDF en modo de lectura binaria
+    with open(pdf_path, "rb") as file:
+        # Crea un objeto PDFReader
+        pdf_reader = PyPDF2.PdfReader(file)
+
+        # Itera sobre todas las páginas del PDF
+        artics = ModelArtic.objects.all()
+        
+            
+            
+        for artic in artics:
+            for page in pdf_reader.pages:
+        
+                text_page = page.extract_text()
+                code_in_page = text_page.find(f'\n {artic.code.strip().upper()}')
+
+                if code_in_page > -1:
+                    code_in_page += 2
+                    i = 0
+                    lines = text_page[code_in_page:].split('\n')
+                    line = lines[i]
+                    len_lines = len(lines)
+                    while i <= len_lines:
+                        if line[:fin_cod].strip().upper() == artic.code:
+                            break
+                        i += 1
+                        line = lines[i]
+                    else:
+                        continue # si no lo encientra continua con el for
+                    break # sale de bucle for si lo encuentra
+            else:
+                artic.active = False

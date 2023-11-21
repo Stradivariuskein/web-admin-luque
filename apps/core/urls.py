@@ -19,10 +19,13 @@ from django.urls import path
 from apps.core.views.views import CreateXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, ViewSelectList, download_xlsx, ViewUploadDrive
 from apps.core.views.views_tmp import tmp_view_delet_duplicate_drive, view_check_drive_id
 from apps.core.views.view_search import ViewSearchArtic
+from apps.core.views.view_testing import test_prices_siaac, test_files_drive
 
 
 urlpatterns = [
     path('test/', view_check_drive_id, name='test'),
+    path('test/prices', test_prices_siaac, name='test-prices'),
+    path('test/files', test_files_drive, name='test-files'),
     path('', ViewSelectList.as_view(), name='listas-xlsx'),
     path('create/', CreateXlsx.as_view(), name='create-list-xlsx'),
     path('xlsxstep1/', ViewUpdateXlsxStep1.as_view(), name='udate-xlsx-step1'),

@@ -6,7 +6,7 @@ RUTE_XLSX_ORIGIN = { #RUTE_XLSX_ORIGIN = ["./Listas de preios/lista minorista/",
     "mi": "./LISTAS/mi/",
       "ma": "./LISTAS/ma/"
                     } 
-RUTE_SIAAC = "./SIAAC3_test/"
+RUTE_SIAAC = "./vDos_SIAAC/SIAAC3/"
 RUTE_SIAAC_FILES = "./siaac/"
 
 XLSX_RUTE = "./LISTAS/"

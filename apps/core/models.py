@@ -36,6 +36,7 @@ class ModelArtic(models.Model):
     listXlsxID = models.ForeignKey(ModelListXlsx,on_delete=models.SET_NULL, null=True)
     row = models.IntegerField(default=0)
     col = models.IntegerField(default=0)
+    active = models.BooleanField(default=True)
 
     def __str__(self) -> str:
         return f"{self.code},{self.description},{self.row},{self.col},may: {self.priceMa}, min: {self.priceMi}"

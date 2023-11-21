@@ -1,0 +1,22 @@
+rem This is essentially the DOS autoexec.bat.
+rem =========================================
+
+rem At startup, C: is the only drive letter known by vDos.
+rem By default it is assigned to the folder of vDos.exe.
+
+rem Note this vDos/DOS C: is commonly NOT Windows C: !
+rem vDos drive letters don't have to match those of Windows.
+rem It's even adviced they don't, to limit access to the Windows file system.
+
+rem The USE command assigns vDos drive letters to Windows drives, folders,
+rem or network shares. The command syntax is:
+rem USE <vDos drive letter:> <Windows path>\
+rem Examples: USE C: D:\dosprog\, USE F: \\server\share\dosprog\.
+
+rem Execute the batch file that launches the DataPerfect TestDrive demo program:
+CALL DPTEST\STARTDP.BAT
+
+@echo off
+rem The demo program and batch file ended, so we return here.
+rem Edit this file to launch your DOS program as vDos starts.
+rem Eventually add a last EXIT command to close the vDos window.
