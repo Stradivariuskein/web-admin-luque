@@ -67,9 +67,9 @@ function uploadDrive2() {
                     dropBox[0].innerText = "Error";
                     dropBox[0].style.backgroundColor = "lightcoral";
                 }
-                dropBox[0].className = "btn-link"
+                //dropBox[0].className = "btn-link"
                 // agrego una flecha
-                dropBox[0].innerHTML += "<div class='font-28 my-1'> &blacktriangledown;</div>";
+                //dropBox[0].innerHTML += "<div class='font-28 my-1'> &blacktriangledown;</div>";
                 // Crear el elemento <a>
                 for (let key in fileInfo) {
                     if (key !== 'succes') {

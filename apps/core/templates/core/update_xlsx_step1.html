@@ -8,6 +8,7 @@
             <h1>Actializar listas paso 1</h1>
         </div>
         <form method="post" action="{% url 'udate-xlsx-step2' %}">
+            
             {% csrf_token %}
             
             <div class="scrollable-body">
@@ -17,7 +18,7 @@
                         {{ xlsx.list_name }}
                         <div class="font-28"> &blacktriangledown;</div>     
                     </button>
-                    <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100">
+                    <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100" style="display: none;">
                         <div class="text-center pt-2">
                             <div title="Aplica el mismo porcentaje a todos los articulo de un lista">
                                 <label>Porcentaje a todo</label>
@@ -26,66 +27,81 @@
 
                         </div>
                         <div class="scrollable-table">
-                        <table class="table table-bordered scrollable-table" id="table_{{ forloop.counter }}">
-                            <thead>
-                              <tr>
-                                <th class="text-center">Código</th>
-                                <th class="text-center">Descripción</th>
-
-                                <th class="text-center">Aumento por porcentaje</th>
-                                <th class="text-center">Precio manual</th>
-                              </tr>
-                            </thead>
+                            <div class="row">
+                                <div class="col-12 mb-4 mb-lg-0">
+                                    <div class="card">
+                                        <h5 class="card-header">Listas de precios</h5>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table" id="table_{{ forloop.counter }}">
+                                                    <thead>
+                                                      <tr>
+                                                        <th scope="col">Código</th>
+                                                        <th scope="col">Descripción</th>
+                                                        <th scope="col th-percent">Aumento por porcentaje</th>
+                                                        <th scope="col">Precio manual</th>
+                                                        
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for artic, form in xlsx.artics %}
+                                                        <tr>
+                                                            <input type="hidden" name="xlsx_id" value="{{ form.initial.xlsx_id }}" readonly>
+                                                            <td class="font-size-1 text-center"><input type="text" name="code" value="{{ form.initial.code }}" readonly></td>
+                                                            <td class="text-center">{{ artic.description }}</td>
                             
-                            {% for artic, form in xlsx.artics %}
-                            
-                            
+                                                            <td>
+                                                                <div class="col justify-content-center">
+                                                                    <div>
+                                                                    <label title="Utiliza el precio de la lista como base y le aplica el porcentaje">Sobre lista</label>
+                                                                    <input title="Utiliza el precio de la lista como base y le aplica el porcentaje" type="checkbox" name="percent_list" value="{{xlsx}}" onclick="handleCheckboxClick(this)" checked>
+                                                                    </div>
+                                                                    <div style="display: none;">
+                                                                    <label title="Utiliza el precio del sistema ventas como base y le aplica el porcentaje" >Sobre sistema</label>
+                                                                    <input title="Utiliza el precio del sistema ventas como base y le aplica el porcentaje" type="checkbox" name="percent_sistem" value="{{xlsx}}" onclick="handleCheckboxClick(this)" style="margin-right: 0%;">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col text-center">
+                                                                    <div class="row justify-content-center">
+                                                                        <h3>%</h3>
+                                                                    </div>
+                                                                    <div title="Aumento o descuento por %. Si el numero es postivo hace un aumento y si es negatio hace un descuento" class="row justify-content-center">{{form.price_percent}}</div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    
+                                                                    <div class="col">
+                                                                        <h3>Mayorista</h3>
+                                                                        {{form.price_manual_may}}  
+                                                                    </div>
+                                                            
+                                                                    
+                                                                    <div class="col">
+                                                                        <h3>Minorista</h3>
+                                                                        {{form.price_manual_min}}   
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        
+                                                        
+                                                        </tr>
+                                            
                         
-                            <tbody>
-                                <tr>
-                                    <input type="hidden" name="xlsx_id" value="{{ form.initial.xlsx_id }}" readonly>
-                                <td class="font-size-1 text-center"><input type="text" name="code" value="{{ form.initial.code }}" readonly></td>
-                                <td class="text-center">{{ artic.description }}</td>
-
-                                <td>
-                                    <div class="col justify-content-center">
-                                        <label title="Utiliza el precio de la lista como base y le aplica el porcentaje" class="ml-5">Sobre lista</label>
-                                        <input title="Utiliza el precio de la lista como base y le aplica el porcentaje" type="checkbox" name="percent_list" value="{{xlsx}}" onclick="handleCheckboxClick(this)" checked>
-
-                                        <label title="Utiliza el precio del sistema ventas como base y le aplica el porcentaje" class="ml-5">Sobre sistema</label>
-                                        <input title="Utiliza el precio del sistema ventas como base y le aplica el porcentaje" type="checkbox" name="percent_sistem" value="{{xlsx}}" onclick="handleCheckboxClick(this)" >
-                                    </div>
-                                    <div class="col text-center">
-                                        <div class="row justify-content-center">
-                                            <h3>%</h3>
+                                                    </tbody>
+                        
+                        
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
                                         </div>
-                                        <div title="Aumento o descuento por %. Si el numero es postivo hace un aumento y si es negatio hace un descuento" class="row justify-content-center">{{form.price_percent}}</div>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="row">
-                                        
-                                        <div class="col">
-                                            <h3>Mayorista</h3>
-                                            {{form.price_manual_may}}  
-                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    
                                 
-                                        
-                                        <div class="col">
-                                            <h3>Minorista</h3>
-                                            {{form.price_manual_min}}   
-                                        </div>
-                                    </div>
-                                </td>
-                                
-                                
-                                </tr>
-                            </tbody>
-                        
-                        
-                        {% endfor %}
-                        </table>
-                        
+                                            
                     </ul>
                 </div>
                 {% endfor %}
