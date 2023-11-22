@@ -37,7 +37,7 @@ class ApiDrive(Drive_manager):
             print(f"error con el dirve: {e}")
 
         # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
-        if not isinstance(response,ModelFileDrive):
+        if not isinstance(response,HttpError):
             fileDrive.driveId = response['id']
             #fileDrive.save()
             msj = f"output upload: {fileDrive}"

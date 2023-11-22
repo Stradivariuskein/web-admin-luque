@@ -4,14 +4,14 @@
 {% block content %}
 
     <div class="my-5">
-        <div class="pt-5 my-5 text-center">
+        <div class="my-5 text-center">
             <h1>Actializar listas paso 1</h1>
         </div>
         <form method="post" action="{% url 'udate-xlsx-step2' %}">
             
             {% csrf_token %}
             
-            <div class="scrollable-body">
+            <div>
                 {% for xlsx in listXlsx %}
                 <div class="dropdown">
                     <button class="btn btn-secondary w-100 big-button" type="button" onclick="toggleDropdown('dropdown-menu-{{ forloop.counter }}')">
@@ -22,15 +22,15 @@
                         <div class="text-center pt-2">
                             <div title="Aplica el mismo porcentaje a todos los articulo de un lista">
                                 <label>Porcentaje a todo</label>
-                                <input id="percentage_input_{{ forloop.counter }}" placeholder="Porcentaje" onkeyup="updatePercentage('{{ forloop.counter }}')">
+                                <input id="percentage_input_{{ forloop.counter }}" placeholder="%" onkeyup="updatePercentage('{{ forloop.counter }}')">
                             </div>
 
                         </div>
-                        <div class="scrollable-table">
+                        <div class="card scrollable-table">
                             <div class="row">
                                 <div class="col-12 mb-4 mb-lg-0">
                                     <div class="card">
-                                        <h5 class="card-header">Listas de precios</h5>
+                                        <h5 class="card-header">Articulos</h5>
                                         <div class="card-body">
                                             <div class="table-responsive">
                                                 <table class="table text-center" id="table_{{ forloop.counter }}">

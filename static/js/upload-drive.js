@@ -31,6 +31,8 @@ function uploadDrive() {
 }
 
 
+//falta validar la peticion 
+
 function uploadDrive2() {
     console.log("subiendo")
     // Obtener el atributo href de la etiqueta <a>
@@ -71,12 +73,12 @@ function uploadDrive2() {
                             link.textContent = key;
                             
     
-                            let drop_div = document.createElement('div')
-                            drop_div.style.margin = "5%";
-                            drop_div.className = 'card text-center';
+                            let drop_li = document.createElement('li')
+                            
+                            drop_li.className = 'btn text-center';
                        
-                            drop_div.appendChild(link);
-                            dropBox[1].appendChild(drop_div);
+                            drop_li.appendChild(link);
+                            dropBox[1].appendChild(drop_li);
                         }
                         
                     }

@@ -221,6 +221,8 @@ class ViewUploadDrive(View):
 
         for file in results_threads:
             if isinstance(file, ModelFileDrive):
+                if results[file.name]['succes']: ######## hay algo mal!!!!!!!!
+                    results[file.name] = {'succes': True}
                 file.save()
                 if file.parentId.name == "ma":
                     results[file.name]['Link comun mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
