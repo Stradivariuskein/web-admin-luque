@@ -136,9 +136,6 @@ function searchArtic() {
 
       // Verifica cada celda de la fila para la palabra de búsqueda
       
-        
-
-      
         if (keyword !== "" || keyword !== " ") {
           let index = row_html.toUpperCase().indexOf(keyword.toUpperCase());
           let highlightedText = "";
@@ -177,14 +174,19 @@ function searchArtic() {
 }
 
   // Limpia el contenido de la tabla antes de agregar el fragmento principal
-  table.innerHTML = `<tr class="text-center" id="">
-  <th>Codigo</th>
-  <th style="min-width: 25rem;">Descripcion</th>
-  <th >Precio mayorista</th>
-  <th>Precio minorista</th>  
-</tr>`;
+  table.innerHTML = `<thead>
+  <tr class="text-center" id="">
+      <th>Codigo</th>
+      <th style="min-width: 25rem;">Descripcion</th>
+      <th >Precio mayorista</th>
+      <th>Precio minorista</th>
+      
+  </tr>
+</thead>`;
   // Agrega el fragmento principal al DOM
-  table.appendChild(fragment);
+  tbody = document.createElement('tbody')
+  tbody.appendChild(fragment)
+  table.appendChild(tbody);
 } else {
   table.innerHTML = table_html
 }

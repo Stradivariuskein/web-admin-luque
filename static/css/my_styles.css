@@ -54,7 +54,7 @@ td{
   display: none;
 }
 
-.card {
+.card-warning {
   background-color: rgb(230, 241, 128);
   border-radius: 10px;
 }

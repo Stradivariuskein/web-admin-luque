@@ -4,11 +4,11 @@
 {% block content %}
 <main>
     <div class="my-5">
-        <div class="pt-5 my-5 text-center">
+        <div class="my-5 text-center">
             <h1>Actualizar listas paso final</h1>
         </div>
-        <div id="msj" class="pt-5 my-5 text-center card justify-content-center">
-            <p>Espere a que todas las listas digan subido</p>
+        <div id="msj" class="m-5 text-center card-warning justify-content-center">
+            <p class="p-3">Espere a que todas las listas digan subido</p>
         </div>
         <div class="row">
             <div class="col-12 mb-4 mb-lg-0">
@@ -83,7 +83,7 @@
                                         </td>
                                     <td class="w-20 ml-0 text-center">
                                         <div class="dropdown" id="{{ xlsx_tuple.0 }}">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn card-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
                                                 Subiendo al drive...
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="links-{{ forloop.counter }}">

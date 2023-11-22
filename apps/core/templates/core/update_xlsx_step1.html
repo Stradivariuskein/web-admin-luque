@@ -14,7 +14,7 @@
             <div class="scrollable-body">
                 {% for xlsx in listXlsx %}
                 <div class="dropdown">
-                    <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('dropdown-menu-{{ forloop.counter }}')">
+                    <button class="btn btn-secondary w-100 big-button" type="button" onclick="toggleDropdown('dropdown-menu-{{ forloop.counter }}')">
                         {{ xlsx.list_name }}
                         <div class="font-28"> &blacktriangledown;</div>     
                     </button>
@@ -33,12 +33,12 @@
                                         <h5 class="card-header">Listas de precios</h5>
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                <table class="table" id="table_{{ forloop.counter }}">
+                                                <table class="table text-center" id="table_{{ forloop.counter }}">
                                                     <thead>
                                                       <tr>
                                                         <th scope="col">Código</th>
                                                         <th scope="col">Descripción</th>
-                                                        <th scope="col th-percent">Aumento por porcentaje</th>
+                                                        <th scope="col th-percent">Aumento por %</th>
                                                         <th scope="col">Precio manual</th>
                                                         
                                                       </tr>
@@ -51,7 +51,7 @@
                                                             <td class="text-center">{{ artic.description }}</td>
                             
                                                             <td>
-                                                                <div class="col justify-content-center">
+                                                                <div class="col justify-content-center card">
                                                                     <div>
                                                                     <label title="Utiliza el precio de la lista como base y le aplica el porcentaje">Sobre lista</label>
                                                                     <input title="Utiliza el precio de la lista como base y le aplica el porcentaje" type="checkbox" name="percent_list" value="{{xlsx}}" onclick="handleCheckboxClick(this)" checked>
@@ -63,9 +63,12 @@
                                                                 </div>
                                                                 <div class="col text-center">
                                                                     <div class="row justify-content-center">
-                                                                        <h3>%</h3>
+                                                                        <!--<h3>%</h3>-->
+                                                                        <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                            <path d="M19 5L5 19M9 7C9 8.10457 8.10457 9 7 9C5.89543 9 5 8.10457 5 7C5 5.89543 5.89543 5 7 5C8.10457 5 9 5.89543 9 7ZM19 17C19 18.1046 18.1046 19 17 19C15.8954 19 15 18.1046 15 17C15 15.8954 15.8954 15 17 15C18.1046 15 19 15.8954 19 17Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                            </svg>
                                                                     </div>
-                                                                    <div title="Aumento o descuento por %. Si el numero es postivo hace un aumento y si es negatio hace un descuento" class="row justify-content-center">{{form.price_percent}}</div>
+                                                                    <div title="Aumento o descuento por %. Si el numero es postivo hace un aumento y si es negatio hace un descuento" class="justify-content-center">{{form.price_percent}}</div>
                                                                 </div>
                                                             </td>
                                                             <td>
