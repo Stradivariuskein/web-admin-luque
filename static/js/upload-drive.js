@@ -53,7 +53,9 @@ function uploadDrive2() {
         },
         success: function(data) {
             for (let name in data) {
+                console.log(name)
                 let status = document.getElementById(name);
+                console.log(status.innerHTML)
                 let fileInfo = data[name];
                 let dropBox = status.children;
                 

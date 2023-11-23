@@ -135,3 +135,4 @@ MEDIA_ROOT = join(BASE_DIR, 'media')
 DECIMAL_SEPARATOR = '.'
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 8000
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 10  # Aumenta el límite a 10 MB (cambia según tus necesidades)
