@@ -93,6 +93,7 @@ function uploadDrive2() {
                 }
 
             }
+            console.log(data)
           
             if (all_ok) {
                 msj = document.getElementById('msj');

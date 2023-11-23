@@ -91,6 +91,7 @@ class Drive_manager():
             ).execute()
             return file
         except Exception as e:
+            print(f"error drive.upload: {e}")
             return e
 
 

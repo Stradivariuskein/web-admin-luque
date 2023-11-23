@@ -1,5 +1,7 @@
 from apps.core.tools.driver_manager import Drive_manager
 from googleapiclient.errors import HttpError
+from httplib2.error import ServerNotFoundError
+from google.auth.exceptions import TransportError
 
 from apps.core.models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
 from configs import RUTE_XLSX_ORIGIN
@@ -18,9 +20,16 @@ class ApiDrive(Drive_manager):
             try:
                 result = func(*args, **kwargs)
                 return result
+            except ServerNotFoundError:
+                i=0
+                time.sleep(wait_time)
+            except TransportError:
+                i=0
+                time.sleep(wait_time)
             except Exception as e:
                 print(e)
                 time.sleep(wait_time)
+            
 
         raise Exception("No se pudo ejecutar la función después de varios intentos.")
 
@@ -37,7 +46,8 @@ class ApiDrive(Drive_manager):
             print(f"error con el dirve: {e}")
 
         # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
-        if not isinstance(response,HttpError):
+        if not isinstance(response,HttpError) and not isinstance(response,ServerNotFoundError):
+           
             fileDrive.driveId = response['id']
             #fileDrive.save()
             msj = f"output upload: {fileDrive}"

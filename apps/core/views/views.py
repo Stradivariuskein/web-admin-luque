@@ -145,7 +145,7 @@ class ViewUpdateXlsxStep2(View):
                     
                     #actualiza la fecha de modificacion
                     current_xslx = ModelListXlsx.objects.filter(id=xlsx_id).first()
-                    
+
                     update = update_xlsx(current_xslx.name, xlsx_data)
                     
                    
@@ -192,7 +192,6 @@ class ViewUploadDrive(View):
         results = {}
         print("subiendo")
         data = request.POST
-        drive = ApiDrive("../service_account.json")
         xlsx_ids = data['xlsx_id'].split(',')
         files = ModelFileDrive.objects.none()
         
@@ -204,7 +203,7 @@ class ViewUploadDrive(View):
                     results[xlsx.name] = {'succes': True}
             except ModelListXlsx.DoesNotExist:
                 results[xlsx.name] = {'succes': False}
-            results
+            
             current_files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
             files |= current_files
 
@@ -220,18 +219,22 @@ class ViewUploadDrive(View):
             thread.join()
 
         for file in results_threads:
+           
             if isinstance(file, ModelFileDrive):
-                if results[file.name]['succes']: ######## hay algo mal!!!!!!!!
-                    results[file.name] = {'succes': True}
+                
                 file.save()
                 if file.parentId.name == "ma":
                     results[file.name]['Link comun mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                    
                 elif file.parentId.name == "mi":
                     results[file.name]['Link comun minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                   
                 elif file.parentId.parentId.name == "ma":
                     results[file.name]['Link ordenado mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                    
                 elif file.parentId.parentId.name == "mi":
                     results[file.name]['Link ordenado minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"
+                   
                 
                 
             else:
