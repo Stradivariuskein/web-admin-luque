@@ -61,9 +61,8 @@ class ModelFileDrive(models.Model):
         return f"name: {name}"
     
 
-class ModelUploadingDrive(models.Model):
+class ModelUploadDrive(models.Model):
     fileDrive = models.ForeignKey(to=ModelFolderDrive, on_delete=models.SET_NULL, null=True)
-    uploaded = models.BooleanField(default=False)
     
 
 

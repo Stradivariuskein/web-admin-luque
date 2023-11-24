@@ -24,8 +24,8 @@ class Drive_manager():
                 fileId=id,
                 fields="id, name, mimeType, parents, modifiedTime"
                 ).execute()
-        except HttpError as e:
-            result = e
+        except HttpError:
+            return None
         return result
 
     def list_drive(self, parent_id=None, query=None):
@@ -77,6 +77,7 @@ class Drive_manager():
         # falta verificar si ya existe un archivo con el mismo nombre
         try:
             file_name = os.path.basename(file_path)
+            exist_file = self.get_file(folder_id)
 
             file_metadata = {
                 'name' : file_name,

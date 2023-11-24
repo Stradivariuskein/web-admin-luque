@@ -22,7 +22,7 @@ from apps.core.tools.apiDriveV2 import ApiDrive
 
 import threading
 
-from apps.core.models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive, ModelUploadingDrive
+from apps.core.models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive
 from apps.core.forms import UpdateXlsxForm
  
 # muestra todas las listas de precio para q las selecione el usuario

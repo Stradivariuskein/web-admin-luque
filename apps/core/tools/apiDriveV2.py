@@ -37,6 +37,10 @@ class ApiDrive(Drive_manager):
         if fileDrive.driveId:
              self.retry_execute(super().delete, fileDrive.driveId)
 
+        exist_in_drive = self.find_file_id_by_name(fileDrive.name, fileDrive.parentId.driveId)
+        if exist_in_drive != []:
+            for driveId, name in exist_in_drive:
+                self.retry_execute(super().delete, driveId)
         try:
             if fileDrive.parentId.parentId.name == "ma" or fileDrive.parentId.name == "ma":
                 response = self.retry_execute(super().upload, RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
