@@ -200,12 +200,16 @@ class ViewUploadDrive(View):
             try:
                 xlsx = ModelListXlsx.objects.get(id=id)
                 if not xlsx.name in results:
-                    results[xlsx.name] = {'succes': True}
+                    results[xlsx.name] = {}
+                current_files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
+                if current_files:
+                    files |= current_files
+                else:
+                    results[xlsx.name]['no_drive'] = True
             except ModelListXlsx.DoesNotExist:
-                results[xlsx.name] = {'succes': False}
+                results[xlsx.name] = {'error': f"ID({id}) does not exist. "}
             
-            current_files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
-            files |= current_files
+            
 
 
         threads = []
@@ -238,7 +242,10 @@ class ViewUploadDrive(View):
                 
                 
             else:
-                results[file.name]['succes'] = False
+                if 'error' in results[file.name]:
+                    results[file.name]['error'] += f'Error uploading file to drive. {file}'
+                else:
+                    results[file.name]['error'] = f'Error uploading file to drive. {file}'
 
 
         return JsonResponse(results)

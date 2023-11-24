@@ -74,7 +74,7 @@ class Drive_manager():
     
 
     def upload(self, file_path, folder_id):
-        
+        # falta verificar si ya existe un archivo con el mismo nombre
         try:
             file_name = os.path.basename(file_path)
 

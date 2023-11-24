@@ -43,7 +43,24 @@ function uploadDrive2() {
     var ids = link.split('?')[1].split('=')[1];
 
     var all_ok = true
-    
+    const writeMsj = (status, textMsj='') => {
+        msj = document.getElementById('msj');
+        msj_child = msj.children[0];
+
+        if (status) {
+            msj_child.textContent = "Todo subido";
+            msj.style.backgroundColor = "lightgreen";
+        
+        } else {                
+            msj_child.textContent = "Algo salio mal.";
+            msj.style.backgroundColor = "lightcoral";
+        } 
+        if (textMsj !== '') {
+            console.log(textMsj)
+            msj_child.textContent += ' ' + textMsj 
+        }
+        
+    }
     $.ajax({
         type: "POST",
         url: "/uploadDrive/",
@@ -53,61 +70,74 @@ function uploadDrive2() {
         },
         success: function(data) {
             for (let name in data) {
-                console.log(name)
+
                 let status = document.getElementById(name);
-                console.log(status.innerHTML)
+
                 let fileInfo = data[name];
                 let dropBox = status.children;
+                dropBox[0].classList.remove('card-warning')
                 
                 // Modificar el estado y el color de fondo
-                if (fileInfo['succes']) {
+                // if ('error' in fileInfo) {
 
-                    dropBox[0].innerText = "Subido";
-                    dropBox[0].classList.remove('card-warning')
-                    dropBox[0].classList.add('card-green')
+                // si hay links lo agregamos
+                if (Object.keys(fileInfo).length !== 0){
+
+                   
                     
                     for (let key in fileInfo) {
-                        if (key !== 'succes') {
-    
-                            let link = document.createElement('a');
-                            link.href = fileInfo[key];
-                            link.target = "_blank";
-                            link.textContent = key;
+                        if (key !== 'error') {
+
+                            if (key !== 'no_drive') {
+                                dropBox[0].innerText = "Subido";
+                                dropBox[0].classList.add('card-green')
+
+                                let link = document.createElement('a');
+                                link.href = fileInfo[key];
+                                link.target = "_blank";
+                                link.textContent = key;
+                                
+
+                                let drop_li = document.createElement('li')
+                                
+                                drop_li.className = 'btn text-center';
                             
-    
-                            let drop_li = document.createElement('li')
+                                drop_li.appendChild(link);
+                                dropBox[1].appendChild(drop_li);
+
+                            } else {
+                                dropBox[0].innerText = "Drive no";
+                                dropBox[0].title = "Esta lista no esta subida al drive.\nSe actualizo correctamente"
+                                dropBox[0].classList.add('card-warning')
+                            }
+
                             
-                            drop_li.className = 'btn text-center';
-                       
-                            drop_li.appendChild(link);
-                            dropBox[1].appendChild(drop_li);
+                        } else {
+                            all_ok = false
+                            dropBox[0].innerText = "Error";
+                            writeMsj(all_ok, fileInfo[key]);
+                            dropBox[0].style.backgroundColor = "lightcoral";
                         }
                         
                     }
+            } else {
+                all_ok = false
+                dropBox[0].innerText = "Error";
+                dropBox[0].style.backgroundColor = "lightcoral";
+            }
 
                     
-                } else {
-                    all_ok = false
-                    dropBox[0].innerText = "Error";
-                    dropBox[0].style.backgroundColor = "lightcoral";
-                }
+                // } else {
+                //     
+                // }
 
             }
-            console.log(data)
-          
-            if (all_ok) {
-                msj = document.getElementById('msj');
-                msj_child = msj.children[0];
-                msj_child.textContent = "Todo subido";
-                msj.style.backgroundColor = "lightgreen";
-            
-             } else {
-                msj = document.getElementById('msj');
-                msj_child = msj.children[0];
-                msj_child.textContent = "Algo sali mal";
-                msj.style.backgroundColor = "lightcoral";
-             }  
+            writeMsj(all_ok)
                 
+        },
+        error: function(xhr, status, error) {
+            console.log(error)
+            writeMsj(false, error)
         }
 
 })
