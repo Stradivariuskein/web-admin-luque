@@ -50,15 +50,12 @@ class ApiDrive(Drive_manager):
             print(f"error con el dirve: {e}")
 
         # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
-        if not isinstance(response,HttpError) and not isinstance(response,ServerNotFoundError):
+        if (not isinstance(response,HttpError) and not isinstance(response,ServerNotFoundError)):
            
             fileDrive.driveId = response['id']
-            #fileDrive.save()
-            msj = f"output upload: {fileDrive}"
             return fileDrive       
         else:
-            msj = f"output upload: {response}"
-            return response
+            return {'response': response, 'file': fileDrive}
         
 
     def delete(self, fileDrive: ModelFileDrive):

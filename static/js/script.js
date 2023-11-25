@@ -125,18 +125,15 @@ function searchArtic() {
 
     let row_html = row.innerHTML;
 
-
-
-      
-      
-
     // Verifica cada palabra de búsqueda
     for (let keyword of keywords) {
       let found = false;  // Asume que la palabra no se ha encontrado en la fila
 
       // Verifica cada celda de la fila para la palabra de búsqueda
       
-        if (keyword !== "" || keyword !== " ") {
+        if (keyword !== "" && keyword !== " ") {
+
+          let found = false;  // Asume que la palabra no se ha encontrado en la fila
           let index = row_html.toUpperCase().indexOf(keyword.toUpperCase());
           let highlightedText = "";
 
@@ -156,16 +153,16 @@ function searchArtic() {
 
           // Actualiza el contenido de la celda
           row.innerHTML = highlightedText;
-        }
-      
 
-      // Si la palabra de búsqueda no se encuentra en ninguna celda, oculta la fila
-      if (!found) {
-        row.style.display = 'none';
-        break;  // No es necesario verificar más palabras si una no se encuentra
-      } else {
-        row.style.display = ''; // Muestra la fila si se encontró la palabra
-      }
+
+          // Si la palabra de búsqueda no se encuentra en ninguna celda, oculta la fila
+          if (!found) {
+            row.style.display = 'none';
+            break;  // No es necesario verificar más palabras si una no se encuentra
+          } else {
+            row.style.display = ''; // Muestra la fila si se encontró la palabra
+          }
+        }
     }
 
   // Agrega la fila al fragmento principal

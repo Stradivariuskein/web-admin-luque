@@ -21,14 +21,31 @@ from configs import *
 from apps.core.tools.apiDriveV2 import ApiDrive
 
 import threading
+import requests
 
-from apps.core.models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive
+from apps.core.models import ModelListXlsx, ModelArtic, ModelToUpdateList, ModelFileDrive, ModelToUploadDrive
 from apps.core.forms import UpdateXlsxForm
  
+
+
+
+
+
 # muestra todas las listas de precio para q las selecione el usuario
 # arriba del todo apareceran las q se tiene q actualizar y despues las q no sufrieron cambios
 class ViewSelectList(View):
     def get(self, request, *args, **kwargs):
+        # verifico si hay archivos pendiantes a subir
+        url = "http://localhost:8000/reuploadDrive/"
+    
+        try:
+            # Realiza la solicitud sin esperar la respuesta
+            thread = threading.Thread(target=requests.get, args=(url,)) 
+            thread.start()
+            
+        except requests.exceptions.RequestException as e:
+            print(f"Error en la solicitud: {e}")
+        
         #agregar lo q se esta subiendo al drive
         siaac_artics = reed_artics()
         lists_xlsx = update_artics(siaac_artics)
@@ -211,10 +228,11 @@ class ViewUploadDrive(View):
             
             
 
-
+        
         threads = []
 
         for file in files:
+            
             thread = threading.Thread(target=upload_save_file, args=(file,))
             threads.append(thread)
             thread.start()
@@ -242,13 +260,48 @@ class ViewUploadDrive(View):
                 
                 
             else:
+                error = file['response']
+                file = file['file']
+                exist_file_to_upload = ModelToUploadDrive.objects.filter(fileDrive=file)
+                if not exist_file_to_upload:
+                    to_upload = ModelToUploadDrive(fileDrive=file)
+                    to_upload.save()
+                
                 if 'error' in results[file.name]:
-                    results[file.name]['error'] += f'Error uploading file to drive. {file}'
+                    results[file.name]['error'] += f'Error uploading file to drive. {error}'
                 else:
-                    results[file.name]['error'] = f'Error uploading file to drive. {file}'
+                    results[file.name]['error'] = f'Error uploading file to drive. {error}'
 
 
         return JsonResponse(results)
+    
+class ReuploadFileDrive(View):
+    def get(self, request, *args, **kwargs):
+        results_threads = []
+        def upload_save_file(file):
+            drive = ApiDrive("../service_account.json")
+            results_threads.append(drive.upload(file))
+
+        files_to_upload = ModelToUploadDrive.objects.all()
+        threads = []
+        for file in files_to_upload:
+            
+            thread = threading.Thread(target=upload_save_file, args=(file.fileDrive,))
+            threads.append(thread)
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+        results = {}
+        for file in results_threads:
+            if isinstance(file, ModelFileDrive):
+                files_to_upload.get(fileDrive=file).delete()
+                results[file.id] = True
+            else:
+                results[file.id] = False
+                
+        return JsonResponse(results)
+            
     
 
 # recive los ids separados por ','(ej: '1,50,28,36...') de 

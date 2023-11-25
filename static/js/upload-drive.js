@@ -59,6 +59,7 @@ function uploadDrive2() {
             console.log(textMsj)
             msj_child.textContent += ' ' + textMsj 
         }
+        console.log(`msj = ${textMsj}`)
         
     }
     $.ajax({
@@ -69,6 +70,7 @@ function uploadDrive2() {
             "X-CSRFToken": csrfToken  // Agrega el token CSRF a la cabecera
         },
         success: function(data) {
+            console.log(data)
             for (let name in data) {
 
                 let status = document.getElementById(name);
@@ -77,10 +79,6 @@ function uploadDrive2() {
                 let dropBox = status.children;
                 dropBox[0].classList.remove('card-warning')
                 
-                // Modificar el estado y el color de fondo
-                // if ('error' in fileInfo) {
-
-                // si hay links lo agregamos
                 if (Object.keys(fileInfo).length !== 0){
 
                    
@@ -89,7 +87,10 @@ function uploadDrive2() {
                         if (key !== 'error') {
 
                             if (key !== 'no_drive') {
-                                dropBox[0].innerText = "Subido";
+                                if (dropBox[0].innerText !== 'Error') {
+                                    dropBox[0].innerText = "Subido";
+                                }
+                                
                                 dropBox[0].classList.add('card-green')
 
                                 let link = document.createElement('a');
@@ -125,11 +126,6 @@ function uploadDrive2() {
                 dropBox[0].innerText = "Error";
                 dropBox[0].style.backgroundColor = "lightcoral";
             }
-
-                    
-                // } else {
-                //     
-                // }
 
             }
             writeMsj(all_ok)

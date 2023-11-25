@@ -325,10 +325,6 @@ def update_artics(artics):
     for update_xlsx in to_update:
         if update_xlsx in no_changes:
             no_changes.remove(update_xlsx)
-    print("*************************************")
-    print(f"len_nochange: {len(no_changes)}")
-    print("*************************************")
-
     return {
         'to_update': to_update,
         'no_changes': no_changes
