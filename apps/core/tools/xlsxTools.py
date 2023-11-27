@@ -56,7 +56,7 @@ def buscarPrecio(cod, lista_num):
     return -1
 
 
-# dado un archivo xlsx devuelve un dic con todos los codgos descripcion, precios, y cleda
+# dado una ruta de un archivo xlsx devuelve un dic con todos los codgos descripcion, precios, y cleda
 def get_artcis_from_xlsx(rute_xlsx):
     
     try:

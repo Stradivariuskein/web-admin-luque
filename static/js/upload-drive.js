@@ -43,17 +43,37 @@ function uploadDrive2() {
     var ids = link.split('?')[1].split('=')[1];
 
     var all_ok = true
+    var msj = document.getElementById('msj');
+    var msj_child = msj.children[0];
+    msj_child.innerText = 'Subiendo al drive...\nEspere a que todas las listas digan subido'
     const writeMsj = (status, textMsj='') => {
-        msj = document.getElementById('msj');
-        msj_child = msj.children[0];
+
+        // Verifica si hay un botón entre los hijos del contenedor
+        var haveButton = Array.from(msj.children).some(function (element) {
+            return element.tagName === 'BUTTON';
+        });
 
         if (status) {
             msj_child.textContent = "Todo subido";
             msj.style.backgroundColor = "lightgreen";
+            if (haveButton) {
+                msj.removeChild(msj.children[1])
+            }
         
         } else {                
             msj_child.textContent = "Algo salio mal.";
             msj.style.backgroundColor = "lightcoral";
+            msj.classList.remove('card-warning')
+
+            if (!haveButton) {
+                retryButton = document.createElement('BUTTON');
+                retryButton.innerText = 'Reintentar';
+                retryButton.className = 'btn card-warning mb-2';
+                retryButton.onclick = uploadDrive2;
+                msj.appendChild(retryButton);
+            }
+
+            
         } 
         if (textMsj !== '') {
             console.log(textMsj)
@@ -129,6 +149,15 @@ function uploadDrive2() {
 
             }
             writeMsj(all_ok)
+            if (all_ok) {
+                for (let name in data) {
+            
+                    let status = document.getElementById(name);
+                    status.children[0].innerText = 'Subido'
+                    status.children[0].classList.add("card-green")
+                    status.children[0].style = ''
+                }
+            }
                 
         },
         error: function(xhr, status, error) {
@@ -137,5 +166,6 @@ function uploadDrive2() {
         }
 
 })
+
 
 }

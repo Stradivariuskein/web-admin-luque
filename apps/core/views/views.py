@@ -61,10 +61,10 @@ class ViewSelectList(View):
 # actualizarlo manualmente o poniendo un porsentaje
 class ViewUpdateXlsxStep1(View):
         
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
      
 
-        lists_xlsx = request.GET.getlist("lists_xlsx")
+        lists_xlsx = request.POST.getlist("lists_xlsx")
 
         if lists_xlsx:
             xlsx_and_artics = []
@@ -232,6 +232,7 @@ class ViewUploadDrive(View):
         threads = []
 
         for file in files:
+
             
             thread = threading.Thread(target=upload_save_file, args=(file,))
             threads.append(thread)
@@ -295,6 +296,7 @@ class ReuploadFileDrive(View):
         results = {}
         for file in results_threads:
             if isinstance(file, ModelFileDrive):
+                file.save()
                 files_to_upload.get(fileDrive=file).delete()
                 results[file.id] = True
             else:

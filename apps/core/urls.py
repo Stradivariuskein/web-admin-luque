@@ -17,7 +17,7 @@ Including another URLconf
 
 from django.urls import path
 from apps.core.views.views import CreateXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, ViewSelectList, download_xlsx, ViewUploadDrive, ReuploadFileDrive
-from apps.core.views.views_tmp import tmp_view_delet_duplicate_drive, view_check_drive_id
+from apps.core.views.views_tmp import tmp_view_delet_duplicate_drive, view_check_drive_id, deactivate_artics
 from apps.core.views.view_search import ViewSearchArtic
 from apps.core.views.view_testing import test_prices_siaac, test_files_drive
 
@@ -34,5 +34,5 @@ urlpatterns = [
     path('uploadDrive/', ViewUploadDrive.as_view(), name='upload-drive'),
     path('reuploadDrive/', ReuploadFileDrive.as_view(), name='reupload-drive'),
     path('artics/', ViewSearchArtic.as_view(), name='artics'),
-
+    path('artics/deactivate/', deactivate_artics, name='deactivate-artics'),
 ]

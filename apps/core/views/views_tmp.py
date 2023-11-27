@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from apps.core.models import ModelListXlsx, ModelArtic, ModelFolderDrive, ModelFileDrive
 
@@ -13,6 +13,7 @@ from re import findall
 from datetime import datetime
 import os
 import PyPDF2
+import threading
 
 #funcion temporal para registrar listas xlsx en la db
 def temp_create_listXlsx(request):
@@ -201,11 +202,44 @@ def view_test(request):
 
 # a los articulos q no estene en el pdf (quiere decir q no se actualizan desde el 2019) pone el atributo active en false
 def deactivate_artics(request):
+    results_threads = []
+    def find_code(artic, pdf_txt):
+       
+        response = {'deactivate': []}
+        
+        for page in pdf_txt:
+            
+    
+            
+            code_in_page = page.find(f'\n {artic.code.strip().upper()}')
+
+            if code_in_page > -1:
+                code_in_page += 2
+                i = 0
+                lines = page[code_in_page:].split('\n')
+                
+                len_lines = len(lines)-1
+                while i <= len_lines:
+                    line = lines[i]
+                    if line[:fin_cod].strip().upper() == artic.code:
+                        print(f"igual")
+                        break
+                    i += 1
+                    
+                else:
+                    continue # si no lo encuentra continua con el for
+                print('break')
+                break # sale de bucle for si lo encuentra
+        else:
+            
+            artic.active = False
+            response['deactivate'].append(artic.code)
+        results_threads.append(response)
 
     pdf_path = os.path.abspath('./PRICES-PDF/prices_L_5.pdf')
-    fin_cod = 13
+    fin_cod = 12
 
-    
+    response = {'deactivate': []}
     # Abre el archivo PDF en modo de lectura binaria
     with open(pdf_path, "rb") as file:
         # Crea un objeto PDFReader
@@ -213,28 +247,27 @@ def deactivate_artics(request):
 
         # Itera sobre todas las páginas del PDF
         artics = ModelArtic.objects.all()
+        pdf_txt = []
+        for page in pdf_reader.pages:
+    
+            pdf_txt.append(page.extract_text())
         
-            
-            
-        for artic in artics:
-            for page in pdf_reader.pages:
-        
-                text_page = page.extract_text()
-                code_in_page = text_page.find(f'\n {artic.code.strip().upper()}')
 
-                if code_in_page > -1:
-                    code_in_page += 2
-                    i = 0
-                    lines = text_page[code_in_page:].split('\n')
-                    line = lines[i]
-                    len_lines = len(lines)
-                    while i <= len_lines:
-                        if line[:fin_cod].strip().upper() == artic.code:
-                            break
-                        i += 1
-                        line = lines[i]
-                    else:
-                        continue # si no lo encientra continua con el for
-                    break # sale de bucle for si lo encuentra
-            else:
-                artic.active = False
+        threads = []
+
+        for artic in artics:
+
+            
+            thread = threading.Thread(target=find_code, args=(artic, pdf_txt))
+            threads.append(thread)
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+
+        for res in results_threads:
+                response['deactivate'] += res['deactivate'] 
+    print(len(response['deactivate']))
+    return JsonResponse(response)
+
+
