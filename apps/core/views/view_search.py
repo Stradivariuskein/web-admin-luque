@@ -1,20 +1,14 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, View
 
 from apps.core.models import ModelArtic
 from apps.core.tools.siaacTools import reed_artics
 from apps.core.tools.xlsxTools import update_artics
 
-class ViewSearchArtic(ListView):
-    model= ModelArtic
-    context_object_name = 'artics'
-    template_name = 'core/search_artic.html' 
-
-    def get_queryset(self):
-        artics = reed_artics()
-        update_artics(artics)
-
-        # Llama al método super() para obtener la consulta original
-        queryset = super().get_queryset()
-
-        return queryset
+class ViewSearchArtic(View):
+    def get(self, request, *args, **kwargs):
+        artics = ModelArtic.objects.filter(active=True)
+        test = ModelArtic.objects.all()
+        print(len(test)-len(artics))
+        
+        return render(request, 'core/search_artic.html',{'artics': artics})

@@ -217,23 +217,25 @@ def deactivate_artics(request):
                 code_in_page += 2
                 i = 0
                 lines = page[code_in_page:].split('\n')
-                
+                if artic.code.strip() == 'T-240':
+                    print(lines[0])
                 len_lines = len(lines)-1
                 while i <= len_lines:
                     line = lines[i]
                     if line[:fin_cod].strip().upper() == artic.code:
-                        print(f"igual")
+
                         break
                     i += 1
                     
                 else:
                     continue # si no lo encuentra continua con el for
-                print('break')
+
                 break # sale de bucle for si lo encuentra
         else:
             
             artic.active = False
-            response['deactivate'].append(artic.code)
+
+            response['deactivate'].append(artic)
         results_threads.append(response)
 
     pdf_path = os.path.abspath('./PRICES-PDF/prices_L_5.pdf')
@@ -266,8 +268,10 @@ def deactivate_artics(request):
             thread.join()
 
         for res in results_threads:
+            if res['deactivate'] != []:
+                res['deactivate'][0].save()
                 response['deactivate'] += res['deactivate'] 
     print(len(response['deactivate']))
-    return JsonResponse(response)
+    return HttpResponse("termino")
 
 
