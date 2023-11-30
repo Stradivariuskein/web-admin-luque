@@ -7,8 +7,10 @@ from apps.core.tools.xlsxTools import update_artics
 
 class ViewSearchArtic(View):
     def get(self, request, *args, **kwargs):
+        siaac_artics = reed_artics()
+        update_artics(siaac_artics)
         artics = ModelArtic.objects.filter(active=True)
-        test = ModelArtic.objects.all()
-        print(len(test)-len(artics))
+        test = artics.filter(code='BULO-104').first()
+        print(test.description)
         
         return render(request, 'core/search_artic.html',{'artics': artics})

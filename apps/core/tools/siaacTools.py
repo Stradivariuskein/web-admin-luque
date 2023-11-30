@@ -8,7 +8,7 @@ from configs import RUTE_SIAAC
 RUTE_ARTIC = f"{RUTE_SIAAC}ARTIC.DBF" 
 RUTE_FILES_SIAAC = "./siaac/"
 INDEX_CODE = 11
-INDEX_DESCRIPTION = [12,64]
+INDEX_DESCRIPTION = [11,64]
 INDEX_PRICE1 = [78,88]
 INDEX_PRICE5 = [126,136]
 LEN_LINE = 200
@@ -149,6 +149,10 @@ def reed_artics():
             artic_price_ma = float(articLine[INDEX_PRICE5[0]:INDEX_PRICE5[1]].strip())
             
             articdb.write(articLine)
+            if 'BULO-104' in artic_cod:
+                print(f"desc {artic_desc}")
+            if 'T-232' in artic_cod:
+                print(f"desc {artic_desc}")
             dic_artics[artic_cod] = {
                 'description': artic_desc,
                 'priceMa': artic_price_ma,
