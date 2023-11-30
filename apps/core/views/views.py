@@ -348,7 +348,3 @@ def download_xlsx(request):
         return response
     else:
         return HttpResponse(f"{request.method} no allowed")
-
-
-
-

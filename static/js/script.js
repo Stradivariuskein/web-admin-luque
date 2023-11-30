@@ -286,7 +286,7 @@ function searchArtic2() {
     table.innerHTML = table_html;
   }
 }
-
+var table_artics = document.getElementById('table-body').innerHTML;
 function searchArtic3() {
    // Obtén el término de búsqueda
    let input = document.getElementById('searchInput');
@@ -297,7 +297,7 @@ function searchArtic3() {
      let keywords = filter.split(' ');  // Divide el término de búsqueda en palabras
  
      // Obtén la tabla y las filas
-     table.innerHTML = table_html; // variable global
+     table.innerHTML = table_artics; // variable global
      let rows = table.getElementsByTagName('tr');
  
      // Crea un fragmento de documento para las manipulaciones
@@ -362,10 +362,13 @@ function searchArtic3() {
      //debug
      console.log(fragment.children.innerHTML)
      // Limpia el contenido de la tabla antes de agregar el fragmento
+     table.innerHTML = ''
      table.appendChild(fragment);
  
    } else {
      // Restaura la tabla original si no hay término de búsqueda
-     table.innerHTML = table_html;
+     table.innerHTML = table_artics;
    }
  }
+
+ 
