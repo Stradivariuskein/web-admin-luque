@@ -238,14 +238,14 @@ def update_artics(artics):
     with transaction.atomic():
         
         db_artics = ModelArtic.objects.all()
-        artic_exist = False
+        
         to_update = []
         no_changes = []
-        counter = 0
 
         
         # verifico q los precios esten actualizados, si no los actualiza
         for code, data in artics.items():
+            artic_exist = False
             for artic in db_artics:
                 if artic.code == code:
                     try:
@@ -255,8 +255,8 @@ def update_artics(artics):
                             
                             artic.priceMa = data['priceMa']
                             artic.priceMi = data['priceMi']
-                            artic.description = data['description']
-                            artic.save()
+
+                        
 
                             xlsx = ModelToUpdateList.objects.filter(xlsxId=artic.listXlsxID).first()
                             if xlsx == None:
@@ -266,9 +266,6 @@ def update_artics(artics):
                             if not xlsx.xlsxId in to_update:
                                 to_update.append(xlsx.xlsxId)
                             
-                               
-
-
                         elif artic.listXlsxID is not None:
                             
                             if not artic.listXlsxID in no_changes and not artic.listXlsxID in to_update:
@@ -289,9 +286,9 @@ def update_artics(artics):
                                     else:
                                         no_changes.append(artic.listXlsxID)
 
-                                    
-
-                                
+                        if artic.description != data['description']:
+                            artic.description = data['description']
+                        artic.save()    
                     except KeyError:
                         print(KeyError("Error en la data"))
                     except Exception as e:
@@ -300,9 +297,9 @@ def update_artics(artics):
 
                     artic_exist = True
                 
-
+            # si el articulo no existe lo crea
             if not artic_exist:
-                new_artic = ModelArtic(code=code, description=[data['description']], priceMa=data['priceMa'], priceMi=data['priceMi'])
+                new_artic = ModelArtic(code=code, description=data['description'], priceMa=data['priceMa'], priceMi=data['priceMi'])
                 new_artic.save()
 
             
