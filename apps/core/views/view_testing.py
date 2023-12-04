@@ -5,6 +5,7 @@ from googleapiclient.errors import HttpError
 from apps.core.models import ModelArtic, ModelFileDrive
 from configs import RUTE_XLSX_AGRUPS, RUTE_XLSX_ORIGIN
 from apps.core.tools.apiDriveV2 import ApiDrive
+from apps.core.tools.xlsxTools import get_artcis_from_xlsx, list_xlsx_to_folder
 
 import os
 import PyPDF2
@@ -97,14 +98,13 @@ def test_prices_siaac(request):
                 
                             
         return response
-
+    # comienzo
     pdf_paths = [os.path.abspath('./PRICES-PDF/prices_L_5.pdf'), os.path.abspath('./PRICES-PDF/prices_L_1.pdf')]
 
     fin_cod = 13
     init_price = 66
     fn_price = 76
     margin = 0.19
-    # Establecer el número máximo de hilos
     
     response = {'msj': ''}
     for path in pdf_paths:
@@ -129,7 +129,29 @@ def test_prices_siaac(request):
     return JsonResponse(response)
 
 def test_prices_precent(request):
-    pass
+    xlsx_rutes = []
+    for _, rute in RUTE_XLSX_AGRUPS.items():
+        xlsx_rutes += list_xlsx_to_folder(rute)
+
+    for _, rute in RUTE_XLSX_ORIGIN.items():
+        xlsx_rutes += list_xlsx_to_folder(rute)
+    artics = {}
+    for rute in xlsx_rutes:
+        split_rute = rute.split('/')
+        key = split_rute[-2]+'/'+split_rute[-1]
+        artics[key] = get_artcis_from_xlsx(rute)
+
+    len_artics = len(artics.items())
+    len_rutes = len(xlsx_rutes)
+    if len_artics == len_rutes:
+        print('ok')
+    else:
+        print(f'error: {len_artics}!= {len_rutes}')
+        
+    
+
+    return JsonResponse(artics)
+
 
 def test_prices_manual(request):
     pass

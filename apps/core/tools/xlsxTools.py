@@ -62,6 +62,7 @@ def get_artcis_from_xlsx(rute_xlsx):
     try:
         wb = load_workbook(rute_xlsx)
     except FileNotFoundError:
+        print(f'{rute_xlsx} not found')
         return None
     sheet = wb['Hoja1']
 
@@ -195,7 +196,7 @@ def list_xlsx_to_folder(path):
     for root, dirs, files in os.walk(path):
         for file in files:
             if file.endswith(".xlsx"):
-                archivos_xlsx.append((file, os.path.basename(root)))
+                archivos_xlsx.append(os.path.join(root, file))
 
     return archivos_xlsx
 
