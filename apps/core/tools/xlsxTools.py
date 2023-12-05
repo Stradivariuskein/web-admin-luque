@@ -121,6 +121,8 @@ def update_xlsx(xlsx_name, xlsx_data):
         try:
             wb = load_workbook(rute_xlsx)
         except FileNotFoundError:
+            # hay q arreglar q cuando 1 ruta no exista crashea toda la app
+            print(f"none: {rute_xlsx}")
             return None
         
         to_return = []

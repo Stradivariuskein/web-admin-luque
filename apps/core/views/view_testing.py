@@ -153,7 +153,7 @@ def test_prices_auto(request):
                 if key[:2].upper() == 'MA':
                     print(f"{key[:2].upper()}: {key[:2].upper() == 'MA'}")
                     if db_artic.priceMa != data['price']:
-                        response[code] = f"{db_artic.priceMa} != {data['price']}"
+                        response[code] = f"{db_artic.priceMa} != {data['price']} || rute: {rute}"
                 elif key[:2].upper() == 'MI':
                     print(f"{key[:2].upper()}: {key[:2].upper() == 'MI'}")
                     if db_artic.priceMi!= data['price']:
