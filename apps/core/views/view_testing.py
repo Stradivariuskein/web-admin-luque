@@ -129,32 +129,41 @@ def test_prices_siaac(request):
     return JsonResponse(response)
 
 def test_prices_precent(request):
+    pass
+
+def test_prices_manual(request):
+    pass
+
+def test_prices_auto(request):
+
     xlsx_rutes = []
     for _, rute in RUTE_XLSX_AGRUPS.items():
         xlsx_rutes += list_xlsx_to_folder(rute)
 
     for _, rute in RUTE_XLSX_ORIGIN.items():
         xlsx_rutes += list_xlsx_to_folder(rute)
-    artics = {}
+    response = {}
     for rute in xlsx_rutes:
         split_rute = rute.split('/')
         key = split_rute[-2]+'/'+split_rute[-1]
-        artics[key] = get_artcis_from_xlsx(rute)
+        artics = get_artcis_from_xlsx(rute)
+        for code, data in artics.items():
+            db_artic = ModelArtic.objects.filter(code=code).first()
+            if db_artic != None:
+                if key[:2].upper() == 'MA':
+                    print(f"{key[:2].upper()}: {key[:2].upper() == 'MA'}")
+                    if db_artic.priceMa != data['price']:
+                        response[code] = f"{db_artic.priceMa} != {data['price']}"
+                elif key[:2].upper() == 'MI':
+                    print(f"{key[:2].upper()}: {key[:2].upper() == 'MI'}")
+                    if db_artic.priceMi!= data['price']:
+                        response[code] = f"{db_artic.priceMa} != {data['price']}"
+                else:
+                    response[code] = 'error: no es ma ni mi'
+            else:
+                response[code] = 'error: codigo inexistente'
 
-    len_artics = len(artics.items())
-    len_rutes = len(xlsx_rutes)
-    if len_artics == len_rutes:
-        print('ok')
-    else:
-        print(f'error: {len_artics}!= {len_rutes}')
-        
-    
-
-    return JsonResponse(artics)
-
-
-def test_prices_manual(request):
-    pass
+    return JsonResponse(response)
 
 
 def test_files_drive(request):
