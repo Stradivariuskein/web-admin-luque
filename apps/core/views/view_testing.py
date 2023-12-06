@@ -137,29 +137,28 @@ def test_prices_manual(request):
 def test_prices_auto(request):
 
     xlsx_rutes = []
-    for _, rute in RUTE_XLSX_AGRUPS.items():
-        xlsx_rutes += list_xlsx_to_folder(rute)
-
+    #obtenemos las rutas de todos los archivos xlsx
     for _, rute in RUTE_XLSX_ORIGIN.items():
         xlsx_rutes += list_xlsx_to_folder(rute)
     response = {}
+    #por cada archivo obtenemos los codigos y precios y los compaamos con los de la base de datos
     for rute in xlsx_rutes:
         split_rute = rute.split('/')
         key = split_rute[-2]+'/'+split_rute[-1]
         artics = get_artcis_from_xlsx(rute)
         for code, data in artics.items():
-            db_artic = ModelArtic.objects.filter(code=code).first()
+            db_artic = ModelArtic.objects.filter(code=code.strip()).first()
             if db_artic != None:
-                if key[:2].upper() == 'MA':
-                    print(f"{key[:2].upper()}: {key[:2].upper() == 'MA'}")
+                if split_rute[-2].upper() == 'MA' or split_rute[-3].upper() == 'MA':
+                    
                     if db_artic.priceMa != data['price']:
-                        response[code] = f"{db_artic.priceMa} != {data['price']} || rute: {rute}"
-                elif key[:2].upper() == 'MI':
-                    print(f"{key[:2].upper()}: {key[:2].upper() == 'MI'}")
+                        response[code] = f"{db_artic.priceMa} != {data['price']} || rute: {rute}\t|{data['col']}|{data['row']}"
+                elif split_rute[-2].upper() == 'MI' or split_rute[-3].upper() == 'MI':
+                    
                     if db_artic.priceMi!= data['price']:
-                        response[code] = f"{db_artic.priceMa} != {data['price']}"
+                        response[code] = f"{db_artic.priceMa} != {data['price']}\t|{data['col']}|{data['row']}"
                 else:
-                    response[code] = 'error: no es ma ni mi'
+                    response[code] = f'error: no es ma ni mi [{split_rute[-2]}][{split_rute[-3]}]'
             else:
                 response[code] = 'error: codigo inexistente'
 

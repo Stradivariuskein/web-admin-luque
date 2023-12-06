@@ -7,6 +7,21 @@
   color: black;
 }
 
+.custom-checkbox {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: auto;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #333; /* Puedes ajustar el grosor y el color del borde según tus preferencias */
+  border-radius: 3px; /* Puedes ajustar el radio de borde para darle esquinas redondeadas */
+}
+
+.custom-checkbox:checked {
+  background-color: #4CAF50; /* Puedes cambiar el color de fondo cuando el checkbox está marcado */
+}
+
 .font-28 {
   font-size: 28px;
   line-height: 2px;

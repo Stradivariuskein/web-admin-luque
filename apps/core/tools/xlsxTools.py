@@ -123,7 +123,7 @@ def update_xlsx(xlsx_name, xlsx_data):
         except FileNotFoundError:
             # hay q arreglar q cuando 1 ruta no exista crashea toda la app
             print(f"none: {rute_xlsx}")
-            return None
+            continue
         
         to_return = []
         sheet = wb['Hoja1']
@@ -131,17 +131,17 @@ def update_xlsx(xlsx_name, xlsx_data):
         
         for code, data in xlsx_data.items():
             
-            
             if code != 'rutes':
                 try:
                     row = data['row']
                     col = data['col'] - 1
                     code = sheet[row][col].value 
                     code = code.strip()
-
+                    
                     if code:
                         cell = f"{ABC[col+4]}{row}"
                         percent = int(data['price_percent'])
+                        
                         if percent != 0:
                             xlsx_data[code]['percent'] = percent
                             try:  
@@ -160,8 +160,9 @@ def update_xlsx(xlsx_name, xlsx_data):
                                 print(f"error: en {code} el precio {cell_value} no es un numero")
                         elif data['price_manual_may'] != None and data['price_manual_min'] != None:
                             try:
-                                is_ma = rute_xlsx.find("/ma/")
-                                is_mi = rute_xlsx.find("/mi/")
+                                is_ma = rute_xlsx.upper().find("/MA/")
+                                is_mi = rute_xlsx.upper().find("/MI/")
+
                                 if is_ma > -1:
                                     if isinstance(data['price_manual_may'], float):
                                         xlsx_data[code]['price_manual_may'] = data['price_manual_may']
@@ -169,12 +170,15 @@ def update_xlsx(xlsx_name, xlsx_data):
                                         xlsx_data[code]['price_manual_may'] = float(data['price_manual_may'].strip())
 
                                     sheet[cell] = xlsx_data[code]['price_manual_may']
+                                    
                                 elif is_mi > -1:
                                     if isinstance(data['price_manual_min'], float):
                                         xlsx_data[code]['price_manual_min'] = data['price_manual_min']
                                     else:
                                         xlsx_data[code]['price_manual_min'] = float(data['price_manual_min'].strip())
                                     sheet[cell] = xlsx_data[code]['price_manual_min']
+                                else:
+                                    print('Error: el archivo tiene q esta contenido en una carpeta con nombre ma o mi')
                             except ValueError:
                                 
                                 sheet[cell] = '********'
@@ -183,6 +187,9 @@ def update_xlsx(xlsx_name, xlsx_data):
                             print(f"{code}: el precio no cambio")
                 except Exception as e:
                     print(f"Error: {e}")
+                if rute_xlsx == './LISTAS_ORDENADAS/MA/Bisagras/BISAGRA ALACENA.xlsx':
+                    print(xlsx_data[code])
+                
                 to_return.append((code, xlsx_data[code]))
 
             

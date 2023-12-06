@@ -131,15 +131,6 @@ class ViewUpdateXlsxStep2(View):
             rutes = []
             for id, rute_xlsx in RUTE_XLSX_ORIGIN.items():
                 rutes.append(f"{rute_xlsx}{name}")
-            for id, rute_xlsx in RUTE_XLSX_AGRUPS.items():
-                # lo sigiente es para obtener el nombre de la carpeta padre
-                files = ModelFileDrive.objects.filter(name=name)
-                for file in files:
-                    if file.parentId.name.upper() != 'MA' and file.parentId.name.upper() != 'MI':
-                        if name == 'BISAGRA ALACENA.xlsx':
-                            print(f"{rute_xlsx}{file.parentId.name}/{name}")
-                            rutes.append(f"{rute_xlsx}{file.parentId.name}/{name}")
-
                 
             try:
                 to_update[current_id]['rutes'] = rutes
@@ -162,9 +153,8 @@ class ViewUpdateXlsxStep2(View):
         if len_artics == len(brute_data['price_percent']) ==  len(brute_data['xlsx_ids']) == len(brute_data['price_manual_may']) == len(brute_data['price_manual_min']):
             results = []
             files = []
-            drive = ApiDrive("../service_account.json")
+
             with transaction.atomic():
-                files_upload = {}
 
                 xlsx_to_download = ''
                 for xlsx_id, xlsx_data in to_update.items():

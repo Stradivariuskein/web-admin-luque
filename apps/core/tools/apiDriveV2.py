@@ -50,7 +50,7 @@ class ApiDrive(Drive_manager):
             print(f"error con el dirve: {e}")
 
         # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
-        if (not isinstance(response,HttpError) and not isinstance(response,ServerNotFoundError)):# and not fileDrive.id == 7440:
+        if (not isinstance(response,HttpError) and not isinstance(response,ServerNotFoundError)):
            
             fileDrive.driveId = response['id']
             return fileDrive       
