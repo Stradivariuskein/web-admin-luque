@@ -27,7 +27,6 @@ class ApiDrive(Drive_manager):
                 i=0
                 time.sleep(wait_time)
             except Exception as e:
-                print(e)
                 time.sleep(wait_time)
             
 

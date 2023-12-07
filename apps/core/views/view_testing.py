@@ -180,9 +180,9 @@ def test_files_drive(request):
                response[f.name] = "DriveID no fund"
             else:
                 if f.name == result['name'] and f.parentId.driveId == result['parents'][0]:
-                    response[f.id] = result
+                    pass
                 else:
-                    response[f.name] = f"{result['name']}  parents: {result['parents']} != {f.parentId.driveId}]|{f.name == result['name'] and f.parentId.driveId == result['parents']}"
+                    response[f.id] = f"{f.name}|{result['name']}  parents: {result['parents']} != {f.parentId.driveId}]|{f.name == result['name'] and f.parentId.driveId == result['parents']}"
 
     return JsonResponse(response)
 

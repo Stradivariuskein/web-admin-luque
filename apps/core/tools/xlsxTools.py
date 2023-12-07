@@ -147,8 +147,8 @@ def update_xlsx(xlsx_name, xlsx_data):
                             try:  
                                 cell_value = sheet[row][col+3].value
                                 cell_value = float(cell_value)
-                                result_mi = rute_xlsx.find('mi')
-                                result_ma = rute_xlsx.find('ma')
+                                result_mi = rute_xlsx.upper().find('MI')
+                                result_ma = rute_xlsx.upper().find('MA')
                                 if result_mi > -1:
                                     xlsx_data[code]['price_manual_min'] = percent_apli(cell_value, percent)
                                     sheet[cell] = xlsx_data[code]['price_manual_min']
@@ -168,15 +168,25 @@ def update_xlsx(xlsx_name, xlsx_data):
                                         xlsx_data[code]['price_manual_may'] = data['price_manual_may']
                                     else:
                                         xlsx_data[code]['price_manual_may'] = float(data['price_manual_may'].strip())
-
-                                    sheet[cell] = xlsx_data[code]['price_manual_may']
+                                    try:
+                                        float(sheet[cell].value)
+                                        sheet[cell] = xlsx_data[code]['price_manual_may']
+                                    except Exception as e:
+                                        print(e)
+                                        sheet[cell] = '********'
+                                        xlsx_data[code]['price_manual_may'] = '*******'
                                     
                                 elif is_mi > -1:
                                     if isinstance(data['price_manual_min'], float):
                                         xlsx_data[code]['price_manual_min'] = data['price_manual_min']
                                     else:
                                         xlsx_data[code]['price_manual_min'] = float(data['price_manual_min'].strip())
-                                    sheet[cell] = xlsx_data[code]['price_manual_min']
+                                    try:
+                                        float(sheet[cell].value)
+                                        sheet[cell] = xlsx_data[code]['price_manual_min']
+                                    except:
+                                        sheet[cell] = '********'
+                                        xlsx_data[code]['price_manual_min'] = '*******'
                                 else:
                                     print('Error: el archivo tiene q esta contenido en una carpeta con nombre ma o mi')
                             except ValueError:

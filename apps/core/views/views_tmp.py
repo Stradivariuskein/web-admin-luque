@@ -150,7 +150,7 @@ def view_check_drive_id(request):
     for file in files:
         response = drive.get_file(file.driveId)
         # validar si el archivo esta en el drive si no esta hay q subirlo
-        if response:
+        if not response:
             # falta validar si existe en la carpeta contenedora
             files_drive = drive.find_file_id_by_name(file_name=file.name, parent_id=file.parentId.driveId)
             if files_drive != []:
