@@ -144,15 +144,17 @@ def test_prices_auto(request):
     #por cada archivo obtenemos los codigos y precios y los compaamos con los de la base de datos
     for rute in xlsx_rutes:
         split_rute = rute.split('/')
-        key = split_rute[-2]+'/'+split_rute[-1]
+        
         artics = get_artcis_from_xlsx(rute)
         for code, data in artics.items():
             db_artic = ModelArtic.objects.filter(code=code.strip()).first()
             if db_artic != None:
+                # si la lista esta  contenida en la carpeta ma es precio mayorista
                 if split_rute[-2].upper() == 'MA' or split_rute[-3].upper() == 'MA':
                     
                     if db_artic.priceMa != data['price']:
                         response[code] = f"{db_artic.priceMa} != {data['price']} || rute: {rute}\t|{data['col']}|{data['row']}"
+                # si la lista esta  contenida en la carpeta mi es precio menorista
                 elif split_rute[-2].upper() == 'MI' or split_rute[-3].upper() == 'MI':
                     
                     if db_artic.priceMi!= data['price']:
@@ -173,11 +175,14 @@ def test_files_drive(request):
     for f in files:
         if f.driveId:
             result = drive.get_file(f.driveId)
-            if isinstance(result,HttpError):
+            if not result:
                response['msj'] += f"{f.id} {f.name}: DriveID no fund"
-               response[f.id] = "DriveID no fund"
+               response[f.name] = "DriveID no fund"
             else:
-                response[f.id] = result
+                if f.name == result['name'] and f.parentId.driveId == result['parents'][0]:
+                    response[f.id] = result
+                else:
+                    response[f.name] = f"{result['name']}  parents: {result['parents']} != {f.parentId.driveId}]|{f.name == result['name'] and f.parentId.driveId == result['parents']}"
 
     return JsonResponse(response)
 

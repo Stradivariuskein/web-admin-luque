@@ -142,7 +142,7 @@ def tmp_view_delet_duplicate_drive(request):
         
         
     return HttpResponse(msj)
-# cheque q el id del drive este bien si no puede scceder al archivo entonse lo busca por nombre eb la carpeta padre y le reasigna el nuevo id
+# cheque q el id del drive este bien si no puede acceder al archivo entonse lo busca por nombre en la carpeta padre y le reasigna el nuevo id
 def view_check_drive_id(request):
     drive = ApiDrive("../service_account.json")
     files = ModelFileDrive.objects.all()
@@ -150,7 +150,7 @@ def view_check_drive_id(request):
     for file in files:
         response = drive.get_file(file.driveId)
         # validar si el archivo esta en el drive si no esta hay q subirlo
-        if isinstance(response, HttpError):
+        if response:
             # falta validar si existe en la carpeta contenedora
             files_drive = drive.find_file_id_by_name(file_name=file.name, parent_id=file.parentId.driveId)
             if files_drive != []:

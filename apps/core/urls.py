@@ -23,7 +23,7 @@ from apps.core.views.view_testing import test_prices_siaac, test_files_drive, te
 
 
 urlpatterns = [
-    path('test/', view_check_drive_id, name='test'),
+    path('test/drive/files', view_check_drive_id, name='test-drive-files'),
     path('test/prices', test_prices_siaac, name='test-prices'),
     path('test/prices/percent', test_prices_precent, name='test-prices-percent'),
     path('test/prices/auto', test_prices_auto, name='test-prices-percent'),
