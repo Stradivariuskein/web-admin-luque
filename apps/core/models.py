@@ -37,6 +37,7 @@ class ModelArtic(models.Model):
     row = models.IntegerField(default=0)
     col = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
+    priceXlsx = models.BooleanField(default=True) # si es verdadero se agrega el precio a la lista excel sino se ponen astericos(*)
 
     def __str__(self) -> str:
         return f"{self.code},{self.description},{self.row},{self.col},may: {self.priceMa}, min: {self.priceMi}"

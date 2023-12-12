@@ -74,8 +74,11 @@ class ViewUpdateXlsxStep1(View):
                 xlsx = xlsx.split(", ")
                 artics_forms = []
 
-                list_artics = ModelArtic.objects.filter(listXlsxID=int(xlsx[0].split(' ')[1])).order_by('code')
+                list_artics = ModelArtic.objects.filter(listXlsxID=int(xlsx[0].split(' ')[1]), active=True).order_by('code')
                 for artic in list_artics:
+                    if not artic.priceXlsx:
+                        artic.priceMa = None
+                        artic.priceMi = None
                     artic_dic = {
                         'code': artic.code,
                         'price_auto': True,
@@ -348,3 +351,18 @@ def download_xlsx(request):
         return response
     else:
         return HttpResponse(f"{request.method} no allowed")
+
+
+def get_prices_form_code(request):
+
+    code = request.GET.get('code', None)
+    priceMa = None
+    priceMi = None
+
+    if code:
+        artic = ModelArtic.objects.filter(code=code.strip().upper()).first()
+        if artic:
+            priceMa = artic.priceMa
+            priceMi = artic.priceMi
+
+    return JsonResponse({'priceMa': priceMa, 'priceMi': priceMi})
