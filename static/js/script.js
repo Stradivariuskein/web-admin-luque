@@ -203,10 +203,13 @@ function searchArtic3() {
       // Verificar si la solicitud fue exitosa (código 200)
       if (xhr.status == 200) {
         // Convertir la respuesta JSON a un objeto JavaScript
-        var respuesta = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
 
         // Manejar la respuesta JSON aquí
-        console.log(respuesta);
+        pricesHtml = document.getElementById(code).getElementsByTagName("input");
+        pricesHtml[0].value = response.priceMa
+        pricesHtml[1].value = response.priceMi
+        console.log(pricesHtml);
       } else {
         // Manejar errores aquí
         console.error('Error en la solicitud:', xhr.status, xhr.statusText);
