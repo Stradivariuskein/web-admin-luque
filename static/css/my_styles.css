@@ -110,7 +110,7 @@ td {
 }
 
 .link-menu {
-  width: 206px;
+  width: 100%;
   padding: 5% 10%;
   z-index: 999;
 }
@@ -218,4 +218,8 @@ label {
 .table td {
   padding: 0.5rem 0.5rem;
   border-bottom-width: 1px;
+}
+
+.table-responsive {
+  overflow-x: unset;
 }
