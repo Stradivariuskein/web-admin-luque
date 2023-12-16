@@ -1,13 +1,13 @@
-### Program para la actualizacion de lista en formato excel segun un sistema de facturacion
+# Program para la actualizacion de lista en formato excel segun un sistema de facturacion
 
-Todabia no esta terminado.
+# Todabia no esta terminado.
 
-### Problematica:
-# hay 105 listas excels con un formato donde los codigos estan en la columna "A", la descripcion en las columnas "B+C" y los precios en la "D".
+## Problematica:
+#### hay 105 listas excels con un formato donde los codigos estan en la columna "A", la descripcion en las columnas "B+C" y los precios en la "D".
 
-# tambien hay un archivo con los codigos, descripcion y precion en formato de texto (ARTIC.DBF programa de facturacion).
+#### tambien hay un archivo con los codigos, descripcion y precion en formato de texto (ARTIC.DBF programa de facturacion).
 
-# objetivo: hacer q las lista se actualizen con los precios del archivo y se suban al drive automaticamente.
+#### objetivo: hacer q las lista se actualizen con los precios del archivo y se suban al drive automaticamente.
 
 ### como usarlo:
 
