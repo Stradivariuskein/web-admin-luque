@@ -2,14 +2,14 @@
 
 Todabia no esta terminado.
 
-###Problematica:
-hay 105 listas excels con un formato donde los codigos estan en la columna "A", la descripcion en las columnas "B+C" y los precios en la "D".
+### Problematica:
+# hay 105 listas excels con un formato donde los codigos estan en la columna "A", la descripcion en las columnas "B+C" y los precios en la "D".
 
-tambien hay un archivo con los codigos, descripcion y precion en formato de texto (ARTIC.DBF programa de facturacion).
+# tambien hay un archivo con los codigos, descripcion y precion en formato de texto (ARTIC.DBF programa de facturacion).
 
-objetivo: hacer q las lista se actualizen con los precios del archivo y se suban al drive automaticamente.
+# objetivo: hacer q las lista se actualizen con los precios del archivo y se suban al drive automaticamente.
 
-###como usarlo:
+### como usarlo:
 
 paso 1: el programa detectara las lista q se tenga q modificar y parareceran tildadas. tambien puede selecionar otras si lo desea.
 
