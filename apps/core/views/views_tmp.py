@@ -85,7 +85,7 @@ def view_vincular_xlsx_artic(request):
 def tmp_view_duplicate_xlsx(request):
     
     files = ModelListXlsx.objects.all()
-    drive = ApiDrive("../service_account.json", "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
+    drive = ApiDrive(FILE_CREDENTIALS_DRIVE, "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
     new_files = []
     
     for file in files:
@@ -107,7 +107,7 @@ def tmp_view_duplicate_xlsx(request):
 
 # recorrre todos los archivos de la db y verifica q solo alla 1 solo si hay mas los borra
 def tmp_view_delet_duplicate_drive(request):
-    drive = ApiDrive("../service_account.json")
+    drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
     files = ModelFileDrive.objects.all()
     msj = []
     for file in files:
@@ -144,7 +144,7 @@ def tmp_view_delet_duplicate_drive(request):
     return HttpResponse(msj)
 # cheque q el id del drive este bien si no puede acceder al archivo entonse lo busca por nombre en la carpeta padre y le reasigna el nuevo id
 def view_check_drive_id(request):
-    drive = ApiDrive("../service_account.json")
+    drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
     files = ModelFileDrive.objects.all()
     not_funds = []
     for file in files:

@@ -19,7 +19,7 @@ def upload_file_drive(request):
                 files.append(ruta_completa)
         return files
     #if request.method == "POST":
-    drive = ApiDrive("../service_account.json", "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
+    drive = ApiDrive(FILE_CREDENTIALS_DRIVE, "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
 
 
 
@@ -42,7 +42,7 @@ def upload_file_drive(request):
     
 
 def view_sinc_folder_drive(request):
-    drive = ApiDrive("../service_account.json", "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
+    drive = ApiDrive(FILE_CREDENTIALS_DRIVE, "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
     files = drive.list_drive()
     print(f"archs: {files}")
     folder_list = []

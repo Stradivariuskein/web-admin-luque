@@ -7,6 +7,7 @@ from apps.core.models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
 from configs import RUTE_XLSX_ORIGIN
 import multiprocessing
 
+import os
 import time
 
 class ApiDrive(Drive_manager):
@@ -42,15 +43,15 @@ class ApiDrive(Drive_manager):
                 self.retry_execute(super().delete, driveId)
         try:
             if fileDrive.parentId.parentId.name == "ma" or fileDrive.parentId.name == "ma":
-                response = self.retry_execute(super().upload, RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
+                response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name), fileDrive.parentId.driveId)
             elif fileDrive.parentId.parentId.name == "mi" or fileDrive.parentId.name == "mi":
-                response = self.retry_execute(super().upload, RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name, fileDrive.parentId.driveId)
+                response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name), fileDrive.parentId.driveId)
         except Exception as e:
             print(f"error con el dirve: {e}")
-
-        # da error porque se esta haciend o en hilos encontrar otra forma de subir los archvos y actualizar la base de datos
+        
+        
         if (not isinstance(response,HttpError) and not isinstance(response,ServerNotFoundError)):
-           
+            
             fileDrive.driveId = response['id']
             return fileDrive       
         else:

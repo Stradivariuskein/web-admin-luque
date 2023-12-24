@@ -15,3 +15,5 @@ ROOTS_DRIVE_IDS={
     'order': '1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi',
     'common': '1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW'
 }
+
+FILE_CREDENTIALS_DRIVE = "../service_account.json"

@@ -206,7 +206,7 @@ class ViewUploadDrive(View):
     def post(self, request, *args, **kwargs):
         results_threads = []
         def upload_save_file(file):
-            drive = ApiDrive("../service_account.json")
+            drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
             results_threads.append(drive.upload(file))
 
         results = {}
@@ -283,7 +283,7 @@ class ReuploadFileDrive(View):
     def get(self, request, *args, **kwargs):
         results_threads = []
         def upload_save_file(file):
-            drive = ApiDrive("../service_account.json")
+            drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
             results_threads.append(drive.upload(file))
 
         files_to_upload = ModelToUploadDrive.objects.all()
