@@ -1,6 +1,6 @@
 # Program para la actualizacion de lista en formato excel segun un sistema de facturacion
 
-# Todabia no esta terminado.
+# En desarollo pero ya es funcional...
 
 ## Problematica:
 #### Hay 105 listas excels con un formato donde los codigos estan en la columna "A", la descripcion en las columnas "B+C" y los precios en la "D".
@@ -21,8 +21,8 @@
 
 ## Como usarlo:
 
-#### Paso 1: el programa detectara las lista q se tenga q modificar y parareceran tildadas. tambien puede selecionar otras si lo desea.
+#### Paso 1: el programa detectara las lista a modificar y parareceran tildadas. tambien puede selecionar otras si lo desea.
 
-#### Paso 2: se mostraran los precios q se le asignaran a los articulos de las lissta selecionada. puede corregir manualemnte un precio o aplicar un % para un aumento o descuento.
+#### Paso 2: se mostraran los precios que se le asignaran a los articulos de las lissta selecionada. puede corregir manualemnte un precio o aplicar un % para un aumento o descuento.
 
-#### Paso 3: las listas se actualizaran solas, queda esprer a q se suba al drive. si hay algun error aparecera un cartel rojo, sino es verde.
+#### Paso 3: las listas se actualizaran solas, queda esprer a subir al drive. si hay algun error aparecera un cartel rojo, sino es verde.
