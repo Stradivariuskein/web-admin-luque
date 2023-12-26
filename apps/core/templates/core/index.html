@@ -48,15 +48,23 @@
                                       </tr>
                                     </thead>
                                     <tbody>
+                                        <tr>
+                                            <label>
+                                                <input class="custom-checkbox" type="checkbox" id="select-all">
+                                                <span class="ms-2">Seleccionar todo</span>
+                                            </label>
+                                        </tr>
                                         {% for xlsx in to_update %}
                                         <tr>
-                                            <td>
-                                                <input class="custom-checkbox" type="checkbox" name="lists_xlsx" value="{{xlsx}}" checked>
-                                            </td>
-                                            
-                                            <td class="td-name">
-                                                <p>{{xlsx.0.name}} </p>
-                                            </td>
+                                            <label>
+                                                <td>
+                                                    <input class="custom-checkbox" type="checkbox" name="lists_xlsx" value="{{xlsx}}" checked>
+                                                </td>
+                                                
+                                                <td class="td-name">
+                                                    <p>{{xlsx.0.name}} </p>
+                                                </td>
+                                            </label>
                                             <td>{{xlsx.0.modDate}}</td>
                                             <td>
                                                 <div class="scrollable-container">
@@ -135,7 +143,7 @@
                                     </tbody>
                                   </table>
                             </div>
-                            <a href="#" class="btn btn-block btn-light">Ver mas</a>
+                           
                         </div>
                     </div>
                 </div>
