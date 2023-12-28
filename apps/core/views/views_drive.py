@@ -7,7 +7,7 @@ from apps.core.models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
 from apps.core.forms import CreateFolderForm
 
 from apps.core.tools.apiDriveV2 import ApiDrive
-from configs import RUTE_XLSX_AGRUPS
+from configs import RUTE_XLSX_AGRUPS, FILE_CREDENTIALS_DRIVE
 
 def upload_file_drive(request):
     def listar_archivos_recursivamente(ruta):

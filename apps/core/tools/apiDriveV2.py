@@ -33,29 +33,29 @@ class ApiDrive(Drive_manager):
 
         raise Exception("No se pudo ejecutar la función después de varios intentos.")
 
-    def upload(self, fileDrive: ModelFileDrive):
-        if fileDrive.driveId:
-             self.retry_execute(super().delete, fileDrive.driveId)
+    # def upload(self, fileDrive: ModelFileDrive):
+    #     if fileDrive.driveId:
+    #          self.retry_execute(super().delete, fileDrive.driveId)
 
-        exist_in_drive = self.find_file_id_by_name(fileDrive.name, fileDrive.parentId.driveId)
-        if exist_in_drive != []:
-            for driveId, name in exist_in_drive:
-                self.retry_execute(super().delete, driveId)
-        try:
-            if fileDrive.parentId.parentId.name == "ma" or fileDrive.parentId.name == "ma":
-                response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name), fileDrive.parentId.driveId)
-            elif fileDrive.parentId.parentId.name == "mi" or fileDrive.parentId.name == "mi":
-                response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name), fileDrive.parentId.driveId)
-        except Exception as e:
-            print(f"error con el dirve: {e}")
+    #     exist_in_drive = self.find_file_id_by_name(fileDrive.name, fileDrive.parentId.driveId)
+    #     if exist_in_drive != []:
+    #         for driveId, name in exist_in_drive:
+    #             self.retry_execute(super().delete, driveId)
+    #     try:
+    #         if fileDrive.parentId.parentId.name == "ma" or fileDrive.parentId.name == "ma":
+    #             response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name), fileDrive.parentId.driveId)
+    #         elif fileDrive.parentId.parentId.name == "mi" or fileDrive.parentId.name == "mi":
+    #             response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name), fileDrive.parentId.driveId)
+    #     except Exception as e:
+    #         print(f"error con el dirve: {e}")
         
         
-        if (not isinstance(response,HttpError) and not isinstance(response,ServerNotFoundError)):
+    #     if (not isinstance(response,HttpError) and not isinstance(response,ServerNotFoundError)):
             
-            fileDrive.driveId = response['id']
-            return fileDrive       
-        else:
-            return {'response': response, 'file': fileDrive}
+    #         fileDrive.driveId = response['id']
+    #         return fileDrive       
+    #     else:
+    #         return {'response': response, 'file': fileDrive}
         
 
     def delete(self, fileDrive: ModelFileDrive):

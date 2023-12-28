@@ -6,6 +6,8 @@ from django.views import View
 from django.db import transaction
 
 import os
+import shutil
+from pathlib import Path
 import zipfile
 import tempfile
 import datetime
@@ -209,12 +211,32 @@ class ViewUploadDrive(View):
             drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
             results_threads.append(drive.upload(file))
 
+        
         results = {}
         print("subiendo")
         data = request.POST
         xlsx_ids = data['xlsx_id'].split(',')
         files = ModelFileDrive.objects.none()
+        # creamos un archivo temporal para subir la carpeta con todos los archivos
+        # en 1 sola peticion
+        name_tmp_folder = "new_lists"
+        tmp_dir = os.path.abspath('./tmp')
         
+        # asignamos el permiso de lectura y escritura
+       
+        #creo carpeta contenedora
+        rute_new_lists = os.path.join(tmp_dir, name_tmp_folder)
+        os.makedirs(rute_new_lists, exist_ok=True)
+        
+        
+       
+        
+        #creando sub carpetas
+        rute_ma = os.path.join(rute_new_lists, 'ma')
+        os.makedirs(rute_ma, exist_ok=True)
+        rute_mi = os.path.join(rute_new_lists, 'mi')
+        os.makedirs(rute_mi, exist_ok=True)
+
         for id in xlsx_ids:
 
             try:
@@ -228,55 +250,70 @@ class ViewUploadDrive(View):
                     results[xlsx.name]['no_drive'] = True
             except ModelListXlsx.DoesNotExist:
                 results[xlsx.name] = {'error': f"ID({id}) does not exist. "}
-            
-            
 
+            for key, folder in RUTE_XLSX_ORIGIN.items():
+                rute_current_list = os.path.abspath(os.path.join(folder, xlsx.name))
+                tmp_file = os.path.join(rute_new_lists, key, xlsx.name)
+                shutil.copy(rute_current_list, tmp_file)
         
-        threads = []
 
-        for file in files:
+        drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
+        
+        # Ruta completa de la carpeta que deseas crear
+        rute_new_lists = Path(tmp_dir) / 'test'
+
+        # Crear la carpeta si no existe
+        rute_new_lists.mkdir(parents=True, exist_ok=True)
+
+        drive.upload('C:\\Users\\notebook\\Documents\python\\admin_luque\\web-admin-luque\\tmp\\carpeta', '1Cggv_FaF2-lkderF51PUb3hP56exUbGx')
 
             
-            thread = threading.Thread(target=upload_save_file, args=(file,))
-            threads.append(thread)
-            thread.start()
+        
+        # threads = []
 
-        for thread in threads:
-            thread.join()
+        # for file in files:
 
-        for file in results_threads:
+            
+        #     thread = threading.Thread(target=upload_save_file, args=(file,))
+        #     threads.append(thread)
+        #     thread.start()
+
+        # for thread in threads:
+        #     thread.join()
+
+        # for file in results_threads:
            
-            if isinstance(file, ModelFileDrive):
+        #     if isinstance(file, ModelFileDrive):
                 
-                file.save()
-                if file.parentId.name == "ma":
-                    results[file.name]['Link comun mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+        #         file.save()
+        #         if file.parentId.name == "ma":
+        #             results[file.name]['Link comun mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
                     
-                elif file.parentId.name == "mi":
-                    results[file.name]['Link comun minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+        #         elif file.parentId.name == "mi":
+        #             results[file.name]['Link comun minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
                    
-                elif file.parentId.parentId.name == "ma":
-                    results[file.name]['Link ordenado mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+        #         elif file.parentId.parentId.name == "ma":
+        #             results[file.name]['Link ordenado mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
                     
-                elif file.parentId.parentId.name == "mi":
-                    results[file.name]['Link ordenado minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"
+        #         elif file.parentId.parentId.name == "mi":
+        #             results[file.name]['Link ordenado minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"
                    
                 
                 
-            else:
-                error = file['response']
-                file = file['file']
-                exist_file_to_upload = ModelToUploadDrive.objects.filter(fileDrive=file)
-                if not exist_file_to_upload:
-                    to_upload = ModelToUploadDrive(fileDrive=file)
-                    to_upload.save()
+        #     else:
+        #         error = file['response']
+        #         file = file['file']
+        #         exist_file_to_upload = ModelToUploadDrive.objects.filter(fileDrive=file)
+        #         if not exist_file_to_upload:
+        #             to_upload = ModelToUploadDrive(fileDrive=file)
+        #             to_upload.save()
                 
-                if 'error' in results[file.name]:
-                    results[file.name]['error'] += f'Error uploading file to drive. {error}'
-                else:
-                    results[file.name]['error'] = f'Error uploading file to drive. {error}'
+        #         if 'error' in results[file.name]:
+        #             results[file.name]['error'] += f'Error uploading file to drive. {error}'
+        #         else:
+        #             results[file.name]['error'] = f'Error uploading file to drive. {error}'
 
-
+        #shutil.rmtree(tmp_dir)
         return JsonResponse(results)
     
 class ReuploadFileDrive(View):
