@@ -1,4 +1,4 @@
-# Program para la actualizacion de lista en formato excel segun un sistema de facturacion
+# Programa para la actualizacion de lista en formato excel segun un sistema de facturacion
 
 ![ilustration home page](imgs/ilustration.png)
 
