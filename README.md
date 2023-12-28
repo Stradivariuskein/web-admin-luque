@@ -1,6 +1,7 @@
 # Program para la actualizacion de lista en formato excel segun un sistema de facturacion
 
-# En desarollo pero ya es funcional...
+![ilustration home page](imgs/ilustration.png)
+
 
 ## Problematica:
 #### Hay 105 listas excels con un formato donde los codigos estan en la columna "A", la descripcion en las columnas "B+C" y los precios en la "D".
