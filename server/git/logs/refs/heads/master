@@ -1,0 +1,9 @@
+0000000000000000000000000000000000000000 a11c94073b0cf48dd2ae4fdb140bd939820ae867 unknown <mrkein@DESKTOP-NHD0J32.(none)> 1703440178 -0300	clone: from https://github.com/Stradivariuskein/web-admin-luque.git
+a11c94073b0cf48dd2ae4fdb140bd939820ae867 55e27faf1668be6c326372263b6578e087e81b03 unknown <luquealanbri2@gmail.com> 1703440898 -0300	commit: agregue el requeriments.txt
+55e27faf1668be6c326372263b6578e087e81b03 c4cce6e6a32647682262990567437162b54d5adc unknown <luquealanbri2@gmail.com> 1703685997 -0300	pull origin master: Fast-forward
+c4cce6e6a32647682262990567437162b54d5adc b116f16e290a8e645d4365fa875b191890a701aa unknown <luquealanbri2@gmail.com> 1703690492 -0300	commit: agregue un script para subir a google apps scripts voy hay cambiar la forma en q se suben los archivos
+b116f16e290a8e645d4365fa875b191890a701aa 4ffcc4a230fa27e0bd42b30341d73527958b376b unknown <luquealanbri2@gmail.com> 1703801745 -0300	pull origin master: Fast-forward
+4ffcc4a230fa27e0bd42b30341d73527958b376b 965ee8d29469b6f3b6e0cabfca12355dc243baeb unknown <luquealanbri2@gmail.com> 1703801959 -0300	commit: agregue una imagen ilustrativa
+965ee8d29469b6f3b6e0cabfca12355dc243baeb 5861c38b184ddf155b172783dfd499bbd986006d unknown <luquealanbri2@gmail.com> 1703864182 -0300	commit: regurese al metodo anterior para subir al drive
+5861c38b184ddf155b172783dfd499bbd986006d 9c46ae14a775f135984ca19f25a46cf64f187886 unknown <luquealanbri2@gmail.com> 1704664651 -0300	pull origin master: Merge made by the 'ort' strategy.
+9c46ae14a775f135984ca19f25a46cf64f187886 5dd8015020e1c0c1426f7e68ca97a292a12a4f4c unknown <luquealanbri2@gmail.com> 1704987252 -0300	commit: agregue el menu en la bandeja del sisitema y notificaciones

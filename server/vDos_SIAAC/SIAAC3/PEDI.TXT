@@ -1,0 +1,17 @@
+
+
+               NOTA DE PEDIDO DE CLIENTES
+
+ Pedido Numero : 15496
+ Cliente       : GOROSITO PEDRO                          
+ Fecha Pedido  : 08/10/23
+ ===============================================================================
+ CODIGO                   DESCRIPCION       CANTIDAD    P.U.      TOTAL   %DESC
+ ===============================================================================
+
+A-001      Almohadilla rectangular Blanca                    24    10.00     104.50   1,045.00  0.00
+
+
+
+ TOTAL :   1,045.00
+  

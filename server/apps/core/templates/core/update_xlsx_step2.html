@@ -1,0 +1,124 @@
+
+{% extends "core/base.html" %}
+{% load static %}
+{% block content %}
+<main>
+    <div class="my-5">
+        <div class="my-5 text-center">
+            <h1>Actualizar listas paso final</h1>
+        </div>
+        <div id="msj" class="m-5 text-center card-warning justify-content-center">
+            <p class="p-3"></p>
+        </div>
+        <div class="row">
+            <div class="col-12 mb-4 mb-lg-0">
+                <div class="card h-100">
+                    <h5 class="card-header">Listas de precios</h5>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Listas</th>
+                                        <th scope="col">links</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for xlsx_tuple in listXlsx %}
+                                    <div class="dropdown">
+                                        
+                                        <tr class="w-100">
+                                            <td class="w-90">
+                                                <button class="btn btn-secondary w-100" type="button" onclick="toggleDropdown('dropdown-menu-{{ forloop.counter }}')">
+                                                {{ xlsx_tuple.0 }}
+                                                <div class="font-28"> &blacktriangledown;</div>   
+                                                </button>
+                                            
+
+                                                <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100" style="display: none;">
+                                                    <div class="scrollable-table">
+                                                        <table class="table table-bordered scrollable-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="text-center">Código</th>
+                                                                    <th class="text-center">Descripción</th>
+                                                                    <th class="text-center">Aumento por porcentaje</th>
+                                                                    <th class="text-center">Precio manual</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                
+                                                                {% for artic in xlsx_tuple.1 %}
+                                                                    <tr>
+                                                                        <td class="font-size-1 text-center">{{ artic.0 }}</td>
+                                                                        <td class="text-center">ejemplo{{ artic.1.description }}</td>
+                                                                        <td>
+                                                                            <div class="col text-center">
+                                                                                <div class="row justify-content-center"><p>%</p></div>
+                                                                                <div class="row justify-content-center"><p>{{ artic.1.percent }}</p></div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="row">
+                                                                                <div class="col text-center">
+                                                                                    <label>Mayorista</label>
+                                                                                    <p>
+                                                                                    {{ artic.1.price_manual_may }}  
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col text-center">
+                                                                                    <label>Minorista</label>
+                                                                                    <p>
+                                                                                    {{ artic.1.price_manual_min }}  
+                                                                                    </p> 
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </ul>
+                                            </td>
+                                            <td class="w-20 ml-0 text-center">
+                                                <div class="dropdown" id="{{ xlsx_tuple.0 }}">
+                                                    <button class="btn card-warning dropdown-toggle" type="button" id="dropdownMenuButton" onclick="toggleDropdown('links-{{ forloop.counter }}')" aria-expanded="false">
+                                                        Subiendo al drive...
+                                                    </button>
+                                                    <ul class="dropdown-menu px-0 link-menu text-center" aria-labelledby="dropdownMenuButton" id="links-{{ forloop.counter }}" style="z-index: 999999;">
+                                                    </ul>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                
+                                    </div>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+
+    </div>
+            <div class="row navbar-expand-lg navbar-light bg-light fixed-bottom d-flex hight-15">
+            <div class="col text-center justify-content-center align-items-center pr-0 mr-0">
+                <a class="btn btn-primary" href="/">Volver a inicio</a>
+              </div>
+              <div class="col text-center justify-content-center align-items-center whith-2 pl-0 ml-0" >
+                <a class="btn btn-primary" id="btn-download" href="/download?ids={{download}}">Descargar <span>&darr;</span></a>
+              </div>
+            </div>
+
+    </div>
+    {% csrf_token %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{%static 'js/upload-drive.js'%}" onload="uploadDrive2()"></script>
+</main>
+
+{% endblock content %} 

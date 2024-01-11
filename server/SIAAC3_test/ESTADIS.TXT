@@ -1,0 +1,11 @@
+
+                    LISTADO DE ACUMULADO DE VENTAS DE ARTICULOS
+
+ Desde Fecha : 01/08/10 Hasta Fecha : 13/08/10
+                                                            Hoja :   1
+
+ CLIENTE :           
+================================================================================
+CLIENTE             COD.ART.       DESCRIPCION        CANTIDAD   TOTAL
+================================================================================
+Ferret. DANIEL       S-082       Mts.SOGA MULTIF.Pro    100     190.10

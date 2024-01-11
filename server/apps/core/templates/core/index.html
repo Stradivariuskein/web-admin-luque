@@ -1,0 +1,159 @@
+
+{% extends "core/base.html" %}
+
+
+{% block search_table %}
+    
+
+        <div class="input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre o códigos..." onkeyup="startSearchTimer(searchXlsx)">
+        </div>
+
+
+
+{% endblock search_table %}
+    
+
+{% block content %}
+    <!-- faltan agregar esta funcionalidades
+    <div>
+     <a type="btn-secondary" href="#">restaurar drive</a>
+     <a type="btn-secondary" href="#">restaurar listas xlsx</a>
+     <a type="btn-secondary" href="#">editar drive</a>
+     <a type="btn-secondary" href="#">agregar lista</a>
+    </div>
+    -->
+    
+    <div>
+        <div class="my-5 text-center">
+            <h1>Actualizar lista de precios</h1>
+        </div>
+        
+        
+        <form method="post" action="{% url 'udate-xlsx-step1' %}">
+            <div class="row">
+                <div class="col-12 mb-4 mb-lg-0">
+                    <div class="card">
+                        <h5 class="card-header">Listas de precios</h5>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Actualizar</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Ultima modificacion</th>
+                                        <th scope="col">Codigos</th>
+                                        <th scope="col"></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <label>
+                                                <input class="custom-checkbox" type="checkbox" id="select-all">
+                                                <span class="ms-2">Seleccionar todo</span>
+                                            </label>
+                                        </tr>
+                                        {% for xlsx in to_update %}
+                                        <tr>
+                                            <label>
+                                                <td>
+                                                    <input class="custom-checkbox" type="checkbox" name="lists_xlsx" value="{{xlsx}}" checked>
+                                                </td>
+                                                
+                                                <td class="td-name">
+                                                    <p>{{xlsx.0.name}} </p>
+                                                </td>
+                                            </label>
+                                            <td>{{xlsx.0.modDate}}</td>
+                                            <td>
+                                                <div class="scrollable-container">
+                                                    <div class="scrollable-content" style="max-height: 3rem; overflow-y: auto;">
+                                                        {{xlsx.1}}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <!-- links -->
+                                            <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 32 32"
+                                                    style="fill:#FFFFFF;">
+                                                    <path d="M 11.4375 5 L 11.15625 5.46875 L 3.15625 18.46875 L 2.84375 18.96875 L 3.125 19.5 L 7.125 26.5 L 7.40625 27 L 24.59375 27 L 24.875 26.5 L 28.875 19.5 L 29.15625 18.96875 L 28.84375 18.46875 L 20.84375 5.46875 L 20.5625 5 Z M 13.78125 7 L 19.4375 7 L 26.21875 18 L 20.5625 18 Z M 12 7.90625 L 14.96875 12.75 L 8.03125 24.03125 L 5.15625 19 Z M 16.15625 14.65625 L 18.21875 18 L 14.09375 18 Z M 12.875 20 L 26.28125 20 L 23.40625 25 L 9.78125 25 Z"></path>
+                                                    </svg>
+                                                    <span>Links</span>
+                                                </button>
+                                            <ul class="dropdown-menu link-menu" aria-labelledby="dropdownMenuButton">
+                                                {% for link in xlsx.2 %}
+                                                <li>
+                                                <a target="_blank" href="{{link.1}}">{{link.0}}</a>
+                                                </li>                                  
+                                                {% endfor %}
+                                            </ul>
+                                            </div>
+                                            </td>
+                                            
+                                          </tr>
+                                      
+                                      {% endfor %}
+                                      
+
+                                      {% for xlsx in no_changes %}
+                                      <tr>
+                                        <td>
+                                            <input class="custom-checkbox" type="checkbox" name="lists_xlsx" value="{{xlsx}}">
+                                        </td>
+                                        
+                                        <td class="td-name">
+                                            <p>{{xlsx.0.name}} </p>
+                                        </td>
+                                        <td>{{xlsx.0.modDate}}</td>
+                                        <td>
+                                            <div class="scrollable-container">
+                                                <div class="scrollable-content" style="max-height: 3rem; overflow-y: auto;">
+                                                    {{xlsx.1}}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <!-- links -->
+                                        <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 32 32"
+                                                style="fill:#FFFFFF;">
+                                                <path d="M 11.4375 5 L 11.15625 5.46875 L 3.15625 18.46875 L 2.84375 18.96875 L 3.125 19.5 L 7.125 26.5 L 7.40625 27 L 24.59375 27 L 24.875 26.5 L 28.875 19.5 L 29.15625 18.96875 L 28.84375 18.46875 L 20.84375 5.46875 L 20.5625 5 Z M 13.78125 7 L 19.4375 7 L 26.21875 18 L 20.5625 18 Z M 12 7.90625 L 14.96875 12.75 L 8.03125 24.03125 L 5.15625 19 Z M 16.15625 14.65625 L 18.21875 18 L 14.09375 18 Z M 12.875 20 L 26.28125 20 L 23.40625 25 L 9.78125 25 Z"></path>
+                                                </svg>
+                                                <span>Links</span>
+                                            </button>
+                                        <ul class="dropdown-menu link-menu" aria-labelledby="dropdownMenuButton">
+                                            {% for link in xlsx.2 %}
+                                            <li>
+                                            <a target="_blank" href="{{link.1}}">{{link.0}}</a>
+                                            </li>                                  
+                                            {% endfor %}
+                                        </ul>
+                                        </div>
+                                        </td>
+                                        
+                                      </tr>
+                                      
+                                      {% endfor %}
+                                      
+
+                                    </tbody>
+                                  </table>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% csrf_token %}
+                        
+            <div class="text-center navbar-expand-lg navbar-light bg-light fixed-bottom justify-content-center align-items-center d-flex hight-15">
+                <button type="submit" class="btn btn-primary">Siguiente</button>
+              </div>
+        </form>
+    </div>
+
+{% endblock content %} 

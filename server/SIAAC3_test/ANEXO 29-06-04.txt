@@ -1,0 +1,231 @@
+
+
+ Antonio Luque S.A.I.C.
+ Eduardo Porrini 217 - (1702) Ciudadela
+ T.E. (01)-653-3006
+ Hoja:   1                                   
+================================================================================
+   Codigo     Descripcion                    Unidad           
+================================================================================
+
+ *AGUARRAS*                                                            
+   AG-100      x 1 L-AGUARRAS                      c/u         2.460 
+ *BUZONES ANEXO*                                                       
+   B-009/2     BUZON p/REJA c/Pulsador (timbre)    c/u        18.200 
+   B-009/5     BUZON p/Reja REVISTERO con pulsador c/u        25.500 
+ *BOYAS P/FLOTANTES*                                                   
+   B-015       BOYA p/flot. com£n o chata plastica c/u         0.880 
+   B-016       BOYA extra chata RIGIDA  *  (BFL 11 c/u         0.880 
+ *BISAGRAS ANEXO*                                                      
+   B-503       BISAGRA FICHA Rev.80x20x1.25 H§Zinc c/u         0.690 
+   B-545/B     BISAGRA DOBLE PESTA¥A H§BRONCEADO   c/u         0.690 
+   B-547       BISAGRA PESTA¥A REGISTRABLE H§Bronc c/u         0.660 
+ *CABOS ANEXO*                                                         
+   C-169       CABO de RASTRILLO 1.35m.            c/u         2.950 
+ *CABEZALES ANEXO*                                                     
+   C-344/C     CABEZAL FV Llave de Paso de 3/4 Cor c/u         4.010 
+   C-344/L     CABEZAL FV Llave de Paso de 3/4 Lar c/u         4.150 
+   C-384       CABEZAL PH Cierre Ceram.c/Prens.Cam c/u        14.300 
+   C-385       CABEZAL PH Cierre Ceram.c/Prens.Cam c/u        14.300 
+ *CA¥O DE COBRE*                                                       
+   CC-100      Kg Ca¤o de COBRE 7.94 (5/16) Rollo  Kg.        27.200 
+   CC-101      Kg Ca¤o de COBRE 9.52 (3/8) Rollo 1 Kg.        27.200 
+   CC-99       Kg Ca¤o de COBRE 6.35 (1/4) Rollo 1 Kg.        27.200 
+ *CRISTAL P/ SOLDADURA*                                                
+   CI-1150     CRISTAL RECTANGULAR P/SOLDADURA     c/u         0.690 
+ *CA¥O DE RIEGO*                                                       
+   CR-001      Ca¤o de RIEGO 1/2 Reforz.           m           0.555 
+   CR-002      Ca¤o de RIEGO 3/4 Reforz.           m           1.114 
+ *CA¥O CRISTAL*                                                        
+   CC-010      CA¥O CRISTAL  9 x 12                m           0.510 
+   CC-012      CA¥O CRISTAL 12 x 15                m           0.740 
+ *SELLADOR*                                                            
+   CS-1000     CARTUCHO SELLADOR ADHESIVO EUROB.   c/u         4.440 
+ *DISCOS ANEXO*                                                        
+   D-182       DISCO 355x3.2x25.4 Ox.Al. Pl.       c/u         7.750 
+ *ELECTRODOS*                                                          
+   EL-200      Kg. ELECTRODOS 2. mm.               kg          5.950 
+   EL-250      Kg.ELECTRODOS 2.5 mm.               kg          4.400 
+   EL-325      Kg. ELECTRODOS 3.25mm.              kg          3.950 
+ *RATICIDAS Y VENENOS*                                                 
+   C-1000      CEBO PARAFINICO Plus BP x  40 gr.   c/u         2.030 
+   C-1002      CEBO PARAFINICO Plus BP x 100 gr.   c/u         2.600 
+   C-1003      CEBO PARAFINICO Plus BP x 200 gr.   c/u         4.440 
+   C-1004      CEBO PARAFINICO Plus BP x 500 gr.   c/u         9.500 
+   C-1009      CEBO CEREAL Super C x 20 gr.        c/u         0.370 
+   C-1010      CEBO CEREAL Super C x 100 gr.       c/u         1.550 
+   C-1011      CEBO CEREAL Super C x 200 gr.       c/u         3.250 
+   C-1012      CEBO CEREAL Super C c 500 gr.       c/u         4.200 
+   J-1000      JERINGA c/Gel QK  X 30              c/u        12.900 
+ *MANGUERA GAS*                                                        
+   MG-100      M.MANGUERA GAS envasado 8 mm.       m           0.755 
+ *IMPORTADOS ANEXO*                                                    
+   HI-1000/1   HACHA c/cabo  600gr.  *             c/u         7.800 
+   JI-1025     JUEGO MECHA WIDIA x3 Larga          Juego       4.800 
+   JI-1030     Jgo.DESTORNILLADOR x6 Verde Pasante Juego       4.600 
+   MI-1058     MARTILLO Galponero c/amarilo fibra  c/u         7.020 
+   NI-1016     NIVEL Alum. 3 Burb. 40cm amarillo   c/u         4.300 
+   PI-1029     PINZA de FUERZA T/ATLAS (PERRO)  *  c/u         8.200 
+   SI-1159     SERRUCHO DE PODA 12"                c/u         3.150 
+   SI-1165     SERRUCHO Carpintero 20" cabo Bicolo c/u         9.400 
+ *HERRAJES IMP. ANEXO*                                                 
+   MI-1021     MANIJA Fija 127mm H§platil (5")     c/u         0.550 
+ *MINI RODILLOS*                                                       
+   MR-100      MINI RODILLO N§5  Descartable       c/u         0.494 
+   MR-101      MINI RODILLO N§8  Descartable       c/u         0.533 
+   MR-102      MINI RODILLO N§11 Descartable       c/u         0.575 
+   MR-110      MINI RODILLO N§5  Forrado SUPER     c/u         0.560 
+   MR-111      MINI RODILLO N§8  Forrado SUPER     c/u         0.600 
+   MR-112      MINI RODILLO N§11 Forrado SUPER     c/u         0.650 
+ *PRECINTOS ANEXO*                                                     
+   P-074       x100 PRECINTO de Nylon 4.8 x 300mm  100         9.300 
+   P-077       x100 PRECINTO de Nylon 7.6 x 365mm  100        16.400 
+ *PERCHAS ANEXO*                                                       
+   P-410/BR    PERCHA 1 GANCHO BRONCEADA *         c/u         1.520 
+   P-411/BR    PERCHA 2 GANCHOS BRONCEADA *        c/u         2.440 
+ *PATINES*                                                             
+   P-771       PATIN  ROSCA 1/4                    c/u         0.590 
+
+
+ Antonio Luque S.A.I.C.
+ Eduardo Porrini 217 - (1702) Ciudadela
+ T.E. (01)-653-3006
+ Hoja:   2                                   
+================================================================================
+   Codigo     Descripcion                    Unidad           
+================================================================================
+
+   P-774       PATIN  ROSCA 3/8                    c/u         0.590 
+   P-780       PATIN  MOVIL 5/16                   c/u         0.590 
+   P-782       PATIN  MOVIL 3/8                    c/u         0.590 
+   P-785       PATIN  MOVIL MOLETEADO              c/u         0.590 
+ *RUEDAS ANEXO*                                                        
+   R-707/1     RUEDA Pol.75 FIJA                   c/u         5.620 
+   R-730       Rueda DOBLE Plana 45 c/Sop. U de 18 c/u         1.330 
+   R-731       RUEDA DOBLE NYLON c/Sop. U 25       C/U         1.700 
+   R-735       Rueda POL.40 Hor.Zg.p/Regaton       c/u         0.950 
+   R-736       RUEDA Pol.44 Hor.Zg.c/Regaton       c/u         1.020 
+   R-737       RUEDA Pol.48 Hor.Zg.p/Regaton       c/u         0.830 
+ *RIEL AMERICANO*                                                      
+   R-1000      Mt.RIEL t/Americano                 m           4.440 
+ *REMOVEDOR*                                                           
+   RP-100      x 1L-REMOVEDOR Profesional          c/u         5.600 
+ *SIERRAS CIRCULARES*                                                  
+   SC-100      SIERRA CIRCULAR 115 C/D d/corrido   c/u         1.750 
+   SC-110      SIERRA CIRCULAR 175 C/D d/corrido   c/u         3.700 
+   SC-111      SIERRA CIRCULAR 115 C/D d/pico loro c/u         1.750 
+ *TUERCAS*                                                             
+   TU-100      x200 TUERCA 1/8 W Ex. H§Zinc. 6.20  200         2.440 
+ *RUEDAS DE NYLON C/ CAJA ZINCADA*                                     
+   R-770       RUEDA NYLON 25 c/rulem.*            c/u         0.530 
+   R-771       RUEDA NYLON 27 c/rulem. *           c/u         0.680 
+   R-772       RUEDA Nylon 32 c/rulem.             c/u         1.020 
+   R-773       RUEDA NYLON 38 c/rulem. *           c/u         1.714 
+   R-774       RUEDA NYLON 45 c/rulem. *           c/u         2.500 
+ *RUEDAS DE ACERO C/ CAJA ZINCADA*                                     
+   R-775       RUEDA ACERO 25 CON RULEMAN          c/u         0.738 
+   R-776       RUEDA ACERO 27 CON RULEMAN          c/u         1.035 
+   R-777       RUEDA ACERO 32 CON RULEMAN          c/u         1.392 
+   R-778       RUEDA ACERO 38 CON RULEMAN          c/u         1.714 
+   R-779       RUEDA ACERO 45 CON RULEMAN          c/u         2.404 
+ *RUEDAS DE APLICAR*                                                   
+   R-781       RUEDA APLICAR N§302 nylon c/rulem.  c/u         0.750 
+ *CARROS C/ 2 Y 4 RUEDAS*                                              
+   R-783       CARRO mod.166 Nylon s/rul.2 ruedas  c/u         0.860 
+   R-784       CARRO mod.168 Nylon c/rul.4 ruedas  c/u         2.810 
+   R-785       CARRO c/4 Ruedas NYLON 25 c/rul. c/ c/u         3.154 
+ *ACCESORIOS P/TALADRO ANEXO*                                          
+   A-2003      (003) ADAPTADOR p/disco de Goma     c/u         1.440 
+   A-2007      (007) TRANSF.TUERCA ROSCA5/8 A PERN c/u         1.850 
+   A-2020      (020) CEPILLO Acero Bceado. 50mmx1/ c/u         4.000 
+   A-2092      (092) DISCO de CORTE 125mm.Carb.Sil c/u         1.630 
+   A-2135      (135) DISCO de GOMA 115mm p/taladro c/u         1.930 
+   A-2148      (148) DISCO LIJA VELCRO 127mm.G 3 A c/u         2.430 
+   A-2150      (150) DISCO LIJA FIBRA 115mm. S 5 M c/u         3.660 
+   A-2154      (154) DISCO LIJA Fibra 115mm S 3 Me c/u         4.140 
+   A-2172      (172) LLAVE p/Mandril 13mm t/Jacobs c/u         4.550 
+   A-2190      (190) PASTA LUSTRAR 100gr. ROSA     c/u         2.700 
+   A-2191      (191) PASTA p/Pulir 100 gr. Amarill c/u         2.700 
+   A-2195      (195) PA¥O TELA HOJAS ENTERAS 5 x 1 c/u         9.000 
+   A-2196      (196) PA¥O TELA HOJAS ENTERAS 6 x 1 c/u        12.100 
+   A-2197      (197) PA¥O TELA COCIDA 6 x 1        c/u        12.100 
+   A-2223      (223) PUNTA MONT.(3)piedra PERNO 1/ c/u         2.950 
+   A-2248      (248) CONTRATUERCA Amol.ang.115 con c/u         3.030 
+   A-2328      (328) KIT DISCO VELCRO 125MM.+PERNO c/u         6.800 
+   A-2342      (342) DISCO FIBRA 178MM G.36 MET LU c/u         5.030 
+   A-2344      (344) DISCO FIBRA 178MM G.50 MET LU c/u         5.030 
+   A-2346      (346) DISCO FIBRA 178MM G.80 MET LU c/u         5.030 
+   A-2372      (372) Disco FLAP ALETADO C/Sil.115  c/u         7.600 
+   A-2373      (373) Disco FLAP ALETADO C/Sil.115  c/u         7.600 
+   A-2670      (670)Disco 178x2  car/si plano cort c/u         2.550 
+ *PINTURAS ANEXO*                                                      
+   BAMT-050    x1/2 L-BARNIZ MATE *                c/u         4.920 
+   BAMT-100    X1   L-BARNIZ MATE *                c/u         8.560 
+   BASI-025    x1/4 L-BARNIZ Sintetico             c/u         2.373 
+   BASI-050    x1/2 L-BARNIZ Sintetico             c/u         3.938 
+   BASI-100    x1   L-BARNIZ Sintetico             c/u         6.846 
+   BASI-400    x4   L-BARNIZ Sintetico             c/u        24.780 
+   CBBL-050    x1/2 L.Convertidor BRILLANTE 2+1 Bl c/u         6.210 
+   CBBL-100    x1   L.Convertidor BRILLANTE 2+1 Bl c/u        11.500 
+   COGR-400    x4   L-CONVERTIDOR de Oxido GRIS    c/u        28.371 
+   ESBE-050    x1/2 L-ESMALTE Sint.BERMELLON       c/u         5.450 
+   ESBM-400    x4   L-ESMALTE Sint.BLANCO MATE     c/u        32.400 
+   ESCR-050    x1/2 L-ESMALTE sint.CREMA           c/u         4.610 
+   ESCR-100    x1   L-ESMALTE Sint.CREMA           c/u         8.100 
+
+
+ Antonio Luque S.A.I.C.
+ Eduardo Porrini 217 - (1702) Ciudadela
+ T.E. (01)-653-3006
+ Hoja:   3                                   
+================================================================================
+   Codigo     Descripcion                    Unidad           
+================================================================================
+
+   ESGE-400    X 4  L-ESMALTE Sint.GRIS ESPACIAL   c/u        29.440 
+   ESGH-100    X1   L-ESMALTE Sint.GRIS HIELO      c/u         8.100 
+   ESGH-400    X 4  L-ESMALTE Sint.GRIS HIELO      c/u        29.440 
+   ESMR-025    x1/4 L-ESMALTE Sint.MARRON          c/u         2.730 
+   ESNE-400    x4   L-ESMALTE Sint.NEGRO           c/u        29.440 
+   LAIN-1000   x10 L-LATEX INTERIOR LE BLANQ *     c/u        14.140 
+ *FILTROS ANEXO*                                                       
+   F-001/3     FILTRO de ACERO p/COCINA   *  (FAC) c/u         1.120 
+ *GANCHOS CONTRA VIENTO*                                               
+   GI-1001     Gsa.GANCHOS CONTRA VIENTO 1"1/2 H§  Gsa.       10.692 
+   GI-1002     Gsa.GANCHOS CONTRA VIENTO 2" H§ gal Gsa.       11.600 
+   GI-1003     Gsa.GANCHOS CONTRA VIENTO 2"1/2 H§  Gsa.       12.300 
+   GI-1004     Gsa.GANCHOS CONTRA VIENTO 3" H§ gal Gsa.       18.522 
+   GI-1005     Gsa.GANCHOS CONTRA VIENTO 4" H§ gal Gsa.       23.436 
+   GI-1007     Gsa.GANCHOS CONTRA VIENTO 6" H§ gal Gsa.       46.872 
+   GI-1008     Gsa.GANCHOS CONTRA VIENTO 8" H§ gal Gsa.       71.345 
+ *JUNTA P/ SOPAPA*                                                     
+   J-090       x100 JUNTA p/Sopapa 1 1/2           100        10.900 
+   J-091       x100 JUNTA p/Sopapa 2               100        10.900 
+ *PATAS PLASTICAS*                                                     
+   P-580       PATA Plastica 10cm Reforzada Reg.   c/u         0.850 
+ *VALVULAS Y REP P/ VALVULAS*                                          
+   R-007       x100 REPUESTO p/Valvula GOMA 3/4    100         5.550 
+   R-008/1     x100 REPUESTO p/Valvula GOMA PIAZZA 100         4.000 
+   V-018       VALVULA 1/2 SILICONADA Transparente c/u         0.177 
+ *SOPORTE CA¥O OVAL*                                                   
+   S-119       SOPORTE de Fleje p/Ca¤o Ovalado     c/u         0.250 
+ *TIJERAS ANEXO*                                                       
+   T-212       TIJERA PODA de Mano "EL ABUELO"  *  c/u        13.300 
+ *HERRAMIENTAS ANEXO*                                                  
+   C-581       Cepillo Rascador (stripper) Quasar  c/u         9.160 
+ *CANASTO P/ RESIDUOS*                                                 
+   C-821       CANASTO P/ RESIDUOS GRANDE *        c/u        26.120 
+ *REP. P/ RIEL*                                                        
+   C-890       % CORREDERA Plas. riel americ.  *   cien        5.900 
+   C-891       x10  CORREDERA Plas. c/Cruce riel a 10         19.150 
+ *ARANDELAS DE GOMA*                                                   
+   AG-010      ARAND.GOMA PLANA 46 x 26 (3/4)  (ag c/u         0.111 
+ *COLA VINILICA*                                                       
+   CV-100      COLA VINILICA x 125 gr.             c/u         0.890 
+   CV-101      COLA VINILICA x 250 gr              c/u         1.390 
+   CV-102      COLA VINILICA x 500 gr              c/u         2.400 
+   CV-103      COLA VINILICA x 1 kg.               c/u         4.120 
+
+                                                                  
+                                                                  
+                                                                  

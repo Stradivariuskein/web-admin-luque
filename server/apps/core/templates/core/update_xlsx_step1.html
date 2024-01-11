@@ -1,0 +1,129 @@
+
+{% extends "core/base.html" %}
+
+{% block content %}
+
+    <div class="my-5">
+        <div class="my-5 text-center">
+            <h1>Actializar listas paso 1</h1>
+        </div>
+        <form method="post" action="{% url 'udate-xlsx-step2' %}">
+            
+            {% csrf_token %}
+            
+            <div>
+                {% for xlsx in listXlsx %}
+                <div class="dropdown">
+                    <button class="btn btn-secondary w-100 big-button" type="button" onclick="toggleDropdown('dropdown-menu-{{ forloop.counter }}')">
+                        {{ xlsx.list_name }}
+                        <div class="font-28"> &blacktriangledown;</div>     
+                    </button>
+                    <ul id="dropdown-menu-{{ forloop.counter }}" class="ofusqued-item w-100" style="display: none;">
+                        <div class="text-center pt-2">
+                            <div title="Aplica el mismo porcentaje a todos los articulo de un lista">
+                                <label>Porcentaje a todo</label>
+                                <input id="percentage_input_{{ forloop.counter }}" placeholder="%" onkeyup="updatePercentage('{{ forloop.counter }}')">
+                            </div>
+
+                        </div>
+                        <div class="card scrollable-table">
+                            <div class="row">
+                                <div class="col-12 mb-4 mb-lg-0">
+                                    <div class="card">
+                                        <h5 class="card-header">Articulos</h5>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table text-center" id="table_{{ forloop.counter }}">
+                                                    <thead>
+                                                      <tr>
+                                                        <th scope="col col-bg">Código</th>
+                                                        <th scope="col">Descripción</th>
+                                                        <th scope="col th-percent">Aumento por %</th>
+                                                        <th scope="col">Precio manual</th>
+                                                        
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for artic, form in xlsx.artics %}
+                                                        <tr>
+                                                            <input type="hidden" name="xlsx_id" value="{{ form.initial.xlsx_id }}" readonly>
+                                                            <td class="col-bg font-size-1 text-center"><input type="text" name="code" value="{{ form.initial.code }}" readonly></td>
+                                                            <td class="text-center">{{ artic.description }}</td>
+                            
+                                                            <td>
+                                                                <div class="col justify-content-center card">
+                                                                    <div>
+                                                                    <label title="Utiliza el precio de la lista como base y le aplica el porcentaje">Sobre lista</label>
+                                                                    <input title="Utiliza el precio de la lista como base y le aplica el porcentaje" type="checkbox" name="percent_list" value="{{xlsx}}" onclick="handleCheckboxClick(this)" checked>
+                                                                    </div>
+                                                                    <div style="display: none;">
+                                                                    <label title="Utiliza el precio del sistema ventas como base y le aplica el porcentaje" >Sobre sistema</label>
+                                                                    <input title="Utiliza el precio del sistema ventas como base y le aplica el porcentaje" type="checkbox" name="percent_sistem" value="{{xlsx}}" onclick="handleCheckboxClick(this)" style="margin-right: 0%;">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row text-center mt-2">
+                                                                    <div class="col justify-content-center">
+                                                                        <!--<h3>%</h3>-->
+                                                                        <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                            <path d="M19 5L5 19M9 7C9 8.10457 8.10457 9 7 9C5.89543 9 5 8.10457 5 7C5 5.89543 5.89543 5 7 5C8.10457 5 9 5.89543 9 7ZM19 17C19 18.1046 18.1046 19 17 19C15.8954 19 15 18.1046 15 17C15 15.8954 15.8954 15 17 15C18.1046 15 19 15.8954 19 17Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                            </svg>
+                                                                            <input type="number" name="price_percent" value="0" step="any" id="id_price_percent">
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="row" id="{{ artic.code }}">
+                                                                    
+                                                                    
+                                                                    <div class="col">
+                                                                        <h3>Mayorista</h3>
+
+                                                                        {{form.price_manual_may}}  
+                                                                    </div>
+                                                            
+                                                                    
+                                                                    <div class="col">
+                                                                        <h3>Minorista</h3>
+                                                                        {{form.price_manual_min}}   
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <button title="Obtien los precios de el sistema" class="btn btn-secondary big-button m-2" type="button" onclick="get_prices('{{ form.initial.code }}')">
+                                                                            <svg width="25" height="25" viewBox="0 0 512 506" style="color:currentColor" xmlns="http://www.w3.org/2000/svg" class="h-full w-full"><rect width="512" height="512" x="0" y="0" rx="0" fill="transparent" stroke="transparent" stroke-width="0" stroke-opacity="100%" paint-order="stroke"></rect><svg width="512px" height="512px" viewBox="0 0 16 16" fill="currentColor" x="0" y="0" role="img" style="display:inline-block;vertical-align:middle" xmlns="http://www.w3.org/2000/svg"><g fill="currentColor"><g fill="currentColor"><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914a.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></g></g></svg></svg>
+                                                                        </button>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                                
+                                                            </td>
+                                                        
+                                                        
+                                                        </tr>
+                                            
+                        
+                                                    </tbody>
+                        
+                        
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                                
+                                            
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="text-center navbar-expand-lg navbar-light bg-light fixed-bottom justify-content-center align-items-center d-flex hight-15">
+                <button class="btn btn-primary" type="submit">Siguiente</button>
+              </div>
+        </form>
+    </div>
+
+
+{% endblock content %} 

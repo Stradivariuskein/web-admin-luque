@@ -1,0 +1,59 @@
+
+{% extends "core/base.html" %}
+
+
+{% block search_table %}
+
+<div class="container"> 
+    <div class="w-75 p-auto mx-auto"> 
+
+        <div class="input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre o códigos..." onkeyup="startSearchTimer(searchArtic3)">
+        </div>
+
+    </div>
+</div>
+    
+{% endblock search_table %}
+    
+
+{% block content %}
+
+    <div class="container my-5">
+        <div class="margin-auto my-5 text-center">
+            <h1>Buscar articulo</h1>
+        </div>
+        
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr class="text-center" id="head">
+                            <th>Codigo</th>
+                            <th style="min-width: 25rem;">Descripcion</th>
+                            <th >Precio mayorista</th>
+                            <th>Precio minorista</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        
+                        {% for art in artics %}
+                        
+                            <tr>
+                                <td>{{art.code}}</td>
+                                <td >{{art.description}}</td>
+                                <td>{{art.priceMa}}</td>
+                                <td>{{art.priceMi}}</td>
+
+                            </tr>
+
+
+                        {% endfor %}
+                      
+                    </tbody>
+                </table>
+            </div>
+
+    </div>
+
+{% endblock content %} 

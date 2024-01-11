@@ -1,0 +1,15 @@
+test-drive:
+https://drive.google.com/drive/u/1/folders/1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi
+
+test:
+https://drive.google.com/drive/u/1/folders/1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW
+
+nootebook:
+https://drive.google.com/drive/folders/1-AH2030Syyy7ncV1xkuEsr1eDJyz8R4N?usp=share_link
+
+minorista: 
+https://drive.google.com/drive/u/1/folders/1snWzD6ISM-tAUHyqVxdk8vIS3EvkPsTQ
+
+mayorista:
+https://drive.google.com/drive/u/1/folders/12mgJw7c8xaDIOZmIKc0MWlTb_UGWTfcm
+
