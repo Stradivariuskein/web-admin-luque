@@ -73,14 +73,16 @@ def run_command():
         process.wait()
 
     # Directorio al que quieres moverte antes de ejecutar el comando
-    target_directory = "./web-admin-luque/"
-    command = f"python manage.py runserver"
+    target_directory = "./server/"
+    ##
+    command = f"python manage.py runserver 192.168.1.61:80"
 
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, text=True, cwd=target_directory)
     
     write_logs()
 
 
+#########
 def show_notification(title, message):
     notification.notify(
         title=title,
