@@ -8,6 +8,7 @@ import psutil
 from plyer import notification
 import time
 
+
 # cantidad de dias q se almasenaran los logs
 days_to_delete_logs = 60
 # Variable global para almacenar el proceso
@@ -75,7 +76,7 @@ def run_command():
     # Directorio al que quieres moverte antes de ejecutar el comando
     target_directory = "./server/"
     ##
-    command = f"python manage.py runserver 192.168.1.61:80"
+    command = f"python manage.py runserver 0.0.0.0:80"
 
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, text=True, cwd=target_directory)
     

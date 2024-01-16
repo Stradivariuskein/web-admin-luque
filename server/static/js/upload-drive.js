@@ -3,7 +3,13 @@
 
 //falta validar la peticion 
 
-function uploadDrive() {
+function uploadDrive(target=null) {
+    if (target == null) {
+        target = '/uploadDrive/'
+        request_method = 'POST'
+    } else {
+        request_method = 'GET'
+    }
     console.log("subiendo")
     // Obtener el atributo href de la etiqueta <a>
     var link = document.getElementById("btn-download").getAttribute("href");
@@ -39,7 +45,11 @@ function uploadDrive() {
                 retryButton = document.createElement('BUTTON');
                 retryButton.innerText = 'Reintentar';
                 retryButton.className = 'btn card-warning mb-2';
-                retryButton.onclick = uploadDrive2;
+
+                retryButton.onclick = function() {            
+                    uploadDrive('/reuploadDrive/');
+                };
+
                 msj.appendChild(retryButton);
             }
 
@@ -53,8 +63,8 @@ function uploadDrive() {
         
     }
     $.ajax({
-        type: "POST",
-        url: "/uploadDrive/",
+        type: request_method,
+        url: target,
         data: {'xlsx_id': ids},
         headers: {
             "X-CSRFToken": csrfToken  // Agrega el token CSRF a la cabecera
@@ -139,3 +149,7 @@ function uploadDrive() {
 
 
 }
+
+
+
+

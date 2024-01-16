@@ -223,3 +223,8 @@ label {
 .table-responsive {
   overflow-x: unset;
 }
+
+.navbar .dropdown-menu {
+  right: 0;
+  left: unset !important;
+}

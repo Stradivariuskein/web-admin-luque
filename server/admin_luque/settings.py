@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from os.path import join
+from configs import IP
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-zwl-j^qpms(ik7m1-u*f5oehe$g1%u+gv*b6%ow1d@)jyc4#-v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.61', 'web.luque']
+ALLOWED_HOSTS = [IP, 'web.luque']
 
 
 

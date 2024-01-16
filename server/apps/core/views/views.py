@@ -38,7 +38,7 @@ from apps.core.forms import UpdateXlsxForm
 class ViewSelectList(View):
     def get(self, request, *args, **kwargs):
         # verifico si hay archivos pendiantes a subir
-        url = "http://localhost:8000/reuploadDrive/"
+        url = f"http://{IP}/reuploadDrive/"
     
         try:
             # Realiza la solicitud sin esperar la respuesta
@@ -339,9 +339,17 @@ class ReuploadFileDrive(View):
             if isinstance(file, ModelFileDrive):
                 file.save()
                 files_to_upload.get(fileDrive=file).delete()
-                results[file.id] = True
+                if file.parentId.name.lower() == 'ma':
+                    link_name = 'Lista comun mayorista'
+                elif file.parentId.name.lower() == 'mi':
+                    link_name = 'Lista comun minorista'
+                elif file.parentId.parentId.name.lower() == 'ma':
+                    link_name = 'Lista ordenada mayorista'
+                elif file.parentId.parentId.name.lower() == 'mi':
+                    link_name = 'Lista ordenada minorista'
+                results[file.name] = {link_name: f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"}
             else:
-                results[file.id] = False
+                results[file.id] = {}
                 
         return JsonResponse(results)
             
