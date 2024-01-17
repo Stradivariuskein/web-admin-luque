@@ -349,7 +349,7 @@ class ReuploadFileDrive(View):
                     link_name = 'Lista ordenada minorista'
                 results[file.name] = {link_name: f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"}
             else:
-                results[file.id] = {}
+                results[file['file'].name] = {}
                 
         return JsonResponse(results)
             

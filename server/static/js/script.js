@@ -1,3 +1,23 @@
+document.addEventListener('DOMContentLoaded', function() {
+  const originalTable = document.getElementById('table-body').cloneNode(true);
+  // Obtén el checkbox "Seleccionar Todo"
+  const selectAllCheckbox = document.getElementById('select-all');
+
+  // Obtén todos los checkboxes individuales
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select-all)');
+
+  const table_html = document.querySelector('.table').innerHTML;
+
+  // Agrega un evento de cambio al checkbox "Seleccionar Todo"
+  selectAllCheckbox.addEventListener('change', function () {
+      // Establece el estado de todos los checkboxes individuales igual al del "Seleccionar Todo"
+      checkboxes.forEach(checkbox => {
+          checkbox.checked = selectAllCheckbox.checked;
+      });
+  });
+});
+
+
 var searchTimer;
 
 function startSearchTimer(func) {
@@ -222,24 +242,7 @@ function get_prices(code) {
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
-  const originalTable = document.getElementById('table-body').cloneNode(true);
-  // Obtén el checkbox "Seleccionar Todo"
-  const selectAllCheckbox = document.getElementById('select-all');
 
-  // Obtén todos los checkboxes individuales
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select-all)');
-
-  const table_html = document.querySelector('.table').innerHTML;
-
-  // Agrega un evento de cambio al checkbox "Seleccionar Todo"
-  selectAllCheckbox.addEventListener('change', function () {
-      // Establece el estado de todos los checkboxes individuales igual al del "Seleccionar Todo"
-      checkboxes.forEach(checkbox => {
-          checkbox.checked = selectAllCheckbox.checked;
-      });
-  });
-});
 
 
   function selectFolder() {
