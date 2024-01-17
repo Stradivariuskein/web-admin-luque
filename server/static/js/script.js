@@ -1,22 +1,35 @@
+let originalTable;
+
 document.addEventListener('DOMContentLoaded', function() {
-  const originalTable = document.getElementById('table-body').cloneNode(true);
+  const auxTable = document.getElementById('table-body');
+
+  if (auxTable) {
+    originalTable = auxTable.cloneNode(true);
+
+  }
+  
   // Obtén el checkbox "Seleccionar Todo"
   const selectAllCheckbox = document.getElementById('select-all');
-
-  // Obtén todos los checkboxes individuales
+  if (selectAllCheckbox) {
+    // Obtén todos los checkboxes individuales
   const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select-all)');
-
-  const table_html = document.querySelector('.table').innerHTML;
 
   // Agrega un evento de cambio al checkbox "Seleccionar Todo"
   selectAllCheckbox.addEventListener('change', function () {
-      // Establece el estado de todos los checkboxes individuales igual al del "Seleccionar Todo"
-      checkboxes.forEach(checkbox => {
-          checkbox.checked = selectAllCheckbox.checked;
-      });
-  });
-});
+    // Establece el estado de todos los checkboxes individuales igual al del "Seleccionar Todo"
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+    });
+  });  
+ 
+  }
+  
 
+  const table_html = document.querySelector('.table').innerHTML;
+
+
+  
+});
 
 var searchTimer;
 
@@ -118,7 +131,7 @@ function searchArtic3() {
   // Obtén el término de búsqueda
   let input = document.getElementById('searchInput');
   let table = document.getElementById('table-body');
-  console.log(originalTable)
+
 
   if (input.value !== "") {
     let filter = input.value.toUpperCase();
@@ -129,13 +142,13 @@ function searchArtic3() {
 
     // Ahora, puedes obtener las filas después de restaurar el contenido
     let rows = table.getElementsByTagName('tr');
-    console.log('Cantidad de filas:', rows.length);
+
     // Crea un fragmento de documento para las manipulaciones
     let fragment = document.createDocumentFragment();
 
     // Recorre las filas y verifica si cumplen con las palabras de búsqueda
     for (let row of rows) {
-      console.log(row.innerHTML);
+
       // Agrega la fila al fragmento
       fragment.appendChild(row.cloneNode(true));
       let fragment_row = fragment.lastChild
@@ -146,7 +159,7 @@ function searchArtic3() {
 
       // Verifica cada palabra de búsqueda
       for (let keyword of keywords) {
-        console.log(keyword);
+
         if (keyword !== "" && keyword !== " ") {
           let found = false;  // Asume que la palabra no se ha encontrado en la fila
 
@@ -188,11 +201,11 @@ function searchArtic3() {
       fragment_row.style.display = shouldShow ? '' : 'none';
       fragment.lastChild.innerHTML = fragment_row.innerHTML
       // debug
-      console.log(fragment.lastChild)
+
       
     }
     //debug
-    console.log(fragment.children.innerHTML)
+
     // Limpia el contenido de la tabla antes de agregar el fragmento
     table.innerHTML = ''
     table.appendChild(fragment);
@@ -239,9 +252,6 @@ function get_prices(code) {
   // Enviar la solicitud
   xhr.send();
 }
-
-
-
 
 
 
