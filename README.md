@@ -18,7 +18,7 @@
 
 #### paso 3: agregue su archivo service-account.json ( credenciales ) cambiar la ruta del la variable FILE_CREDENTIALS_DRIVE en el archivo config.py con la ruta de su archivo.
 
-#### paso 4: levnatar el servidor python manage.py runserver
+#### paso 4: levnatar el servicio con "python main.py"
 
 ## Como usarlo:
 
