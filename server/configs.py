@@ -6,8 +6,8 @@ RUTE_XLSX_ORIGIN = { #RUTE_XLSX_ORIGIN = ["./Listas de preios/lista minorista/",
     "mi": "./LISTAS/mi/",
     "ma": "./LISTAS/ma/"
     } 
-#RUTE_SIAAC = "./vDos_SIAAC/SIAAC3/"
-RUTE_SIAAC = "Y://SIAAC3/"
+RUTE_SIAAC = "./vDos_SIAAC/SIAAC3/"
+#RUTE_SIAAC = "Y://SIAAC3/"
 RUTE_SIAAC_FILES = "./siaac/"
 
 XLSX_RUTE = "./LISTAS/"
@@ -19,5 +19,5 @@ ROOTS_DRIVE_IDS={
 
 FILE_CREDENTIALS_DRIVE = "../service_account.json"
 
-#IP = "192.168.2.218"
-IP = "192.168.1.61"
+IP = "192.168.2.218"
+#IP = "192.168.1.61"

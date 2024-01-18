@@ -218,7 +218,7 @@ function searchArtic3() {
 
 function get_prices(code) {
   // Construir la URL con el parámetro 'code'
-  var url = `http://localhost:8000/prices/?code=${code}`;
+  var url = `/prices/?code=${code}`;
 
   // Crear una instancia de XMLHttpRequest
   var xhr = new XMLHttpRequest();
