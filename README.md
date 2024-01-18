@@ -1,6 +1,6 @@
 # Programa para la actualizacion de lista en formato excel segun un sistema de facturacion
 
-![ilustration home page](imgs/ilustration.png)
+![ilustration home page](server/imgs/ilustration.png)
 
 
 ## Problematica:
