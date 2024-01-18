@@ -117,7 +117,6 @@ class ViewUpdateXlsxStep2(View):
         brute_data = {
 
             'codes': data.getlist('code'),
-            #'prices_auto': data.getlist('price_auto'),
             'price_percent': data.getlist('price_percent'),
             'price_manual_may': data.getlist('price_manual_may'),
             'price_manual_min': data.getlist('price_manual_min'),
@@ -251,23 +250,6 @@ class ViewUploadDrive(View):
                     results[xlsx.name]['no_drive'] = True
             except ModelListXlsx.DoesNotExist:
                 results[xlsx.name] = {'error': f"ID({id}) does not exist. "}
-
-        #     for key, folder in RUTE_XLSX_ORIGIN.items():
-        #         rute_current_list = os.path.abspath(os.path.join(folder, xlsx.name))
-        #         tmp_file = os.path.join(rute_new_lists, key, xlsx.name)
-        #         shutil.copy(rute_current_list, tmp_file)
-        
-
-        # drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
-        
-        # # Ruta completa de la carpeta que deseas crear
-        # rute_new_lists = Path(tmp_dir) / 'test'
-
-        # # Crear la carpeta si no existe
-        # rute_new_lists.mkdir(parents=True, exist_ok=True)
-
-        # drive.upload('C:\\Users\\notebook\\Documents\python\\admin_luque\\web-admin-luque\\tmp\\carpeta', '1Cggv_FaF2-lkderF51PUb3hP56exUbGx')
-
             
         
         threads = []

@@ -173,7 +173,7 @@ def update_xlsx(xlsx_name, xlsx_data):
                     if code:
                         cell = f"{ABC[col+4]}{row}"
                         percent = int(data['price_percent'])
-                        
+                        xlsx_data[code]['description'] = sheet[row][col-4].value
                         if percent != 0:
                             xlsx_data[code]['percent'] = percent
                             try:  

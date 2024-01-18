@@ -11,9 +11,20 @@
             
             {% csrf_token %}
             
-            <div>
+            
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Previsualización</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                 {% for xlsx in listXlsx %}
                 <div class="dropdown">
+                    <tr class="w-100">
+                        <td class="w-90">
                     <button class="btn btn-secondary w-100 big-button" type="button" onclick="toggleDropdown('dropdown-menu-{{ forloop.counter }}')">
                         {{ xlsx.list_name }}
                         <div class="font-28"> &blacktriangledown;</div>     
@@ -116,8 +127,13 @@
                                 
                                             
                     </ul>
+                </td>
+                </tr>
+                    
                 </div>
                 {% endfor %}
+                </table>
+                </div>
             </div>
             <div class="text-center navbar-expand-lg navbar-light bg-light fixed-bottom justify-content-center align-items-center d-flex hight-15">
                 <button class="btn btn-primary" type="submit">Siguiente</button>
