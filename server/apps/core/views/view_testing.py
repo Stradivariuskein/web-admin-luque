@@ -166,7 +166,7 @@ def test_prices_auto(request):
 
     return JsonResponse(response)
 
-
+# testea si todos los archivos existen en el drive
 def test_files_drive(request):
 
     files = ModelFileDrive.objects.all()

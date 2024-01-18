@@ -1,5 +1,6 @@
 from openpyxl import load_workbook
 import os
+import shutil
 import re
 from datetime import datetime
 from configs import *
@@ -113,6 +114,37 @@ def get_artcis_from_xlsx(rute_xlsx):
 
     return list_codes
 
+def copy_file(origin, folder):
+    # Obtener el nombre del archivo desde la ruta de origen
+    file_name = os.path.basename(origin)
+    
+    # Crear la ruta completa de destino para el archivo
+    dest_file = os.path.join(folder, file_name)
+
+    # Verificar si ya existe un archivo con el mismo nombre en la carpeta destino
+    if os.path.exists(dest_file):
+        try:
+            # Eliminar el archivo existente en la carpeta destino
+            os.remove(dest_file)
+            print(f"Archivo existente en {dest_file} eliminado.")
+        except FileNotFoundError:
+            print(f"Error: No se pudo encontrar el archivo {dest_file}.")
+        except PermissionError:
+            print(f"Error: Permiso denegado al eliminar el archivo en {dest_file}.")
+        except Exception as e:
+            print(f"Error inesperado al eliminar el archivo: {e}")
+
+    try:
+        # Copiar el archivo desde el origen hasta la carpeta destino
+        shutil.copy(os.path.join(origin), folder)
+        #print(f"Archivo copiado de {origin} a {folder} exitosamente.")
+    except FileNotFoundError:
+        print(f"Error: No se pudo encontrar el archivo {origin}.")
+    except PermissionError:
+        print(f"Error: Permiso denegado al copiar el archivo en {folder}.")
+    except Exception as e:
+        print(f"Error inesperado al copiar el archivo: {e}")
+
 # actualiza el archio xlsx con los precios el sistema (siaac)
 def update_xlsx(xlsx_name, xlsx_data):
 
@@ -197,14 +229,24 @@ def update_xlsx(xlsx_name, xlsx_data):
                             print(f"{code}: el precio no cambio")
                 except Exception as e:
                     print(f"Error: {e}")
-                if rute_xlsx == './LISTAS_ORDENADAS/MA/Bisagras/BISAGRA ALACENA.xlsx':
-                    print(xlsx_data[code])
+
                 
                 to_return.append((code, xlsx_data[code]))
 
             
         sheet["A1"] = datetime.now().date()
         wb.save(rute_xlsx)
+        # copiamos la lista a la carpta listas de precios
+        if is_mi > -1:
+            folder_name = 'minorista/'
+        elif is_ma > -1:
+            folder_name = 'mayorista/'
+        else:
+            folder_name = ''
+            print('Error: No se copiaron los archivos. El archivo tiene q esta contenido en una carpeta con nombre ma o mi')
+        if folder_name != '':
+            path_file = os.path.abspath(f'{XLSX_RUTE}{folder_name}')
+            copy_file(rute_xlsx, path_file)
 
     return [xlsx_name, to_return]
 

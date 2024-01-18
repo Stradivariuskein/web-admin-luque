@@ -10,7 +10,7 @@ RUTE_SIAAC = "./vDos_SIAAC/SIAAC3/"
 #RUTE_SIAAC = "Y://SIAAC3/"
 RUTE_SIAAC_FILES = "./siaac/"
 
-XLSX_RUTE = "./LISTAS/"
+XLSX_RUTE = "../Listas de precios/"
 
 ROOTS_DRIVE_IDS={
     'order': '1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi',
