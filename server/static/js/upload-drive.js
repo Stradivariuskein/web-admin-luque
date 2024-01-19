@@ -72,7 +72,7 @@ function uploadDrive(target=null) {
         success: function(data) {
             console.log(data)
             for (let name in data) {
-
+                
                 let status = document.getElementById(name);
 
                 let fileInfo = data[name];
@@ -80,13 +80,13 @@ function uploadDrive(target=null) {
                 dropBox[0].classList.remove('card-warning')
                 
                 if (Object.keys(fileInfo).length !== 0){
-
                    
-                    
                     for (let key in fileInfo) {
+            
                         if (key !== 'error') {
-
+                            
                             if (key !== 'no_drive') {
+                                
                                 if (dropBox[0].innerText !== 'Error') {
                                     dropBox[0].innerText = "Subido";
                                 }
@@ -107,6 +107,9 @@ function uploadDrive(target=null) {
                                 dropBox[1].appendChild(drop_li);
 
                             } else {
+                                if (name === "ESCUADRA UNION DISMAY.xlsx") {
+                                    console.log(`no_drive:True  ${name} ${key}`)
+                                    }
                                 dropBox[0].innerText = "Drive no";
                                 dropBox[0].title = "Esta lista no esta subida al drive.\nSe actualizo correctamente"
                                 dropBox[0].classList.add('card-warning')
@@ -114,6 +117,7 @@ function uploadDrive(target=null) {
 
                             
                         } else {
+                            
                             all_ok = false
                             dropBox[0].innerText = "Error";
                             writeMsj(all_ok, fileInfo[key]);
@@ -129,15 +133,6 @@ function uploadDrive(target=null) {
 
             }
             writeMsj(all_ok)
-            if (all_ok) {
-                for (let name in data) {
-            
-                    let status = document.getElementById(name);
-                    status.children[0].innerText = 'Subido'
-                    status.children[0].classList.add("card-green")
-                    status.children[0].style = ''
-                }
-            }
                 
         },
         error: function(xhr, status, error) {
