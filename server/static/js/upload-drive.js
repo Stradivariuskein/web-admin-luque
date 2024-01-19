@@ -107,9 +107,7 @@ function uploadDrive(target=null) {
                                 dropBox[1].appendChild(drop_li);
 
                             } else {
-                                if (name === "ESCUADRA UNION DISMAY.xlsx") {
-                                    console.log(`no_drive:True  ${name} ${key}`)
-                                    }
+                                
                                 dropBox[0].innerText = "Drive no";
                                 dropBox[0].title = "Esta lista no esta subida al drive.\nSe actualizo correctamente"
                                 dropBox[0].classList.add('card-warning')

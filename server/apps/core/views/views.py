@@ -206,10 +206,22 @@ class CreateXlsx(CreateView):
 # es una pecion ajax por post
 class ViewUploadDrive(View):
     def post(self, request, *args, **kwargs):
+        def gen_bachs(elementes, bach_sisze):
+            if bach_sisze >= len(elementes):
+                return [elementes]
+            else:
+                return [elementes[i:i + bach_sisze] for i in range(0, len(elementes), bach_sisze)]
+
         results_threads = []
-        def upload_save_file(file):
-            drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
-            results_threads.append(drive.upload(file))
+        def upload_save_file(file, semaphore):
+            try:
+                drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
+                results_threads.append(drive.upload(file))
+            except Exception as e:
+                print(f"Error en el hilo: {e}")
+            finally:
+                # Liberar el semáforo al finalizar
+                semaphore.release()
 
         
         results = {}
@@ -217,26 +229,7 @@ class ViewUploadDrive(View):
         data = request.POST
         xlsx_ids = data['xlsx_id'].split(',')
         files = ModelFileDrive.objects.none()
-        # creamos un archivo temporal para subir la carpeta con todos los archivos
-        # en 1 sola peticion
-        name_tmp_folder = "new_lists"
-        tmp_dir = os.path.abspath('./tmp')
         
-        # asignamos el permiso de lectura y escritura
-       
-        #creo carpeta contenedora
-        rute_new_lists = os.path.join(tmp_dir, name_tmp_folder)
-        os.makedirs(rute_new_lists, exist_ok=True)
-        
-        
-       
-        
-        #creando sub carpetas
-        rute_ma = os.path.join(rute_new_lists, 'ma')
-        os.makedirs(rute_ma, exist_ok=True)
-        rute_mi = os.path.join(rute_new_lists, 'mi')
-        os.makedirs(rute_mi, exist_ok=True)
-
         for id in xlsx_ids:
 
             try:
@@ -250,14 +243,17 @@ class ViewUploadDrive(View):
                     results[xlsx.name]['no_drive'] = True
             except ModelListXlsx.DoesNotExist:
                 results[xlsx.name] = {'error': f"ID({id}) does not exist. "}
-            
+        
+        # Definir el semáforo con el número máximo de hilos permitidos
+        max_threads = 20  # Puedes ajustar este número según tus necesidades
+        thread_semaphore = threading.BoundedSemaphore(max_threads)
         
         threads = []
 
         for file in files:
 
             
-            thread = threading.Thread(target=upload_save_file, args=(file,))
+            thread = threading.Thread(target=upload_save_file, args=(file, thread_semaphore))
             threads.append(thread)
             thread.start()
 
@@ -265,7 +261,7 @@ class ViewUploadDrive(View):
             thread.join()
 
         for file in results_threads:
-           
+        
             if isinstance(file, ModelFileDrive):
                 
                 file.save()
@@ -274,13 +270,13 @@ class ViewUploadDrive(View):
                     
                 elif file.parentId.name == "mi":
                     results[file.name]['Link comun minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
-                   
+                
                 elif file.parentId.parentId.name == "ma":
                     results[file.name]['Link ordenado mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
                     
                 elif file.parentId.parentId.name == "mi":
                     results[file.name]['Link ordenado minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"
-                   
+                
                 
                 
             else:
