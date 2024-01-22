@@ -213,15 +213,11 @@ class ViewUploadDrive(View):
                 return [elementes[i:i + bach_sisze] for i in range(0, len(elementes), bach_sisze)]
 
         results_threads = []
-        def upload_save_file(file, semaphore):
-            try:
-                drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
-                results_threads.append(drive.upload(file))
-            except Exception as e:
-                print(f"Error en el hilo: {e}")
-            finally:
-                # Liberar el semáforo al finalizar
-                semaphore.release()
+        def upload_save_file(file, semaphore = None):
+
+            drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
+            results_threads.append(drive.upload(file))
+
 
         
         results = {}
@@ -245,17 +241,19 @@ class ViewUploadDrive(View):
                 results[xlsx.name] = {'error': f"ID({id}) does not exist. "}
         
         # Definir el semáforo con el número máximo de hilos permitidos
-        max_threads = 20  # Puedes ajustar este número según tus necesidades
-        thread_semaphore = threading.BoundedSemaphore(max_threads)
+        #max_threads = 6  # Puedes ajustar este número según tus necesidades
+        #thread_semaphore = threading.BoundedSemaphore(max_threads)
         
         threads = []
 
         for file in files:
 
             
-            thread = threading.Thread(target=upload_save_file, args=(file, thread_semaphore))
+            thread = threading.Thread(target=upload_save_file, args=(file,))
             threads.append(thread)
             thread.start()
+            #delay para evitar la limitacion de peticiones de google
+            time.sleep(0.5)
 
         for thread in threads:
             thread.join()

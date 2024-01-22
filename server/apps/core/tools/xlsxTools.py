@@ -126,7 +126,7 @@ def copy_file(origin, folder):
         try:
             # Eliminar el archivo existente en la carpeta destino
             os.remove(dest_file)
-            print(f"Archivo existente en {dest_file} eliminado.")
+            
         except FileNotFoundError:
             print(f"Error: No se pudo encontrar el archivo {dest_file}.")
         except PermissionError:
