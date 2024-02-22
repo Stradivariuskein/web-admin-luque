@@ -1,0 +1,13 @@
+falta:
+	agregar crud listas
+	testing
+	mostrar cantidad de elementos selecionados
+
+extras:
+	hacer api para q la web paresca mas rapido
+	mejorar el buscador de articulos y precios
+	crud filedrive
+
+echo:
+	#agregar visualmente si esta o no el drive
+	

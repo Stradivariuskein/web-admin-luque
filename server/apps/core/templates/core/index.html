@@ -117,6 +117,7 @@
                                         </td>
                                         <!-- links -->
                                         <td>
+                                            {% if xlsx.2|length > 0 %}
                                         <div class="dropdown">
                                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
                                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 32 32"
@@ -125,6 +126,7 @@
                                                 </svg>
                                                 <span>Links</span>
                                             </button>
+                                        
                                         <ul class="dropdown-menu link-menu" aria-labelledby="dropdownMenuButton">
                                             {% for link in xlsx.2 %}
                                             <li>
@@ -132,7 +134,9 @@
                                             </li>                                  
                                             {% endfor %}
                                         </ul>
+                                        
                                         </div>
+                                        {% endif %}
                                         </td>
                                         
                                       </tr>
