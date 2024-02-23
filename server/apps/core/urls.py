@@ -19,8 +19,15 @@ from django.urls import path
 from apps.core.views.views import CreateXlsx, ViewUpdateXlsxStep1, ViewUpdateXlsxStep2, ViewSelectList, download_xlsx, ViewUploadDrive, ReuploadFileDrive, get_prices_form_code
 from apps.core.views.views_tmp import tmp_view_delet_duplicate_drive, view_check_drive_id, deactivate_artics, view_tmp_priceXlsx, view_vincular_xlsx_artic
 from apps.core.views.view_search import ViewSearchArtic
-from apps.core.views.view_testing import test_prices_siaac, test_files_drive, test_prices_precent, test_prices_auto
-
+from apps.core.views.view_testing import (test_prices_siaac,
+                                            test_files_drive,
+                                            test_prices_precent, test_prices_auto
+                                        )
+from apps.core.views.view_crud_listxlsx import (ModelListXlsxUpdateView,
+                                                ModelListXlsxCreateView,
+                                                ModelListXlsxListView,
+                                                ModelListXlsxDetailView   
+                                            )
 
 urlpatterns = [
     path('test/drive/files', view_check_drive_id, name='test-drive-files'),
@@ -40,5 +47,8 @@ urlpatterns = [
     path('pricexlsx/', view_tmp_priceXlsx, name='tmp-pricexlsx'),
     path('prices/', get_prices_form_code, name='prices'),
     path('tmp/refresh_codes/', view_vincular_xlsx_artic, name='refresh-codes'),
-
+    path('xlsx/<int:pk>/', ModelListXlsxUpdateView.as_view(), name='xlsx'),
+    path('xlsx/create/', ModelListXlsxCreateView.as_view(), name='xlsx-create'),
+    path('xlsx/', ModelListXlsxListView.as_view(), name='xlsx-list'),
+    path('xlsx/detail/<int:pk>/', ModelListXlsxDetailView.as_view(), name='xlsx-datail'),
 ]
