@@ -22,7 +22,7 @@
 
 ## Como usarlo:
 
-#### Paso 1: el programa detectara las lista a modificar y parareceran tildadas. tambien puede selecionar otras si lo desea.
+#### Paso 1: Ingrese a http://localhost. El programa detectara las lista a modificar y parareceran tildadas. tambien puede selecionar otras si lo desea.
 
 #### Paso 2: se mostraran los precios que se le asignaran a los articulos de las lissta selecionada. puede corregir manualemnte un precio o aplicar un % para un aumento o descuento.
 
