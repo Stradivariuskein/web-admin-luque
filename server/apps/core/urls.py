@@ -24,8 +24,7 @@ from apps.core.views.view_testing import (test_prices_siaac,
                                             test_prices_precent, test_prices_auto
                                         )
 from apps.core.views.view_crud_listxlsx import (ModelListXlsxUpdateView,
-                                                ModelListXlsxCreateView,
-                                                ModelListXlsxListView,
+                                                ModelListXlsxView,
                                                 ModelListXlsxDetailView   
                                             )
 
@@ -48,7 +47,6 @@ urlpatterns = [
     path('prices/', get_prices_form_code, name='prices'),
     path('tmp/refresh_codes/', view_vincular_xlsx_artic, name='refresh-codes'),
     path('xlsx/<int:pk>/', ModelListXlsxUpdateView.as_view(), name='xlsx'),
-    path('xlsx/create/', ModelListXlsxCreateView.as_view(), name='xlsx-create'),
-    path('xlsx/', ModelListXlsxListView.as_view(), name='xlsx-list'),
+    path('xlsx/', ModelListXlsxView.as_view(), name='xlsx-list'),
     path('xlsx/detail/<int:pk>/', ModelListXlsxDetailView.as_view(), name='xlsx-datail'),
 ]

@@ -8,6 +8,7 @@ agreagar crud de listas
 agregar crud de listras drive con interfaz de carpetas en listas
 inicio automatico
 configs credenciales | ruta de las lisats 
+mostrar cantidad de elementos selecionados en home
 
 falta:
 	agregar crud listas

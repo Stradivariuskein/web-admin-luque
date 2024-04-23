@@ -29,7 +29,6 @@ def percent_apli(num, percent):
 
 def buscarPrecio(cod, lista_num):
     #BUSCA POR CODIGO EL PRECIO DEL ARTICULO en siaac
-    
     long_precio = 11
     if lista_num == 1:
         inicioPrecio = 20
@@ -38,8 +37,7 @@ def buscarPrecio(cod, lista_num):
 
     finprecio = inicioPrecio + long_precio
     patron = '^' + cod.upper().strip() + ' '
-    file = open("DB//articDB.txt")
-    #bandera = 0
+    file = open(RUTE_SIAAC_FILES + "articDB.txt")
     i=0
     
     

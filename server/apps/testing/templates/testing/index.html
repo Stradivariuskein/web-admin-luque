@@ -1,0 +1,95 @@
+
+{% extends "core/base.html" %}
+
+
+{% block search_table %}
+    
+
+        <div class="input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre o códigos..." onkeyup="startSearchTimer(searchXlsx)">
+        </div>
+
+
+
+{% endblock search_table %}
+    
+
+{% block content %}
+    <!-- faltan agregar esta funcionalidades
+    <div>
+     <a type="btn-secondary" href="#">restaurar drive</a>
+     <a type="btn-secondary" href="#">restaurar listas xlsx</a>
+     <a type="btn-secondary" href="#">editar drive</a>
+     <a type="btn-secondary" href="#">agregar lista</a>
+    </div>
+    -->
+    
+    <div>
+        <div class="my-5 text-center">
+            <h1>Test automatizaos</h1>
+        </div>
+        
+        
+        <form method="post" action="{% url 'udate-xlsx-step1' %}">
+            <div class="row">
+                <div class="col-12 mb-4 mb-lg-0">
+                    <div class="card">
+                        <h5 class="card-header">Tests</h5>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Seleccion</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Url</th>
+                                        <th scope="col">Resultado</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <label>
+                                                <input class="custom-checkbox" type="checkbox" id="select-all">
+                                                <span class="ms-2">Seleccionar todo</span>
+                                            </label>
+                                        </tr>
+                                        {% for test in all_tests %}
+                                        <tr>
+                                            <label>
+                                                <td>
+                                                    <input class="custom-checkbox" type="checkbox" name="lists_xlsx" value="{{xlsx}}" checked>
+                                                </td>
+                                                
+                                                <td class="td-name">
+                                                    <p>{{test.name}} </p>
+                                                </td>
+                                                
+                                            </label>
+                                            <td>{{test.url}}</td>
+                                            <td id="result"></td>
+                                            
+                                          </tr>
+                                      
+                                      {% endfor %}
+                                      
+
+                                      
+                                      
+
+                                    </tbody>
+                                  </table>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% csrf_token %}
+                        
+            <div class="text-center navbar-expand-lg navbar-light bg-light fixed-bottom justify-content-center align-items-center d-flex hight-15">
+                <button type="submit" class="btn btn-primary">Start</button>
+              </div>
+        </form>
+    </div>
+
+{% endblock content %} 

@@ -3,9 +3,9 @@ from django.http import HttpResponse, JsonResponse
 from googleapiclient.errors import HttpError
 
 from apps.core.models import ModelArtic, ModelFileDrive
-from configs import RUTE_XLSX_AGRUPS, RUTE_XLSX_ORIGIN
+from configs import RUTE_XLSX_AGRUPS, RUTE_XLSX_ORIGIN, RUTE_SIAAC_FILES
 from apps.core.tools.apiDriveV2 import ApiDrive
-from apps.core.tools.xlsxTools import get_artcis_from_xlsx, list_xlsx_to_folder
+from apps.core.tools.xlsxTools import get_artcis_from_xlsx, list_xlsx_to_folder, buscarPrecio
 
 import os
 import PyPDF2
@@ -134,6 +134,7 @@ def test_prices_precent(request):
 def test_prices_manual(request):
     pass
 
+# test para verificar q los precios sean correctos
 def test_prices_auto(request):
 
     xlsx_rutes = []
@@ -147,18 +148,22 @@ def test_prices_auto(request):
         
         artics = get_artcis_from_xlsx(rute)
         for code, data in artics.items():
-            db_artic = ModelArtic.objects.filter(code=code.strip()).first()
+            db_artic = {
+                "priceMa": buscarPrecio(code, 5),
+                "priceMi": buscarPrecio(code, 1)
+            }
             if db_artic != None:
                 # si la lista esta  contenida en la carpeta ma es precio mayorista
                 if split_rute[-2].upper() == 'MA' or split_rute[-3].upper() == 'MA':
                     
-                    if db_artic.priceMa != data['price']:
-                        response[code] = f"{db_artic.priceMa} != {data['price']} || rute: {rute}\t|{data['col']}|{data['row']}"
+                    if db_artic['priceMa'] != data['price']:
+                        response[code] = f"{db_artic['priceMa']} != {data['price']} || rute: {rute}\t|{data['col']}|{data['row']}"
+                        print(db_artic)
                 # si la lista esta  contenida en la carpeta mi es precio menorista
                 elif split_rute[-2].upper() == 'MI' or split_rute[-3].upper() == 'MI':
                     
-                    if db_artic.priceMi!= data['price']:
-                        response[code] = f"{db_artic.priceMa} != {data['price']}\t|{data['col']}|{data['row']}"
+                    if db_artic['priceMi'] != data['price']:
+                        response[code] = f"{db_artic['priceMi']} != {data['price']}\t|{data['col']}|{data['row']}"
                 else:
                     response[code] = f'error: no es ma ni mi [{split_rute[-2]}][{split_rute[-3]}]'
             else:

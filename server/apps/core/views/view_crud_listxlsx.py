@@ -4,13 +4,6 @@ from apps.core.models import ModelListXlsx
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
 
-class ModelListXlsxListView(ListView):
-    model = ModelListXlsx
-
-    def render_to_response(self, context, **response_kwargs):
-        data = list(context['object_list'].values())  # Obtener los valores de los objetos como una lista
-        return JsonResponse(data, safe=False)
-
 class ModelListXlsxDetailView(DetailView):
     model = ModelListXlsx
 
@@ -18,10 +11,16 @@ class ModelListXlsxDetailView(DetailView):
         data = model_to_dict(context['object'])  # Convertir el objeto a un diccionario
         return JsonResponse(data)
 
-class ModelListXlsxCreateView(CreateView):
+class ModelListXlsxView(CreateView):
     model = ModelListXlsx
     fields = '__all__'
     success_url = reverse_lazy('ModelListXlsx-list')
+
+    def get(self, request, *args, **kwargs):
+        # Lógica para manejar la petición GET
+        data = list(self.model.objects.all().values())
+        return JsonResponse(data, safe=False)
+
 
     def render_to_response(self, context, **response_kwargs):
         return JsonResponse({'message': 'Object created successfully'})
