@@ -1,3 +1,14 @@
+agregar pantalla procesando.. en el boton siguiente step2 ***
+interfaz con los logs**
+testear q las listas tengan los precios correctos**
+testear q todo se suba**
+testiar q se guarden las listas**
+arreglar notificacion del inicio*
+agreagar crud de listas
+agregar crud de listras drive con interfaz de carpetas en listas
+inicio automatico
+configs credenciales | ruta de las lisats 
+
 falta:
 	agregar crud listas
 	testing
@@ -10,4 +21,3 @@ extras:
 
 echo:
 	#agregar visualmente si esta o no el drive
-	

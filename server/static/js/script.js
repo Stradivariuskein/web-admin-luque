@@ -286,3 +286,32 @@ function get_prices(code) {
       fileInput.click();
 
 };
+
+function blockScreen() {
+  // Crear un div para cubrir toda la pantalla
+  var overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
+  overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Fondo semi-transparente
+  overlay.style.zIndex = '9999'; // Z-index alto para asegurarse de que esté por encima de todo
+
+  // Crear un div para el mensaje de "Procesando"
+  var processingMessage = document.createElement('div');
+  processingMessage.textContent = 'Procesando...';
+  processingMessage.classList.add("card")
+  processingMessage.style.position = 'absolute';
+  processingMessage.style.top = '50%';
+  processingMessage.style.left = '50%';
+  processingMessage.style.transform = 'translate(-50%, -50%)';
+  processingMessage.style.padding = '30px';
+  processingMessage.style.fontSize = '24px';
+
+  // Agregar el mensaje de "Procesando" al div de overlay
+  overlay.appendChild(processingMessage);
+
+  // Agregar el overlay al body del documento
+  document.body.appendChild(overlay);
+}

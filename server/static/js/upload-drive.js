@@ -21,7 +21,7 @@ function uploadDrive(target=null) {
     var all_ok = true
     var msj = document.getElementById('msj');
     var msj_child = msj.children[0];
-    msj_child.innerText = 'Subiendo al drive...\nEspere a que todas las listas digan subido'
+    msj_child.innerText = 'Subiendo al drive...\nEspere a que todas las listas digan subido.\nSi cierra esta pagina las listas se subirán igualmente.'
     const writeMsj = (status, textMsj='') => {
 
         // Verifica si hay un botón entre los hijos del contenedor
