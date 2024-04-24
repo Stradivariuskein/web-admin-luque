@@ -1,3 +1,5 @@
+hay articulos q no estan en la base de datos mirar tests/atic-db
+
 agregar pantalla procesando.. en el boton siguiente step2 ***
 interfaz con los logs**
 testear q las listas tengan los precios correctos**

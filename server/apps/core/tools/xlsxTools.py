@@ -29,11 +29,11 @@ def percent_apli(num, percent):
 
 def buscarPrecio(cod, lista_num):
     #BUSCA POR CODIGO EL PRECIO DEL ARTICULO en siaac
-    long_precio = 11
+    long_precio = 12
     if lista_num == 1:
-        inicioPrecio = 20
+        inicioPrecio = 76
     if lista_num == 5:
-        inicioPrecio = 66
+        inicioPrecio = 124
 
     finprecio = inicioPrecio + long_precio
     patron = '^' + cod.upper().strip() + ' '
