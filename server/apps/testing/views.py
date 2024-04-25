@@ -11,7 +11,7 @@ def index(request):
     all_tests = Test.objects.all()
     return render(request, "testing/index.html", {'all_tests': all_tests})
 
-# test para verificar q los precios de los excels coincidan con la base de datos
+# test para verificar q los precios de los excels coincidan con el archivo articDB.txt
 def test_prices_from_db_for_xlsx(request):
 
     xlsx_rutes = []

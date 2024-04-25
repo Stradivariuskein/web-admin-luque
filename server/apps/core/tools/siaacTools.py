@@ -95,6 +95,8 @@ def reed_artics():
     index_ini_price = 86
 
     while linea != "":
+        if "BULO-115" in linea:
+            print(linea)
         linea = normalizar(linea)
 
         final_mayus = findall("[A-Z]$", linea)
@@ -165,4 +167,4 @@ def reed_artics():
 
 
 if __name__ == '__main__':
-    print(get_all_artics())
+    print(reed_artics()['BULO-115'])
