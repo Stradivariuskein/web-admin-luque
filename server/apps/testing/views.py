@@ -3,8 +3,14 @@ from .models import Test
 from configs import RUTE_XLSX_ORIGIN
 from apps.core.tools.xlsxTools import list_xlsx_to_folder, get_artcis_from_xlsx, buscarPrecio
 from django.http import JsonResponse
-from apps.core.models import ModelFileDrive
+from apps.core.models import ModelFileDrive, ModelArtic
 from apps.core.tools.apiDriveV2 import ApiDrive
+from apps.core.tools.siaacTools import reed_artics
+
+# vista de pruevas
+def pruevas(request):
+    artic = reed_artics()
+    return JsonResponse(artic['F-004/1'])
 
 # interfaz para la gestion de tests
 def index(request):
@@ -15,6 +21,7 @@ def index(request):
 def test_prices_from_db_for_xlsx(request):
 
     xlsx_rutes = []
+    ###### cambiar q las rutas las saque de la db y no del directorio #########
     #obtenemos las rutas de todos los archivos xlsx
     for _, rute in RUTE_XLSX_ORIGIN.items():
         xlsx_rutes += list_xlsx_to_folder(rute)

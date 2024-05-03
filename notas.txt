@@ -1,8 +1,7 @@
-hay articulos q no estan en la base de datos mirar tests/atic-db
 
 agregar pantalla procesando.. en el boton siguiente step2 ***
 interfaz con los logs**
-testear q las listas tengan los precios correctos**
+testear q las listas tengan los precios correctos** sacar las rutas de la db no del direcotrio
 testear q todo se suba**
 testiar q se guarden las listas**
 arreglar notificacion del inicio*

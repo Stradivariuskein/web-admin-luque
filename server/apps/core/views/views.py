@@ -31,8 +31,9 @@ from apps.core.forms import UpdateXlsxForm
 
 
 
-
-
+def test(request):
+    siaac_artics = reed_artics()
+    
 # muestra todas las listas de precio para q las selecione el usuario
 # arriba del todo apareceran las q se tiene q actualizar y despues las q no sufrieron cambios
 class ViewSelectList(View):
