@@ -236,9 +236,9 @@ def update_xlsx(xlsx_name, xlsx_data):
         wb.save(rute_xlsx)
         # copiamos la lista a la carpta listas de precios
         if is_mi > -1:
-            folder_name = 'minorista/'
+            folder_name = 'LISTA MAYORISTA/'
         elif is_ma > -1:
-            folder_name = 'mayorista/'
+            folder_name = 'LISTA MINORISTA/'
         else:
             folder_name = ''
             print('Error: No se copiaron los archivos. El archivo tiene q esta contenido en una carpeta con nombre ma o mi')
