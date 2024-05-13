@@ -5,9 +5,9 @@ from apps.core.models import ModelListXlsx, ModelArtic, ModelFolderDrive, ModelF
 from apps.core.tools.siaacTools import reed_artics
 from apps.core.tools.xlsxTools import get_artcis_from_xlsx, list_xlsx_to_folder
 from apps.core.tools.apiDriveV2 import ApiDrive
-from googleapiclient.errors import HttpError
 
-from configs import RUTE_XLSX_AGRUPS, ROOTS_DRIVE_IDS, RUTE_XLSX_ORIGIN, FILE_CREDENTIALS_DRIVE
+
+from configs import ROOTS_DRIVE_IDS, RUTE_XLSX_ORIGIN, FILE_CREDENTIALS_DRIVE
 
 from re import findall
 from datetime import datetime
@@ -23,7 +23,7 @@ def temp_create_listXlsx(request):
         archivos = os.listdir(carpeta)
 
     filtered_archs = []
-    # Imprimir el nombre de cada archivo
+    # recorre todos los arhcivos y los registra los guada en la db
     for archivo in archivos:
         is_xlsx = findall(".xlsx$", archivo)
         is_tmp_file = findall("^~", archivo)
@@ -106,7 +106,7 @@ def tmp_view_duplicate_xlsx(request):
 
     return HttpResponse(new_files)
 
-# recorrre todos los archivos de la db y verifica q solo alla 1 solo si hay mas los borra
+# recorrre todos los archivos de la db y verifica q solo alla 1 en el drive.si hay mas los borra
 def tmp_view_delet_duplicate_drive(request):
     drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
     files = ModelFileDrive.objects.all()

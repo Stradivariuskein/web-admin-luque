@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from googleapiclient.errors import HttpError
 
 from apps.core.models import ModelArtic, ModelFileDrive
-from configs import RUTE_XLSX_AGRUPS, RUTE_XLSX_ORIGIN, RUTE_SIAAC_FILES
+from configs import RUTE_XLSX_ORIGIN
 from apps.core.tools.apiDriveV2 import ApiDrive
 from apps.core.tools.xlsxTools import get_artcis_from_xlsx, list_xlsx_to_folder, buscarPrecio
 

@@ -214,7 +214,7 @@ class ViewUploadDrive(View):
                 return [elementes[i:i + bach_sisze] for i in range(0, len(elementes), bach_sisze)]
 
         results_threads = []
-        def upload_save_file(file, semaphore = None):
+        def upload_save_file(file):
 
             drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
             results_threads.append(drive.upload(file))
@@ -241,9 +241,7 @@ class ViewUploadDrive(View):
             except ModelListXlsx.DoesNotExist:
                 results[xlsx.name] = {'error': f"ID({id}) does not exist. "}
         
-        # Definir el semáforo con el número máximo de hilos permitidos
-        #max_threads = 6  # Puedes ajustar este número según tus necesidades
-        #thread_semaphore = threading.BoundedSemaphore(max_threads)
+        
         
         threads = []
 
@@ -291,7 +289,7 @@ class ViewUploadDrive(View):
                 else:
                     results[file.name]['error'] = f'Error uploading file to drive. {error}'
 
-        #shutil.rmtree(tmp_dir)
+
         return JsonResponse(results)
     
 class ReuploadFileDrive(View):

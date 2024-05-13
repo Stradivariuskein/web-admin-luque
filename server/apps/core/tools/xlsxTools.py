@@ -387,14 +387,6 @@ def update_artics(artics):
         'no_changes': no_changes
         }
 
-if __name__ == '__main__':
-
-    
-
-    results = list_xlsx_to_folder(RUTE_XLSX_AGRUPS['ma'])
-    
-
-    print(results)
 
 
 

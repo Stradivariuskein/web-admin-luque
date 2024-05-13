@@ -18,7 +18,7 @@ def upload_file_drive(request):
                 ruta_completa = os.path.join(raiz, archivo)
                 files.append(ruta_completa)
         return files
-    #if request.method == "POST":
+
     drive = ApiDrive(FILE_CREDENTIALS_DRIVE, "1mupKCvLb4Gccpp2R9zx9vnylUVdIVgvW")
 
 
@@ -33,12 +33,10 @@ def upload_file_drive(request):
     file = drive.retry_execute(drive.upload, fileDrive)
 
     
-    #folderMi = ModelFolderDrive(driveId='19Mt4Z7uDXLeaNXh7Mkyax3_I-CvfdDsy' )
+    
 
    
     return HttpResponse(file)
-    #else:
-    #    return HttpResponse(f"Error 500: Method no allowed")
     
 
 def view_sinc_folder_drive(request):
