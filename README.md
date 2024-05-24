@@ -8,7 +8,7 @@
 
 #### Tambien hay un archivo con los codigos, descripcion y precion en formato de texto (ARTIC.DBF programa de facturacion).
 
-#### Objetivo: hacer q las lista se actualizen con los precios del archivo y se suban al drive automaticamente.
+#### Objetivo: hacer q las lista se actualizen con los precios del archivo y se suban al drive automaticamente por cuadruplicado (lista ordenada mayorista y minorista, lista comun mayorista y minorista).
 
 ## instalacion:
 
@@ -16,9 +16,13 @@
 
 #### paso 2: pip install -r requierements.txt
 
-#### paso 3: agregue su archivo service-account.json ( credenciales ) cambiar la ruta del la variable FILE_CREDENTIALS_DRIVE en el archivo config.py con la ruta de su archivo.
+#### paso 3: ingrese a "https://console.cloud.google.com/" cree un projecto, habilite la api de google drive, creeuna cuenta de servicio y descargue las credenciales de la cuenta anteriormente creada. 
 
-#### paso 4: levnatar el servicio con "python main.py"
+#### paso 4: Agregue su archivo service-account.json ( credenciales ) cambiar la ruta del la variable FILE_CREDENTIALS_DRIVE en el archivo config.py con la ruta de su archivo.
+
+#### paso 5: Modifique el archvio config.py comentando las variables "RUTE_SIAAC" y "XLSX_RUTE" con los valores q dicen en produccion, y cambie ROOTS_DRIVE_IDS con los ids de las carpetas de su drive
+
+#### paso 6: levnatar el servicio con "python main.py"
 
 ## Como usarlo:
 

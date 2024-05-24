@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from .models import Test
-from configs import RUTE_XLSX_ORIGIN
+from configs import RUTE_XLSX_ORIGIN, FILE_CREDENTIALS_DRIVE
 from apps.core.tools.xlsxTools import list_xlsx_to_folder, get_artcis_from_xlsx, buscarPrecio
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from apps.core.models import ModelFileDrive, ModelArtic
 from apps.core.tools.apiDriveV2 import ApiDrive
 from apps.core.tools.siaacTools import reed_artics
@@ -82,3 +82,49 @@ def test_files_exist_in_drive(request):
                     response[f.id] = f"{f.name}|{result['name']}  parents: {result['parents']} != {f.parentId.driveId}]|{f.name == result['name'] and f.parentId.driveId == result['parents']}"
 
     return JsonResponse(response)
+
+
+# cheque q el id del drive este bien si no puede acceder al archivo entonse lo busca por nombre en la carpeta padre y le reasigna el nuevo id
+def view_check_drive_id(request):
+    drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
+    files = ModelFileDrive.objects.all()
+    not_funds = []
+    for file in files:
+        response = drive.get_file(file.driveId)
+        # validar si el archivo esta en el drive si no esta hay q subirlo
+        if not response:
+            # falta validar si existe en la carpeta contenedora
+            files_drive = drive.find_file_id_by_name(file_name=file.name, parent_id=file.parentId.driveId)
+            if files_drive != []:
+                len_files = len(files_drive) 
+                print(f"files_drive tiene archivos para {file.name}")
+        
+                if len_files > 1:
+
+                    print(f"files_drive mayor a 1")                    
+                    for i in range(len_files-1,0,-1): # bucle inverso dejando el primero
+                        tmp_file = ModelFileDrive(driveId=files_drive[i][0])
+                        res_del = drive.delete(tmp_file)
+
+                        del files_drive[i]
+                        print(f"res_del: {res_del}")
+                len_files = len(files_drive) 
+                print(len_files)
+                if len_files == 1:
+
+                    file.driveId = files_drive[0][0]
+                    file.save()
+                    print(f"solo un archivo: {file.name}")
+
+                   
+            else:
+                print(file.driveId)
+                file = drive.upload(file)
+                print(file.driveId)
+                print(file)
+                file.save()
+            not_funds.append(file)
+
+        
+
+    return HttpResponse(not_funds)

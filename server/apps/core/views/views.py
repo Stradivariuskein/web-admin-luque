@@ -1,13 +1,10 @@
 from django.shortcuts import render
-from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.http import HttpResponse, JsonResponse
 from django.views import View
 from django.db import transaction
 
 import os
-import shutil
-from pathlib import Path
 import zipfile
 import tempfile
 import datetime
@@ -29,11 +26,7 @@ from apps.core.models import ModelListXlsx, ModelArtic, ModelToUpdateList, Model
 from apps.core.forms import UpdateXlsxForm
  
 
-
-
-def test(request):
-    siaac_artics = reed_artics()
-    
+# vista de la raiz    
 # muestra todas las listas de precio para q las selecione el usuario
 # arriba del todo apareceran las q se tiene q actualizar y despues las q no sufrieron cambios
 class ViewSelectList(View):
@@ -195,138 +188,130 @@ class ViewUpdateXlsxStep2(View):
         return render(request, 'core/update_xlsx_step2.html', context)
 
 
-class CreateXlsx(CreateView):
-    model = ModelListXlsx
-    template_name = 'core/createXlsx.html'
-    success_url = reverse_lazy('create-list-xlsx')
-    fields = ['name', 'driveId', 'modDate', 'img', 'pathlocal']
-
 # recive los ids separados por ','(ej: '1,50,28,36...') de 
 # las lista a subir busca en la db todos los archivos q tenga esos ids
 # los sube al drive y actualiza la db
 # es una pecion ajax por post
-class ViewUploadDrive(View):
-    def post(self, request, *args, **kwargs):
-        def gen_bachs(elementes, bach_sisze):
-            if bach_sisze >= len(elementes):
-                return [elementes]
-            else:
-                return [elementes[i:i + bach_sisze] for i in range(0, len(elementes), bach_sisze)]
-
-        results_threads = []
-        def upload_save_file(file):
-
-            drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
-            results_threads.append(drive.upload(file))
-
-
-        
-        results = {}
-        print("subiendo")
-        data = request.POST
-        xlsx_ids = data['xlsx_id'].split(',')
-        files = ModelFileDrive.objects.none()
-        
-        for id in xlsx_ids:
-
-            try:
-                xlsx = ModelListXlsx.objects.get(id=id)
-                if not xlsx.name in results:
-                    results[xlsx.name] = {}
-                current_files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
-                if current_files:
-                    files |= current_files
-                else:
-                    results[xlsx.name]['no_drive'] = True
-            except ModelListXlsx.DoesNotExist:
-                results[xlsx.name] = {'error': f"ID({id}) does not exist. "}
-        
-        
-        
-        threads = []
-
-        for file in files:
-
-            
-            thread = threading.Thread(target=upload_save_file, args=(file,))
-            threads.append(thread)
-            thread.start()
-            #delay para evitar la limitacion de peticiones de google
-            time.sleep(0.5)
-
-        for thread in threads:
-            thread.join()
-
-        for file in results_threads:
-        
-            if isinstance(file, ModelFileDrive):
-                
-                file.save()
-                if file.parentId.name == "ma":
-                    results[file.name]['Link comun mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
-                    
-                elif file.parentId.name == "mi":
-                    results[file.name]['Link comun minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
-                
-                elif file.parentId.parentId.name == "ma":
-                    results[file.name]['Link ordenado mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
-                    
-                elif file.parentId.parentId.name == "mi":
-                    results[file.name]['Link ordenado minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"
-                
-                
-                
-            else:
-                error = file['response']
-                file = file['file']
-                exist_file_to_upload = ModelToUploadDrive.objects.filter(fileDrive=file)
-                if not exist_file_to_upload:
-                    to_upload = ModelToUploadDrive(fileDrive=file)
-                    to_upload.save()
-                
-                if 'error' in results[file.name]:
-                    results[file.name]['error'] += f'Error uploading file to drive. {error}'
-                else:
-                    results[file.name]['error'] = f'Error uploading file to drive. {error}'
-
-
-        return JsonResponse(results)
+# class ViewUploadDrive(View):
+#     def post(self, request, *args, **kwargs):
     
-class ReuploadFileDrive(View):
-    def get(self, request, *args, **kwargs):
-        results_threads = []
-        def upload_save_file(file):
-            drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
-            results_threads.append(drive.upload(file))
+#         results_threads = []
+#         def upload_save_file(file):
 
-        files_to_upload = ModelToUploadDrive.objects.all()
-        threads = []
-        for file in files_to_upload:
+#             drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
+#             if file.name == 'RETEN A RODILLO.xlsx':
+#                 results_threads.append(drive.upload(file, resetDrive=True))
+#             else:
+#                 results_threads.append(drive.upload(file))
+
+
+        
+#         results = {}
+#         print("subiendo")
+#         data = request.POST
+#         xlsx_ids = data['xlsx_id'].split(',')
+#         files = ModelFileDrive.objects.none()
+        
+#         for id in xlsx_ids:
+
+#             try:
+#                 xlsx = ModelListXlsx.objects.get(id=id)
+#                 if not xlsx.name in results:
+#                     results[xlsx.name] = {}
+#                 current_files = ModelFileDrive.objects.filter(listXlsxID=xlsx)
+#                 if current_files:
+#                     files |= current_files
+#                 else:
+#                     results[xlsx.name]['no_drive'] = True
+#             except ModelListXlsx.DoesNotExist:
+#                 results[xlsx.name] = {'error': f"ID({id}) does not exist. "}
+        
+        
+        
+#         threads = []
+
+#         for file in files:
+
             
-            thread = threading.Thread(target=upload_save_file, args=(file.fileDrive,))
-            threads.append(thread)
-            thread.start()
+#             thread = threading.Thread(target=upload_save_file, args=(file,))
+#             threads.append(thread)
+#             thread.start()
+#             #delay para evitar la limitacion de peticiones de google
+#             time.sleep(0.5)
 
-        for thread in threads:
-            thread.join()
-        results = {}
-        for file in results_threads:
-            if isinstance(file, ModelFileDrive):
-                file.save()
-                files_to_upload.get(fileDrive=file).delete()
-                if file.parentId.name.lower() == 'ma':
-                    link_name = 'Lista comun mayorista'
-                elif file.parentId.name.lower() == 'mi':
-                    link_name = 'Lista comun minorista'
-                elif file.parentId.parentId.name.lower() == 'ma':
-                    link_name = 'Lista ordenada mayorista'
-                elif file.parentId.parentId.name.lower() == 'mi':
-                    link_name = 'Lista ordenada minorista'
-                results[file.name] = {link_name: f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"}
-            else:
-                results[file['file'].name] = {}
+#         for thread in threads:
+#             thread.join()
+
+#         for file in results_threads:
+        
+#             if isinstance(file, ModelFileDrive):
                 
-        return JsonResponse(results)
+#                 file.save()
+#                 if file.parentId.name == "ma":
+#                     results[file.name]['Link comun mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                    
+#                 elif file.parentId.name == "mi":
+#                     results[file.name]['Link comun minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                
+#                 elif file.parentId.parentId.name == "ma":
+#                     results[file.name]['Link ordenado mayorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489" 
+                    
+#                 elif file.parentId.parentId.name == "mi":
+#                     results[file.name]['Link ordenado minorista'] = f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"
+                
+                
+                
+#             else:
+#                 error = file['response']
+#                 file = file['file']
+#                 exist_file_to_upload = ModelToUploadDrive.objects.filter(fileDrive=file)
+#                 if not exist_file_to_upload:
+#                     to_upload = ModelToUploadDrive(fileDrive=file)
+#                     to_upload.save()
+                
+#                 if 'error' in results[file.name]:
+#                     results[file.name]['error'] += f'Error uploading file to drive. {error}'
+#                 else:
+#                     results[file.name]['error'] = f'Error uploading file to drive. {error}'
+
+
+#         return JsonResponse(results)
+    
+# class ReuploadFileDrive(View):
+#     def get(self, request, *args, **kwargs):
+#         results_threads = []
+#         def upload_save_file(file):
+#             drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
+#             results_threads.append(drive.upload(file))
+
+#         files_to_upload = ModelToUploadDrive.objects.all()
+#         threads = []
+#         for file in files_to_upload:
+            
+#             thread = threading.Thread(target=upload_save_file, args=(file.fileDrive,))
+#             threads.append(thread)
+#             thread.start()
+
+#         for thread in threads:
+#             thread.join()
+#         results = {}
+#         for file in results_threads:
+#             if isinstance(file, ModelFileDrive):
+#                 file.save()
+#                 files_to_upload.get(fileDrive=file).delete()
+#                 if file.parentId.name.lower() == 'ma':
+#                     link_name = 'Lista comun mayorista'
+#                 elif file.parentId.name.lower() == 'mi':
+#                     link_name = 'Lista comun minorista'
+#                 elif file.parentId.parentId.name.lower() == 'ma':
+#                     link_name = 'Lista ordenada mayorista'
+#                 elif file.parentId.parentId.name.lower() == 'mi':
+#                     link_name = 'Lista ordenada minorista'
+#                 results[file.name] = {link_name: f"https://docs.google.com/spreadsheets/d/{file.driveId}/edit#gid=813836489"}
+#             else:
+#                 results[file['file'].name] = {}
+                
+#         return JsonResponse(results)
             
     
 

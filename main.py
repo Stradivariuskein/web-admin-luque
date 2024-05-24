@@ -47,12 +47,12 @@ def on_quit(icon):
 # Escrive los logs del servidor en el archivo
 def write_logs():
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
-    with open("logs.txt", "a") as log_file:
-        log_file.write(f"{current_time} || Run server\n")
+    while True:
+        with open("logs.txt", "a") as log_file:
+            log_file.write(f"{current_time} || Run server\n")
 
-        # leemos la salida del servidor y scrivimos la salida en el archivo
-        while True:
+            # leemos la salida del servidor y scrivimos la salida en el archivo
+        
             output = process.stdout.readline()
             if not output:
                 break
@@ -61,7 +61,7 @@ def write_logs():
             # Escribir el log en el archivo
             log_file.write(f"{current_time} || {logs}\n")
 
-        log_file.write(f"{current_time} || Stop server\n")        
+            log_file.write(f"{current_time} || Stop server\n")        
 
 
 # Ejecuta el comado para del servidor 

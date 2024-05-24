@@ -4,7 +4,7 @@ from httplib2.error import ServerNotFoundError
 from google.auth.exceptions import TransportError
 
 from apps.core.models import ModelFileDrive, ModelFolderDrive, ModelListXlsx
-from configs import RUTE_XLSX_ORIGIN
+from configs import RUTE_XLSX_ORIGIN, ROOTS_DRIVE_IDS
 
 
 import os
@@ -33,22 +33,59 @@ class ApiDrive(Drive_manager):
 
         raise Exception("No se pudo ejecutar la función después de varios intentos.")
 
-    def upload(self, fileDrive: ModelFileDrive):
+    def upload(self, fileDrive: ModelFileDrive, resetDrive = False):
+        
+        # elimina el archivo viejo
         if fileDrive.driveId:
-             self.retry_execute(super().delete, fileDrive.driveId)
+            self.retry_execute(super().delete, fileDrive.driveId)
 
+        # verifica q el archivo se alla elmininado
         exist_in_drive = self.find_file_id_by_name(fileDrive.name, fileDrive.parentId.driveId)
         if exist_in_drive != []:
-            for driveId, name in exist_in_drive:
-                self.retry_execute(super().delete, driveId)
+            for driveId, _ in exist_in_drive:
+              self.retry_execute(super().delete, driveId)
         try:
-            if fileDrive.parentId.parentId.name == "ma" or fileDrive.parentId.name == "ma":
-                response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name), fileDrive.parentId.driveId)
-            elif fileDrive.parentId.parentId.name == "mi" or fileDrive.parentId.name == "mi":
-                response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name), fileDrive.parentId.driveId)
+            if not resetDrive:
+                # si la carpeta padre es 'ma' es precio mayorista si es 'mi' es precio minorista
+                if fileDrive.parentId.parentId.name.lower() == "ma" or fileDrive.parentId.name.lower() == "ma":
+                    response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name), fileDrive.parentId.driveId)
+                elif fileDrive.parentId.parentId.name.lower() == "mi" or fileDrive.parentId.name.lower() == "mi":
+                    response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['mi'] + fileDrive.listXlsxID.name), fileDrive.parentId.driveId)
+            
+            else: # resube el archivo mantentiendo la estructura de carpetas con respecto a el driveID seteados en configs.py
+            
+                # si la carpeta padre es 'ma' es precio mayorista si es 'mi' es precio minorista
+                # otenemos el id de la carpeta donde se tiene q subir
+                if fileDrive.parentId.parentId.name.lower() == "ma" or fileDrive.parentId.name.lower() == "ma":
+
+                    search_results = self.find_file_id_by_name("MA",ROOTS_DRIVE_IDS['order'])
+
+                    if search_results:
+                        search_results = self.find_file_id_by_name(fileDrive.parentId.name,search_results[0][0])
+
+                        if search_results:
+                            parent_drive_ids = search_results[0][0]
+
+                    response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name), parent_drive_ids)
+
+                # otenemos el id de la carpeta donde se tiene q subir
+                elif fileDrive.parentId.parentId.name.lower() == "mi" or fileDrive.parentId.name.lower() == "mi":
+                    
+                    search_results = self.find_file_id_by_name("MI",ROOTS_DRIVE_IDS['order'])
+
+                    if search_results:
+                        search_results = self.find_file_id_by_name(fileDrive.parentId.name,search_results[0][0])
+                        
+                        if search_results:
+                            parent_drive_ids = search_results[0][0]
+
+                    response = self.retry_execute(super().upload, os.path.abspath(RUTE_XLSX_ORIGIN['ma'] + fileDrive.listXlsxID.name), parent_drive_ids)
+                    
+
         except Exception as e:
-            print(f"error con el dirve: {e}")
-        
+            with open("debug_api_drvie.txt", 'w') as out_file:
+                    out_file.write(f"Error en apiDriveV2.upload ({type(e).__name__}): {e}")
+                
         
         if (not isinstance(response,HttpError) and not isinstance(response,ServerNotFoundError)):
             

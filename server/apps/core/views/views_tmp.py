@@ -1,3 +1,5 @@
+# son funciones y endpoints q lludaron la constuccion del programa
+
 from django.http import HttpResponse, JsonResponse
 
 from apps.core.models import ModelListXlsx, ModelArtic, ModelFolderDrive, ModelFileDrive
@@ -143,50 +145,50 @@ def tmp_view_delet_duplicate_drive(request):
         
         
     return HttpResponse(msj)
-# cheque q el id del drive este bien si no puede acceder al archivo entonse lo busca por nombre en la carpeta padre y le reasigna el nuevo id
-def view_check_drive_id(request):
-    drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
-    files = ModelFileDrive.objects.all()
-    not_funds = []
-    for file in files:
-        response = drive.get_file(file.driveId)
-        # validar si el archivo esta en el drive si no esta hay q subirlo
-        if not response:
-            # falta validar si existe en la carpeta contenedora
-            files_drive = drive.find_file_id_by_name(file_name=file.name, parent_id=file.parentId.driveId)
-            if files_drive != []:
-                len_files = len(files_drive) 
-                print(f"files_drive tiene archivos para {file.name}")
+# # cheque q el id del drive este bien si no puede acceder al archivo entonse lo busca por nombre en la carpeta padre y le reasigna el nuevo id
+# def view_check_drive_id(request):
+#     drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
+#     files = ModelFileDrive.objects.all()
+#     not_funds = []
+#     for file in files:
+#         response = drive.get_file(file.driveId)
+#         # validar si el archivo esta en el drive si no esta hay q subirlo
+#         if not response:
+#             # falta validar si existe en la carpeta contenedora
+#             files_drive = drive.find_file_id_by_name(file_name=file.name, parent_id=file.parentId.driveId)
+#             if files_drive != []:
+#                 len_files = len(files_drive) 
+#                 print(f"files_drive tiene archivos para {file.name}")
         
-                if len_files > 1:
+#                 if len_files > 1:
 
-                    print(f"files_drive mayor a 1")                    
-                    for i in range(len_files-1,0,-1): # bucle inverso dejando el primero
-                        tmp_file = ModelFileDrive(driveId=files_drive[i][0])
-                        res_del = drive.delete(tmp_file)
+#                     print(f"files_drive mayor a 1")                    
+#                     for i in range(len_files-1,0,-1): # bucle inverso dejando el primero
+#                         tmp_file = ModelFileDrive(driveId=files_drive[i][0])
+#                         res_del = drive.delete(tmp_file)
 
-                        del files_drive[i]
-                        print(f"res_del: {res_del}")
-                len_files = len(files_drive) 
-                print(len_files)
-                if len_files == 1:
+#                         del files_drive[i]
+#                         print(f"res_del: {res_del}")
+#                 len_files = len(files_drive) 
+#                 print(len_files)
+#                 if len_files == 1:
 
-                    file.driveId = files_drive[0][0]
-                    file.save()
-                    print(f"solo un archivo: {file.name}")
+#                     file.driveId = files_drive[0][0]
+#                     file.save()
+#                     print(f"solo un archivo: {file.name}")
 
                    
-            else:
-                print(file.driveId)
-                file = drive.upload(file)
-                print(file.driveId)
-                print(file)
-                file.save()
-            not_funds.append(file)
+#             else:
+#                 print(file.driveId)
+#                 file = drive.upload(file)
+#                 print(file.driveId)
+#                 print(file)
+#                 file.save()
+#             not_funds.append(file)
 
         
 
-    return HttpResponse(not_funds)
+#     return HttpResponse(not_funds)
 
 
 def view_test(request):
