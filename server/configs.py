@@ -11,6 +11,7 @@ RUTE_XLSX_ORIGIN = { #RUTE_XLSX_ORIGIN = ["./Listas de preios/lista minorista/",
     "ma": "./LISTAS/ma/"
     } 
 
+
 # ruta del sistema de ventas
 #RUTE_SIAAC = "./vDos_SIAAC/SIAAC3/" # EN PRODUCCION
 RUTE_SIAAC = "Y://SIAAC3/" # EN DESPLIEGUE
