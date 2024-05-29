@@ -230,9 +230,28 @@ class ReuploadFileDrive(View):
 
 
 class ChangeRootDrive(View):
+
     def post(self, request, *args, **kwargs):
         data = request.POST
+        driveIds = data['droveIds']
+        folders_names = ["MA", 'MI']
 
+        #crear carpetas ma y mi por cada DriveId
+        drive = ApiDrive(cred_file=FILE_CREDENTIALS_DRIVE)
+        for driveId in driveIds.items():
+            for current_name in folders_names:
+                maches = drive.find_file_id_by_name(current_name, parent_id=driveId)
+                if not maches:
+                    drive.create_folder(folder_name=current_name)
+        # paso 2 por cada lista traer todos los registros de file_drive
+
+        # paso 3 por cada file_drive comparar el nombre del padre con ma o mi
+        # si el nombre no es ma ni mi verifica si la carpeta existe si no existe
+        #  guardar el nombre del padre en una variable.
+        # traer el folder_drive y comparar el nombre del padre con ma o mi
+        # si es si crear las carpeta padres correspondiente (desde ma o mi ej: idDrive/ma/tornillos)
+        # y sube el archivo 
+        #bortra el archivo original
 
 
         return HttpResponse("pass")
