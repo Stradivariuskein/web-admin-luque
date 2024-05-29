@@ -109,7 +109,7 @@ class Drive_manager():
 
 
 
-    def create_folder(self, folder_name, parent_folder_id=None):
+    def create_folder(self, folder_name, parent_folder_id=None) -> str:
         try:
             folder_metadata = {
                 'name': folder_name,
