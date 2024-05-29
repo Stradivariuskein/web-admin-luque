@@ -132,19 +132,20 @@ class Drive_manager():
     def get_path(self, folder_id: str) -> str:
         path = ""
         current_drive_id = folder_id
+        tmp_response = []
         while True:
             response = self.get_file(current_drive_id)
+            tmp_response.append(response)
             if response:
-                if response['parents'] == []:
+                try:
+                    parents = response['parents']
+  
+                except KeyError:
                     path = '/' + path
                     break
                 current_drive_id = response['parents'][0]
                 response = self.get_file(current_drive_id)
                 path = response['name'] + '/' + path 
-
-                
-                
-
 
             else:
                 raise "Error geting file[] to drive"

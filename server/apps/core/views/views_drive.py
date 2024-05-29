@@ -14,6 +14,8 @@ from apps.core.forms import CreateFolderForm
 from apps.core.tools.apiDriveV2 import ApiDrive
 from configs import RUTE_XLSX_AGRUPS, FILE_CREDENTIALS_DRIVE
 
+
+
 # def upload_file_drive(request):
 #     def listar_archivos_recursivamente(ruta):
 #         files = []
@@ -275,4 +277,4 @@ class TestingPaht(View):
 
         path = drive.get_path(test_file)
 
-        HttpResponse(path)
+        JsonResponse({'path': path})
