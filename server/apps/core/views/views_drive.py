@@ -234,7 +234,7 @@ class ChangeRootDrive(View):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         data = request.POST
-        driveIds = data['droveIds']
+        driveIds = data['driveIds']
         folders_names = ["MA", 'MI']
 
         #crear carpetas ma y mi por cada DriveId
@@ -253,6 +253,7 @@ class ChangeRootDrive(View):
                 for file in finded_files:
 
                     files_drive.append(file)
+
         # paso 3 por cada file_drive comparar el nombre del padre con ma o mi
         # si el nombre no es ma ni mi verifica si la carpeta existe si no existe
         #  guardar el nombre del padre en una variable.
@@ -263,3 +264,15 @@ class ChangeRootDrive(View):
 
 
         return HttpResponse("pass")
+
+
+
+class TestingPaht(View):
+    def get(self, request, *args, **kwargs):
+        test_file = ModelFileDrive.objects.filter(driveId='1x0wYT0LDR-E5fbogjLzJGj9jC7awoVwn').first()
+
+        drive = ApiDrive(FILE_CREDENTIALS_DRIVE)
+
+        path = drive.get_path(test_file)
+
+        HttpResponse(path)

@@ -128,12 +128,29 @@ class Drive_manager():
         except:
             return None
         
-    
+    # obtiene la ruta de un archivo en el drive
     def get_path(self, folder_id: str) -> str:
-
+        path = ""
+        current_drive_id = folder_id
         while True:
-            response = self.get_file(folder_id)
-            parent_id = response['parents'][0]
+            response = self.get_file(current_drive_id)
+            if response:
+                if response['parents'] == []:
+                    path = '/' + path
+                    break
+                current_drive_id = response['parents'][0]
+                response = self.get_file(current_drive_id)
+                path = response['name'] + '/' + path 
+
+                
+                
+
+
+            else:
+                raise "Error geting file[] to drive"
+
+        return path
+
 
 
 

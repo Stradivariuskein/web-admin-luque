@@ -37,7 +37,7 @@ from apps.core.views.view_search import ViewSearchArtic
 #                                             test_prices_auto
 #                                         )
 
-from apps.core.views.views_drive import ReuploadFileDrive, ViewUploadDrive
+from apps.core.views.views_drive import ReuploadFileDrive, ViewUploadDrive, TestingPaht
 
 from apps.core.views.view_crud_listxlsx import (ModelListXlsxView,
                                                 ModelListXlsxUpdateView,
@@ -66,4 +66,5 @@ urlpatterns = [
     path('xlsx/<int:pk>/', ModelListXlsxUpdateView.as_view(), name='xlsx'),
     path('xlsx/', ModelListXlsxView.as_view(), name='xlsx-list'),
     path('xlsx/detail/<int:pk>/', ModelListXlsxDetailView.as_view(), name='xlsx-datail'),
+    path('test-path/', TestingPaht.as_view(), name='test-path'),
 ]

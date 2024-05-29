@@ -106,10 +106,12 @@ class ApiDrive(Drive_manager):
     def get_file(self, drive_id: str):
         return self.retry_execute(super().get_file, drive_id)
 
+    def get_path(self, file_drive: ModelFileDrive) -> str:
+        return super().get_path(file_drive.driveId)
 
 
 if __name__ == '__main__':
-
+    # testing
     drive = ApiDrive("../service_account.json", "1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi")
     xlsx = ModelListXlsx.objects.filter(id="104").first()
     folderDrive = ModelFolderDrive(driveId='TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi')
