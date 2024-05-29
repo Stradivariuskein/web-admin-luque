@@ -127,6 +127,15 @@ class Drive_manager():
             return folder.get('id')
         except:
             return None
+        
+    
+    def get_path(self, folder_id: str) -> str:
+
+        while True:
+            response = self.get_file(folder_id)
+            parent_id = response['parents'][0]
+
+
 
         
 

@@ -3,6 +3,7 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.http import HttpResponse, JsonResponse
 from django.views import View
+from django.db import transaction
 
 import threading
 import time
@@ -230,7 +231,7 @@ class ReuploadFileDrive(View):
 
 
 class ChangeRootDrive(View):
-
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         data = request.POST
         driveIds = data['droveIds']
@@ -244,7 +245,14 @@ class ChangeRootDrive(View):
                 if not maches:
                     drive.create_folder(folder_name=current_name)
         # paso 2 por cada lista traer todos los registros de file_drive
+        list_xlsx = ModelListXlsx.objects.all()
+        files_drive = []
+        for xlsx in list_xlsx:
+            finded_files = ModelFileDrive.objects.filter(file_id=xlsx.id) # obtiene los archivo en el drive q estan vinculados con la lista correspondiente
+            if finded_files:
+                for file in finded_files:
 
+                    files_drive.append(file)
         # paso 3 por cada file_drive comparar el nombre del padre con ma o mi
         # si el nombre no es ma ni mi verifica si la carpeta existe si no existe
         #  guardar el nombre del padre en una variable.
