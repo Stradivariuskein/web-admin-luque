@@ -277,4 +277,4 @@ class TestingPaht(View):
 
         path = drive.get_path(test_file)
 
-        JsonResponse({'path': path})
+        return JsonResponse({'path': path})

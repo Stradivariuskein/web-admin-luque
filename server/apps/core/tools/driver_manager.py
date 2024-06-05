@@ -143,7 +143,7 @@ class Drive_manager():
                 except KeyError:
                     path = '/' + path
                     break
-                current_drive_id = response['parents'][0]
+                current_drive_id = parents[0]
                 response = self.get_file(current_drive_id)
                 path = response['name'] + '/' + path 
 
@@ -160,9 +160,9 @@ class Drive_manager():
 
 
 if __name__ == "__main__":
-    drive = Drive_manager("../service_account.json", "1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi")
-    file = drive.upload("./test.txt", "1TEHr2NrX6YLbyxzNG3BDaN-WpRRAcKdi")
-    print(file)
+    drive = Drive_manager("../../../../service_account.json")
+    path = drive.get_path("1x0wYT0LDR-E5fbogjLzJGj9jC7awoVwn")
+    print(path)
 
 
     
