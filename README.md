@@ -4,7 +4,7 @@
 
 
 ## Contexto:
-#### Hay 105 listas excels con un formato donde los codigos estan en la columna "A", la descripcion en las columnas "B+C" y los precios en la "D".
+#### Hay 105 listas de precios en excels. Donde los codigos estan en la columna "A", la descripcion en las columnas "B+C" y los precios en la "D".
 
 #### Tambien hay un archivo con los codigos, descripcion y precion en formato de texto (ARTIC.DBF programa de facturacion).
 
